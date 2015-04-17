@@ -1,0 +1,32 @@
+<use name="FWCore/Framework"/>
+<use name="FWCore/PluginManager"/>
+<use name="FWCore/ParameterSet"/>
+<use name="FWCore/MessageLogger"/>
+<use   name="FWCore/Utilities"/>
+<use   name="FWCore/ServiceRegistry"/>
+
+<use   name="DataFormats/Common"/>
+<use   name="DataFormats/MuonReco"/>
+<use   name="DataFormats/TrackReco"/>
+<use   name="DataFormats/HLTReco"/>
+
+<use   name="DataFormats/PatCandidates"/>
+
+<use   name="RecoMuon/GlobalTrackFinder"/>
+<use   name="RecoMuon/GlobalTrackingTools"/>
+<use   name="RecoMuon/TrackingTools"/>
+<use   name="TrackingTools/PatternTools"/>
+
+<use   name="TrackingTools/TransientTrack"/>
+<use   name="SimDataFormats/Track"/>
+<use   name="HLTrigger/HLTcore"/>
+
+<use   name="CLHEP"/>
+<use   name="root"/>
+
+<use   name="MuonAnalysis/MuonAssociators"/>
+
+<library   file="HLTEffAnalyzer.cc" name="HLTEffAnalyzer">
+    <flags   EDM_PLUGIN="1"/>
+</library>
+

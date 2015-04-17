@@ -1,0 +1,498 @@
+// -*- C++ -*-
+//
+// Package:    HLTEff/HLTEffAnalyzer
+// Class:      HLTEffAnalyzer
+// 
+/**\class HLTEffAnalyzer HLTEffAnalyzer.cc HLTEff/HLTEffAnalyzer/plugins/HLTEffAnalyzer.cc
+
+ Description: [one line class summary]
+
+ Implementation:
+     [Notes on implementation]
+*/
+//
+// Original Author:  Raffaella Radogna
+//         Created:  Thu, 05 Mar 2015 14:17:53 GMT
+//
+//
+
+
+// system include files
+#include <memory>
+#include <fstream>
+#include <sys/time.h>
+#include <string>
+#include <sstream>
+#include <iostream>
+#include <iomanip>
+#include <math.h>
+
+// root include files
+#include "TFile.h"
+#include "TH1F.h"
+#include "TH2F.h"
+
+// user include files
+#include "FWCore/Framework/interface/Frameworkfwd.h"
+#include "FWCore/Framework/interface/EDAnalyzer.h"
+#include "FWCore/Framework/interface/Event.h"
+#include "FWCore/Framework/interface/MakerMacros.h"
+#include "FWCore/ParameterSet/interface/ParameterSet.h"
+#include "FWCore/Framework/interface/ESHandle.h"
+#include "FWCore/Utilities/interface/InputTag.h"
+#include "FWCore/MessageLogger/interface/MessageLogger.h"
+#include "FWCore/ServiceRegistry/interface/Service.h"
+#include "CommonTools/UtilAlgos/interface/TFileService.h"
+
+#include "MagneticField/Engine/interface/MagneticField.h"
+#include "MagneticField/Records/interface/IdealMagneticFieldRecord.h"
+#include "Geometry/Records/interface/GlobalTrackingGeometryRecord.h"
+#include "Geometry/CommonDetUnit/interface/GlobalTrackingGeometry.h"
+#include "Geometry/CommonDetUnit/interface/GeomDet.h"
+
+#include "TrackingTools/TransientTrack/interface/TransientTrack.h"
+#include "DataFormats/TrajectorySeed/interface/TrajectorySeedCollection.h"
+#include "DataFormats/TrackReco/interface/Track.h"
+#include "RecoMuon/TrackingTools/interface/MuonPatternRecoDumper.h"
+
+#include "DataFormats/HepMCCandidate/interface/GenParticle.h"
+#include "SimDataFormats/Track/interface/SimTrackContainer.h"
+
+#include "DataFormats/Math/interface/deltaR.h"
+#include "DataFormats/MuonReco/interface/Muon.h"
+#include "DataFormats/MuonReco/interface/MuonFwd.h"
+#include "DataFormats/MuonReco/interface/MuonSelectors.h"
+
+#include "DataFormats/PatCandidates/interface/Muon.h"
+
+#include "DataFormats/HLTReco/interface/TriggerObject.h"
+#include "DataFormats/HLTReco/interface/TriggerEvent.h"
+#include "DataFormats/Common/interface/TriggerResults.h"
+#include "HLTrigger/HLTcore/interface/HLTConfigProvider.h"
+#include "FWCore/Common/interface/TriggerNames.h"
+
+#include "DataFormats/VertexReco/interface/Vertex.h"
+
+//
+// class declaration
+//
+class TFile;
+class TH1F;
+class TH2F;
+
+using namespace edm;
+using namespace std;
+using namespace reco;
+
+class HLTEffAnalyzer : public edm::EDAnalyzer {
+public:
+  explicit HLTEffAnalyzer(const edm::ParameterSet&);
+  ~HLTEffAnalyzer();
+  
+  static void fillDescriptions(edm::ConfigurationDescriptions& descriptions);
+  
+  
+private:
+  virtual void beginJob() override;
+  virtual void analyze(const edm::Event&, const edm::EventSetup&) override;
+  virtual void endJob() override;
+  
+  virtual void beginRun(edm::Run const&, edm::EventSetup const&) override;
+  //virtual void endRun(edm::Run const&, edm::EventSetup const&) override;
+  //virtual void beginLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&) override;
+  //virtual void endLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&) override;
+  
+  // ----------member data ---------------------------
+  map<string,TH1F*> histContainer_ ;
+  map<string,TH2F*> histContainer2D_ ;
+
+  map<string,TH1I*> muonFromJpsi_h ;
+  map<string,TH1F*> pT_muonFromJpsi_h, eta_muonFromJpsi_h ;
+  map<string,TH1F*> pT_muonFromJpsi[3] ;
+
+  map<string,TH1F*> pT_denominator_h, eta_denominator_h ;
+  map<string,TH1F*> pT_denominator[3] ;
+  map<string,TH1F*> pT_numerator_h, eta_numerator_h ;
+  map<string,TH1F*> pT_numerator[3] ;
+  map<string,TH1F*> pT_matchingEff_h, eta_matchingEff_h ;
+  map<string,TH1F*> pT_matchingEff[3] ;
+  map<string,TH1F*> pT_newSoftMuon_h, eta_newSoftMuon_h ;
+  map<string,TH1F*> pT_newSoftMuon[3] ;  
+  map<string,TH1F*> pT_newSoftMuonEff_h, eta_newSoftMuonEff_h ;
+  map<string,TH1F*> pT_newSoftMuonEff[3] ;
+
+  string theDataType;
+  EDGetTokenT<vector<Vertex>> vtxHT_;
+  EDGetTokenT<View<GenParticle> > prunedGenToken_;
+
+  //InputTag muonLabel_;
+  EDGetTokenT<pat::MuonCollection> muonToken_;
+  InputTag triggerResultsTag_;
+  InputTag triggerEvent_;
+  HLTConfigProvider hltConfig;
+  
+  vector<double> pT_bins, eta_bins ;
+
+  bool Debug ;
+};
+
+//
+// constants, enums and typedefs
+//
+
+//
+// static data member definitions
+//
+
+//
+// constructors and destructor
+//
+HLTEffAnalyzer::HLTEffAnalyzer(const edm::ParameterSet& iConfig):
+histContainer_(),
+histContainer2D_(),
+
+muonFromJpsi_h(),
+pT_muonFromJpsi_h(), eta_muonFromJpsi_h(),
+pT_muonFromJpsi(),
+
+pT_denominator_h(), eta_denominator_h(),
+pT_denominator(),
+pT_numerator_h(), eta_numerator_h(),
+pT_numerator(),
+pT_matchingEff_h(), eta_matchingEff_h(),
+pT_matchingEff(),
+pT_newSoftMuon_h(), eta_newSoftMuon_h(),
+pT_newSoftMuon(),
+pT_newSoftMuonEff_h(), eta_newSoftMuonEff_h(),
+pT_newSoftMuonEff()
+{
+   //now do what ever initialization is needed
+    theDataType = iConfig.getUntrackedParameter<string>("DataType") ;
+    vtxHT_ = consumes< vector<reco::Vertex> >( iConfig.getParameter< InputTag >("vtxTag") ) ;
+    prunedGenToken_ = consumes< View< GenParticle > >(iConfig.getParameter< InputTag >("pruned")) ;
+    //muonLabel_ = iConfig.getUntrackedParameter<edm::InputTag>("MuonCollectionLabel");
+    muonToken_ = consumes<pat::MuonCollection>(iConfig.getParameter< InputTag >("MuonCollectionLabel")) ;
+    triggerResultsTag_ = iConfig.getParameter< InputTag >("triggerResultsTag");
+    triggerEvent_ = iConfig.getParameter< InputTag >("triggerEvent");
+
+    pT_bins = iConfig.getParameter< vector<double> >("pT_bins");
+    eta_bins = iConfig.getParameter< vector<double> >("eta_bins");
+
+    Debug = iConfig.getUntrackedParameter< bool >("Debug",false) ;    
+    
+    if (theDataType != "RealData" && theDataType != "SimData")
+      if (Debug) cout<<"Error in Data Type!!"<<endl;
+
+}
+
+
+HLTEffAnalyzer::~HLTEffAnalyzer()
+{
+ 
+   // do anything here that needs to be done at desctruction time
+   // (e.g. close files, deallocate resources etc.)
+
+}
+
+
+//
+// member functions
+//
+
+//=======================================================================
+void HLTEffAnalyzer::beginRun(edm::Run const& iRun, edm::EventSetup const& iSetup)
+{
+  /*
+    bool changed = true;
+    if (hltConfig.init(iRun, iSetup, triggerResultsTag_.process(), changed)) {
+        // if init returns TRUE, initialisation has succeeded!
+        edm::LogInfo("TriggerBlock") << "HLT config with process name "
+        << triggerResultsTag_.process() << " successfully extracted";
+    }
+    else {
+        // if init returns FALSE, initialisation has NOT succeeded, which indicates a problem
+        // with the file and/or code and needs to be investigated!
+        edm::LogError("TriggerBlock") << "Error! HLT config extraction with process name "
+        << triggerResultsTag_.process() << " failed";
+        // In this case, all access methods will return empty values!
+    }
+  */
+}
+
+// ------------ method called once each job just before starting event loop  ------------
+void 
+HLTEffAnalyzer::beginJob()
+{
+    // register to the TFileService
+    edm::Service<TFileService> fs;
+    TH1::SetDefaultSumw2();
+    histContainer_["hPtSim"] = fs->make<TH1F>("pTSim","p_{T}^{gen} ",5000,0,5000);
+
+    muonFromJpsi_h["nMuonFromJpsi"] = fs->make<TH1I>("nMuonFromJpsi","number of #mu with a J/#psi mother;n(#mu)",5,-0.5,4.5);
+    pT_muonFromJpsi_h["pT_muonFromJpsi_h"] = fs->make<TH1F>("pT_muonFromJpsi","p_{T} of #mu with a J/#psi mother;p_{T}(#mu) [GeV]",/*70*/ pT_bins.size() -1,/*0.,140*/ &(pT_bins[0]));
+    eta_muonFromJpsi_h["eta_muonFromJpsi_h"] = fs->make<TH1F>("eta_muonFromJpsi","#eta of #mu with a J/#psi mother;#eta(#mu) [GeV]",/*70*/ eta_bins.size() -1,/*0.,140*/ &(eta_bins[0]));
+
+    pT_denominator_h["pT_denominator_h"] = fs->make<TH1F>("pT_denominator","p_{T} of matched gen #mu;p_{T}(#mu) [GeV]",pT_bins.size() -1, &(pT_bins[0]));
+    pT_denominator[0]["pT_denominator"] = fs->make<TH1F>("pT_denominator_0-0p9","p_{T} of matched gen #mu with |#eta(#mu)|<0.9;p_{T}(#mu) [GeV]",pT_bins.size() -1, &(pT_bins[0]));
+    pT_denominator[1]["pT_denominator"] = fs->make<TH1F>("pT_denominator_0p9-1p2","p_{T} of matched gen #mu with 0.9<|#eta(#mu)|<1.2;p_{T}(#mu) [GeV]",pT_bins.size() -1, &(pT_bins[0]));
+    pT_denominator[2]["pT_denominator"] = fs->make<TH1F>("pT_denominator_1p2-2p1","p_{T} of matched gen #mu with 1.2<|#eta(#mu)|<2.1;p_{T}(#mu) [GeV]",pT_bins.size() -1, &(pT_bins[0]));
+    eta_denominator_h["eta_denominator_h"] = fs->make<TH1F>("eta_denominator","#eta of matched gen #mu;#eta(#mu) [GeV]",eta_bins.size() -1, &(eta_bins[0]));
+
+    pT_numerator_h["pT_numerator_h"] = fs->make<TH1F>("pT_numerator","p_{T} of matched reco #mu;p_{T}(#mu) [GeV]",pT_bins.size() -1, &(pT_bins[0]));
+    pT_numerator[0]["pT_numerator"] = fs->make<TH1F>("pT_numerator_0-0p9","p_{T} of matched reco #mu with |#eta(#mu)|<0.9;p_{T}(#mu) [GeV]",pT_bins.size() -1, &(pT_bins[0]));
+    pT_numerator[1]["pT_numerator"] = fs->make<TH1F>("pT_numerator_0p9-1p2","p_{T} of matched reco #mu with 0.9<|#eta(#mu)|<1.2;p_{T}(#mu) [GeV]",pT_bins.size() -1, &(pT_bins[0]));
+    pT_numerator[2]["pT_numerator"] = fs->make<TH1F>("pT_numerator_1p2-2p1","p_{T} of matched reco #mu with 1.2<|#eta(#mu)|<2.1;p_{T}(#mu) [GeV]",pT_bins.size() -1, &(pT_bins[0]));
+    eta_numerator_h["eta_numerator_h"] = fs->make<TH1F>("eta_numerator","#eta of matched reco #mu;#eta(#mu) [GeV]",eta_bins.size() -1, &(eta_bins[0]));
+
+    pT_matchingEff_h["pT_matchingEff_h"] = fs->make<TH1F>("pT_matchingEff","matching efficiency vs p_{T}(#mu);p_{T}(#mu) [GeV]",pT_bins.size() -1, &(pT_bins[0]));
+    pT_matchingEff[0]["pT_matchingEff"] = fs->make<TH1F>("pT_matchingEff_0-0p9","matching efficiency vs p_{T}(#mu) with |#eta(#mu)|<0.9;p_{T}(#mu) [GeV]",pT_bins.size() -1, &(pT_bins[0]));
+    pT_matchingEff[1]["pT_matchingEff"] = fs->make<TH1F>("pT_matchingEff_0p9-1p2","matching efficiency vs p_{T}(#mu) with 0.9<|#eta(#mu)|<1.2;p_{T}(#mu) [GeV]",pT_bins.size() -1, &(pT_bins[0]));
+    pT_matchingEff[2]["pT_matchingEff"] = fs->make<TH1F>("pT_matchingEff_1p2-2p1","matching efficiency vs p_{T}(#mu) with 1.2<|#eta(#mu)|<2.1;p_{T}(#mu) [GeV]",pT_bins.size() -1, &(pT_bins[0]));
+    eta_matchingEff_h["eta_matchingEff_h"] = fs->make<TH1F>("eta_matchingEff","matching efficiency vs #eta(#mu);#eta(#mu) [GeV]",eta_bins.size() -1, &(eta_bins[0]));
+
+    pT_newSoftMuon_h["pT_newSoftMuon_h"] = fs->make<TH1F>("pT_newSoftMuon","p_{T} of matched new-Soft reco #mu;p_{T}(#mu) [GeV]",pT_bins.size() -1, &(pT_bins[0]));
+    pT_newSoftMuon[0]["pT_newSoftMuon"] = fs->make<TH1F>("pT_newSoftMuon_0-0p9","p_{T} of matched new-Soft reco #mu with |#eta(#mu)|<0.9;p_{T}(#mu) [GeV]",pT_bins.size() -1, &(pT_bins[0]));
+    pT_newSoftMuon[1]["pT_newSoftMuon"] = fs->make<TH1F>("pT_newSoftMuon_0p9-1p2","p_{T} of matched new-Soft reco #mu with 0.9<|#eta(#mu)|<1.2;p_{T}(#mu) [GeV]",pT_bins.size() -1, &(pT_bins[0]));
+    pT_newSoftMuon[2]["pT_newSoftMuon"] = fs->make<TH1F>("pT_newSoftMuon_1p2-2p1","p_{T} of matched new-Soft reco #mu with 1.2<|#eta(#mu)|<2.1;p_{T}(#mu) [GeV]",pT_bins.size() -1, &(pT_bins[0]));
+    eta_newSoftMuon_h["eta_newSoftMuon_h"] = fs->make<TH1F>("eta_newSoftMuon","#eta of matched new-Soft reco #mu;#eta(#mu) [GeV]",eta_bins.size() -1, &(eta_bins[0]));
+
+    pT_newSoftMuonEff_h["pT_newSoftMuonEff_h"] = fs->make<TH1F>("pT_newSoftMuonEff","new-Soft #mu ID efficiency vs p_{T};p_{T}(#mu) [GeV]",pT_bins.size() -1, &(pT_bins[0]));
+    pT_newSoftMuonEff[0]["pT_newSoftMuonEff"] = fs->make<TH1F>("pT_newSoftMuonEff_0-0p9","new-Soft #mu ID efficiency vs p_{T}(#mu) with |#eta(#mu)|<0.9;p_{T}(#mu) [GeV]",pT_bins.size() -1, &(pT_bins[0]));
+    pT_newSoftMuonEff[1]["pT_newSoftMuonEff"] = fs->make<TH1F>("pT_newSoftMuonEff_0p9-1p2","new-Soft #mu ID efficiency vs p_{T}(#mu) with 0.9<|#eta(#mu)|<1.2;p_{T}(#mu) [GeV]",pT_bins.size() -1, &(pT_bins[0]));
+    pT_newSoftMuonEff[2]["pT_newSoftMuonEff"] = fs->make<TH1F>("pT_newSoftMuonEff_1p2-2p1","new-Soft #mu ID efficiency vs p_{T}(#mu) with 1.2<|#eta(#mu)|<2.1;p_{T}(#mu) [GeV]",pT_bins.size() -1, &(pT_bins[0]));
+    eta_newSoftMuonEff_h["eta_newSoftMuonEff_h"] = fs->make<TH1F>("eta_newSoftMuonEff","new-Soft #mu ID efficiency vs #eta;#eta(#mu) [GeV]",eta_bins.size() -1, &(eta_bins[0]));
+}
+
+
+// ------------ method called for each event  ------------
+void
+HLTEffAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
+{
+   using namespace edm;
+        
+    //if (theDataType == "SimData") {
+    // Get the SimTrack collection from the event
+    //edm::Handle<GenParticleCollection> genParticles;
+    //iEvent.getByLabel("genParticles", genParticles);
+    Handle<edm::View<reco::GenParticle> > genCollection ;
+    iEvent.getByToken(prunedGenToken_, genCollection);
+    //}
+
+    //Handle<reco::VertexCollection> vtxH;
+    Handle< vector<Vertex> > vtxH;
+    iEvent.getByToken(vtxHT_, vtxH);
+    //const VertexCollection *pvCol = vtxH.product();
+    const vector<Vertex> *pvCol = vtxH.product();
+    const Vertex* pv = &(*pvCol->begin());
+    /*
+    // Get the RecoTrack collection from the event
+    Handle<reco::TrackCollection> staTracks;
+    iEvent.getByLabel("globalMuons", staTracks);
+    */    
+    //Handle<reco::MuonCollection> muons;
+    //iEvent.getByLabel(muonLabel_, muons);
+    Handle<pat::MuonCollection> muons;
+    iEvent.getByToken(muonToken_, muons);
+
+    //if (Debug) cout <<"reco tracks size = " <<staTracks->size() <<endl ;
+    if (Debug) cout <<"muons collection size = " <<muons->size() <<endl ;
+    if (Debug) cout <<"genParticles collection size = " <<genCollection->size() <<endl ;
+
+    vector< GenParticle > stableGenCollection, stableGenMuons ;
+    Int_t muonFromJpsi = 0;
+    const Candidate* genMuon[2] = {0,0} ;
+    for( size_t i = 0; i < genCollection->size(); ++ i) {
+      const GenParticle *p = &(*genCollection)[i] ;
+      if ( p->status() == 1 ) {
+	stableGenCollection.push_back( *p ) ;
+	if ( abs(p->pdgId()) == 13 ) {
+	  stableGenMuons.push_back( *p ) ;
+	  if ( (p->mother())->pdgId() == 443 ) {
+	    muonFromJpsi++ ;
+	    p->charge() > 0 ? genMuon[0] = p : genMuon[1] = p ;
+	    pT_muonFromJpsi_h["pT_muonFromJpsi_h"]->Fill( p->pt() ) ;
+	    eta_muonFromJpsi_h["eta_muonFromJpsi_h"]->Fill( p->eta() ) ;
+	  }
+	}
+      }
+      /*
+      if ( fabs(p.pdgId()) != 13 ) continue;
+      if (Debug) cout<<" muon gen pt: "<<p.pt()<<endl;
+      histContainer_["hPtSim"]->Fill(p.pt());   
+      */
+    }
+    muonFromJpsi_h["nMuonFromJpsi"]->Fill( muonFromJpsi ) ;
+    if (Debug) cout <<"stableGenParticles collection size = " <<stableGenCollection.size() <<endl ;
+    if (Debug) cout <<"stableGenMuons collection size = " <<stableGenMuons.size() <<endl ;
+
+    //Bool_t isValidMuon[2] = {kFALSE, kFALSE} ;
+    //const Muon* recoMuon[2] = {0,0} ;
+    const pat::Muon* patMuon[2] = {0,0} ;
+    Float_t deltaR_temp[2] = {1.,1.} ;
+    //Float_t muonPt[2] = {-1.,-1.} ;
+
+    //for (pat::MuonCollection::const_iterator muon = muons->begin(); muon != muons->end(); ++muon) {
+    //for ( vector<pat::Muon>::const_iterator muon = muons->begin(); muon != muons->end(); ++muon) {
+    for( unsigned int i = 0; i < muons->size(); i++) {
+      //if ( muon->numberOfValidHits() > 0  &&  muon->numberOfValidHits() < 1000 ) 
+      //if ( (muon->pt() > 1)  &&  (muon->pt() < 100000) ) 
+      for (Int_t j = 0; j<2; j++) {
+	//isValidMuon[i] = kTRUE ;
+	if ( (*muons)[i].charge()*genMuon[j]->charge() > 0 ) 
+	  if ( deltaR((*muons)[i], *genMuon[j]) < deltaR_temp[i] ) { // deltaR with a reco::Muon gives segmentation violation!
+	    deltaR_temp[j] = deltaR((*muons)[i],*genMuon[j]) ;
+	    //patMuon[j] = &((*muons)[i]) ;
+	    //recoMuon[j] = &((*muons)[i]) ; // dynamic cast returns always 0
+	    patMuon[j] = &(*muons)[i] ;
+	    //muonPt[j] = ((*muons)[i]).pt() ;
+	  }
+      }
+    }
+    
+    if (Debug) cout <<"patMuon[0] = " <<patMuon[0] <<endl ;
+    if (Debug) cout <<"patMuon[1] = " <<patMuon[1] <<endl ;
+ 
+    // new soft Muon ID
+    Bool_t isNewSoftMuon[2] = {kFALSE, kFALSE} ;
+    for (Int_t i = 0; i<2; i++) 
+      if ( patMuon[i] ) { //cout <<"pT = " <<patMuon[i]->pt() <<endl ; cout <<"orig pT = " <<muonPt[i] <<endl ; cout <<"# = " <<patMuon[i]->numberOfValidHits() <<endl ;
+	if ( patMuon[i]->track().isNonnull() ) {
+	  //if ( (patMuon[i]->track().isAvailable() || patMuon[i]->track().isTransient()) && patMuon[i]->track().isNonnull() ) {
+	  //if ( (patMuon[i]->innerTrack().isAvailable() || patMuon[i]->innerTrack().isTransient()) && patMuon[i]->innerTrack().isNonnull() ) {
+	  //if ( patMuon[i]->isTrackerMuon() ) {
+	  //if ( patMuon[i]->globalTrack().isAvailable() ) {
+	  //if ( patMuon[i]->globalTrack().isNonnull() ) 
+	  if ( 1 
+	       && muon::isGoodMuon(*patMuon[i], muon::TMOneStationTight)
+	       && patMuon[i]->track()->hitPattern().trackerLayersWithMeasurement() > 5
+	       && patMuon[i]->track()->hitPattern().pixelLayersWithMeasurement() > 0
+	       && patMuon[i]->innerTrack()->quality( TrackBase::highPurity )
+	       && fabs(patMuon[i]->innerTrack()->dxy( pv->position() )) < 0.3
+	       && fabs(patMuon[i]->innerTrack()->dz( pv->position() )) < 20
+	       )
+	    isNewSoftMuon[i] = kTRUE ;
+	}
+      }
+    
+    if (Debug) cout <<"newSoftMuonID created" <<endl ;
+    
+    Float_t deltaR_max = 0.2 ;
+    for (Int_t i = 0; i<2; i++) {
+      //if ( recoMuon[i] ) {
+      if ( patMuon[i] ) { 
+	//if ( patMuon[i]->track().isNonnull() ) { if (Debug) cout <<"after patMuon[i]->track" <<endl ;
+	  if ( deltaR_temp[i] < deltaR_max ) {
+
+	    pT_denominator_h["pT_denominator_h"]->Fill( genMuon[i]->pt() ) ;
+	    eta_denominator_h["eta_denominator_h"]->Fill( genMuon[i]->eta() ) ;
+	    pT_numerator_h["pT_numerator_h"]->Fill( patMuon[i]->pt() ) ;
+	    eta_numerator_h["eta_numerator_h"]->Fill( patMuon[i]->eta() ) ;
+	    if ( isNewSoftMuon[i] ) {
+	      pT_newSoftMuon_h["pT_newSoftMuon_h"]->Fill( patMuon[i]->pt() ) ;
+	      eta_newSoftMuon_h["eta_newSoftMuon_h"]->Fill( patMuon[i]->eta() ) ;
+	    }
+
+	    if ( fabs(genMuon[i]->eta()) < 0.9 ) {
+	      pT_denominator[0]["pT_denominator"]->Fill( genMuon[i]->pt() ) ;
+	      pT_numerator[0]["pT_numerator"]->Fill( genMuon[i]->pt() ) ;   
+	      if ( isNewSoftMuon[i] ) 
+		pT_newSoftMuon[0]["pT_newSoftMuon"]->Fill( patMuon[i]->pt() ) ;
+	    } else if ( fabs(genMuon[i]->eta()) < 1.2 ) {
+	      pT_denominator[1]["pT_denominator"]->Fill( genMuon[i]->pt() ) ;
+	      pT_numerator[1]["pT_numerator"]->Fill( genMuon[i]->pt() ) ;
+	      if ( isNewSoftMuon[i] ) 
+		pT_newSoftMuon[1]["pT_newSoftMuon"]->Fill( patMuon[i]->pt() ) ;
+	    } else if ( fabs(genMuon[i]->eta()) < 2.1 ) {
+	      pT_denominator[2]["pT_denominator"]->Fill( genMuon[i]->pt() ) ;
+	      pT_numerator[2]["pT_numerator"]->Fill( genMuon[i]->pt() ) ;
+	      if ( isNewSoftMuon[i] ) 
+		pT_newSoftMuon[2]["pT_newSoftMuon"]->Fill( patMuon[i]->pt() ) ;
+	    }
+	  }
+	//}
+      }
+    }
+    /*
+    edm::Handle<edm::TriggerResults> triggerResults;
+    iEvent.getByLabel(triggerResultsTag_, triggerResults);
+    
+    edm::Handle<trigger::TriggerEvent> handleTriggerEvent;
+    iEvent.getByLabel(triggerEvent_, handleTriggerEvent );
+
+    const vector<string>& pathList = hltConfig.triggerNames();
+    if (Debug) cout <<"path size = " <<pathList.size() <<endl;
+    for (vector<string>::const_iterator it = pathList.begin(); it != pathList.end(); ++it) {
+        if (Debug) cout <<"path list x run " <<*it <<endl;  
+        }
+    
+    const trigger::TriggerObjectCollection & toc(handleTriggerEvent->getObjects());
+    
+    for ( size_t ia = 0; ia < handleTriggerEvent->sizeFilters(); ++ ia) {
+        const trigger::Keys & k = handleTriggerEvent->filterKeys(ia);
+        for (trigger::Keys::const_iterator ki = k.begin(); ki !=k.end(); ++ki ) {
+            if (Debug) cout<<" trigger obj pt "<<toc[*ki].pt()<<" id "<< toc[*ki].id()<<" mass "<<toc[*ki].mass()<<endl;
+    
+        }
+    }
+    */
+}
+
+
+// ------------ method called once each job just after ending the event loop  ------------
+void 
+HLTEffAnalyzer::endJob() 
+{
+  pT_matchingEff_h["pT_matchingEff_h"]->Divide(pT_numerator_h["pT_numerator_h"], pT_denominator_h["pT_denominator_h"], 1, 1, "B") ;
+  eta_matchingEff_h["eta_matchingEff_h"]->Divide(eta_numerator_h["eta_numerator_h"], eta_denominator_h["eta_denominator_h"], 1, 1, "B") ;
+  pT_newSoftMuonEff_h["pT_newSoftMuonEff_h"]->Divide(pT_newSoftMuon_h["pT_newSoftMuon_h"], pT_denominator_h["pT_denominator_h"], 1, 1, "B") ;
+  eta_newSoftMuonEff_h["eta_newSoftMuonEff_h"]->Divide(eta_newSoftMuon_h["eta_newSoftMuon_h"], eta_denominator_h["eta_denominator_h"], 1, 1, "B") ;
+  for (Int_t i = 0; i<=3; i++) {
+    pT_matchingEff[i]["pT_matchingEff"]->Divide(pT_numerator[i]["pT_numerator"], pT_denominator[i]["pT_denominator"], 1, 1, "B") ;
+    pT_newSoftMuonEff[i]["pT_newSoftMuonEff"]->Divide(pT_newSoftMuon[i]["pT_newSoftMuon"], pT_denominator[i]["pT_denominator"], 1, 1, "B") ;
+  }
+}
+
+// ------------ method called when starting to processes a run  ------------
+/*
+void 
+HLTEffAnalyzer::beginRun(edm::Run const&, edm::EventSetup const&)
+{
+}
+*/
+
+// ------------ method called when ending the processing of a run  ------------
+/*
+void 
+HLTEffAnalyzer::endRun(edm::Run const&, edm::EventSetup const&)
+{
+}
+*/
+
+// ------------ method called when starting to processes a luminosity block  ------------
+/*
+void 
+HLTEffAnalyzer::beginLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&)
+{
+}
+*/
+
+// ------------ method called when ending the processing of a luminosity block  ------------
+/*
+void 
+HLTEffAnalyzer::endLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&)
+{
+}
+*/
+
+// ------------ method fills 'descriptions' with the allowed parameters for the module  ------------
+void
+HLTEffAnalyzer::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
+  //The following says we do not know what parameters are allowed so do no validation
+  // Please change this to state exactly what you do use, even if it is no parameters
+  edm::ParameterSetDescription desc;
+  desc.setUnknown();
+  descriptions.addDefault(desc);
+}
+
+//define this as a plug-in
+DEFINE_FWK_MODULE(HLTEffAnalyzer);

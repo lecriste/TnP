@@ -1,0 +1,65 @@
+import FWCore.ParameterSet.Config as cms
+
+process = cms.Process("testHLT")
+
+process.load('Configuration.StandardSequences.Services_cff')
+process.load('Configuration.EventContent.EventContent_cff')
+process.load("FWCore.MessageService.MessageLogger_cfi")
+
+process.load("Configuration.StandardSequences.MagneticField_cff")
+process.load("Configuration.StandardSequences.Geometry_cff")
+process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
+process.GlobalTag.globaltag = cms.string('PHYS14_25_V1::All')
+
+process.maxEvents = cms.untracked.PSet(
+    input = cms.untracked.int32( -1 ) # MINIAOD: 5500 events = 7Kb in 2', 350k events = 8Kb in 20' 
+    )
+
+process.source = cms.Source("PoolSource",
+                            skipEvents = cms.untracked.uint32( 0 ),
+                            fileNames = cms.untracked.vstring(
+        #'file:myfile.root'
+        #'/store/mc/Phys14DR/ZprimeToMuMu_M-5000_Tune4C_13TeV-pythia8/AODSIM/PU20bx25_tsg_PHYS14_25_V1-v1/00000/02BE6C0D-E46E-E411-89C3-003048F0E1B0.root',
+        # MINIAOD
+        '/store/mc/Phys14DR/JpsiToMuMu_JPsiPt7WithFSR_13TeV-pythia6-evtgen/MINIAODSIM/AVE30BX50_tsg_PHYS14_ST_V1-v2/00000/0033C66D-5E9A-E411-8F66-001E6739692D.root',
+        '/store/mc/Phys14DR/JpsiToMuMu_JPsiPt7WithFSR_13TeV-pythia6-evtgen/MINIAODSIM/AVE30BX50_tsg_PHYS14_ST_V1-v2/00000/124916F0-5E9A-E411-A9D9-002481E75ED0.root',
+        '/store/mc/Phys14DR/JpsiToMuMu_JPsiPt7WithFSR_13TeV-pythia6-evtgen/MINIAODSIM/AVE30BX50_tsg_PHYS14_ST_V1-v2/00000/581837DD-5E9A-E411-B71F-002590A3C954.root',
+        '/store/mc/Phys14DR/JpsiToMuMu_JPsiPt7WithFSR_13TeV-pythia6-evtgen/MINIAODSIM/AVE30BX50_tsg_PHYS14_ST_V1-v2/00000/6AEF2574-5E9A-E411-A45D-002590A3C984.root',
+        '/store/mc/Phys14DR/JpsiToMuMu_JPsiPt7WithFSR_13TeV-pythia6-evtgen/MINIAODSIM/AVE30BX50_tsg_PHYS14_ST_V1-v2/00000/96983F41-989A-E411-8955-002590A3C954.root',
+        '/store/mc/Phys14DR/JpsiToMuMu_JPsiPt7WithFSR_13TeV-pythia6-evtgen/MINIAODSIM/AVE30BX50_tsg_PHYS14_ST_V1-v2/00000/CA7C3DBA-5E9A-E411-8787-002481E14D64.root',
+        '/store/mc/Phys14DR/JpsiToMuMu_JPsiPt7WithFSR_13TeV-pythia6-evtgen/MINIAODSIM/AVE30BX50_tsg_PHYS14_ST_V1-v2/00000/EAAB7781-639A-E411-AA7A-002590A3C954.root',
+        '/store/mc/Phys14DR/JpsiToMuMu_JPsiPt7WithFSR_13TeV-pythia6-evtgen/MINIAODSIM/AVE30BX50_tsg_PHYS14_ST_V1-v2/10000/62002A98-C999-E411-B9B9-002481E75ED0.root',
+        '/store/mc/Phys14DR/JpsiToMuMu_JPsiPt7WithFSR_13TeV-pythia6-evtgen/MINIAODSIM/AVE30BX50_tsg_PHYS14_ST_V1-v2/10000/6A9F3E8C-C999-E411-ADBA-001E6739811A.root',
+        '/store/mc/Phys14DR/JpsiToMuMu_JPsiPt7WithFSR_13TeV-pythia6-evtgen/MINIAODSIM/AVE30BX50_tsg_PHYS14_ST_V1-v2/10000/9205F8A8-C999-E411-AAA3-0025B31E330A.root'
+        # AOD
+        #'/store/mc/Phys14DR/JpsiToMuMu_JPsiPt7WithFSR_13TeV-pythia6-evtgen/AODSIM/AVE30BX50_tsg_PHYS14_ST_V1-v2/00000/0242F210-A299-E411-9003-002481E1506A.root'
+    )
+)
+
+process.TFileService = cms.Service("TFileService",
+                                   fileName = cms.string("HLT.root"),
+                                   closeFileFast = cms.untracked.bool(True)
+                                   )
+
+process.analyzeHLT = cms.EDAnalyzer('HLTEffAnalyzer',
+                                    DataType = cms.untracked.string('SimData'),
+				    vtxTag = cms.InputTag("offlineSlimmedPrimaryVertices"), # miniAOD goodPrimaryVertices                                    
+				    #pruned = cms.InputTag("genParticles"),
+                                    pruned = cms.InputTag("prunedGenParticles"),                                    
+                                    #MuonCollectionLabel = cms.untracked.InputTag('muons','','RECO'),
+                                    MuonCollectionLabel = cms.InputTag("slimmedMuons"),
+                                    triggerEvent = cms.InputTag("hltTriggerSummaryAOD","","HLT"),
+                                    triggerResultsTag = cms.InputTag("TriggerResults","","HLT"),
+                                    Debug = cms.untracked.bool(True),
+				    #
+				    pT_bins = cms.vdouble(2, 2.75, 3, 3.25, 3.5, 3.75, 4, 4.5, 5, 6, 8, 10, 15, 20),
+				    eta_bins = cms.vdouble(-2.1, -1.6, -1.2, -0.9, -0.6, -0.3, -0.2, 0.2, 0.3, 0.6, 0.9, 1.2, 1.6, 2.1)
+#BPH:
+#J/psi: 2, 2.75, 3, 3.25, 3.5, 3.75, 4, 4.5, 5, 5.5, 6, 7, 9, 11, 14, 17, 20
+#Z: 2, 2.5, 2.75, 3, 3.25, 3.5, 3.75, 4, 4.5, 5, 5.5, 6, 7, 9, 11, 14, 17, 20
+#J/psi vs Z comparison: 5, 10, 14, 17, 20    
+                                )
+
+
+process.p = cms.Path(process.analyzeHLT)
+
