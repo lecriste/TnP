@@ -618,25 +618,28 @@ HLTEffAnalyzer::endJob()
   eta_matchingEff_h["eta_matchingEff_h"]->Divide(eta_numerator_h["eta_numerator_h"], eta_denominator_h["eta_denominator_h"], 1, 1, "B") ; 
   eta_matchingEff_h["eta_matchingEff_h"]->SetMinimum( 0.5 ) ;
 
-  pT_newSoftMuonEff_h["pT_newSoftMuonEff_h"]->Divide(pT_newSoftMuon_h["pT_newSoftMuon_h"], pT_denominator_h["pT_denominator_h"], 1, 1, "B") ; 
+  pT_newSoftMuonEff_h["pT_newSoftMuonEff_h"]->Divide(pT_newSoftMuon_h["pT_newSoftMuon_h"], pT_denominator_h["pT_denominator_h"], 1, 1, "B") ;
+  //pT_newSoftMuonEff_h["pT_newSoftMuonEff_h"]->SetMaximum( 1.05 ) ; 
   eta_newSoftMuonEff_h["eta_newSoftMuonEff_h"]->Divide(eta_newSoftMuon_h["eta_newSoftMuon_h"], eta_denominator_h["eta_denominator_h"], 1, 1, "B") ; 
   eta_newSoftMuonEff_h["eta_newSoftMuonEff_h"]->SetMinimum( 0.5 ) ;
   nVtx_newSoftMuonEff_h["nVtx_newSoftMuonEff_h"]->Divide(nVtx_newSoftMuon_h["nVtx_newSoftMuon_h"], nVtx_denominator_h["nVtx_denominator_h"], 1, 1, "B") ; 
-  nVtx_newSoftMuonEff_h["nVtx_newSoftMuonEff_h"]->SetMinimum( 0.5 ) ;
+  nVtx_newSoftMuonEff_h["nVtx_newSoftMuonEff_h"]->SetMinimum( 0.5 ) ;  nVtx_newSoftMuonEff_h["nVtx_newSoftMuonEff_h"]->SetMaximum( 1.3 ) ;
   // 8 < pT < 20
   eta_matchingEff[0]["eta_matchingEff"]->Divide(eta_numerator[0]["eta_numerator"], eta_denominator[0]["eta_denominator"], 1, 1, "B") ; 
   eta_matchingEff[0]["eta_matchingEff"]->SetMinimum( 0 ) ;
   eta_newSoftMuonEff[0]["eta_newSoftMuonEff"]->Divide(eta_newSoftMuon[0]["eta_newSoftMuon"], eta_denominator[0]["eta_denominator"], 1, 1, "B") ; 
-  eta_newSoftMuonEff[0]["eta_newSoftMuonEff"]->SetMinimum( 0.5 ) ;
+  eta_newSoftMuonEff[0]["eta_newSoftMuonEff"]->SetMinimum( 0.5 ) ; eta_newSoftMuonEff[0]["eta_newSoftMuonEff"]->SetMaximum( 1.3 ) ;
 
   for (Int_t i = 0; i<3; i++) {
     pT_matchingEff[i]["pT_matchingEff"]->Divide(pT_numerator[i]["pT_numerator"], pT_denominator[i]["pT_denominator"], 1, 1, "B") ; 
+    pT_matchingEff[i]["pT_matchingEff"]->SetMinimum( 0. ) ; //pT_matchingEff[i]["pT_matchingEff"]->SetMaximum( 1.05 ) ;
     pT_newSoftMuonEff[i]["pT_newSoftMuonEff"]->Divide(pT_newSoftMuon[i]["pT_newSoftMuon"], pT_denominator[i]["pT_denominator"], 1, 1, "B") ; 
+    pT_newSoftMuonEff[i]["pT_newSoftMuonEff"]->SetMinimum( 0 ) ; pT_newSoftMuonEff[i]["pT_newSoftMuonEff"]->SetMaximum( 1.8 ) ; // Ilse  
   }
 
   for (Int_t i = 0; i<5; i++) {
     nVtx_newSoftMuonEff[i]["nVtx_newSoftMuonEff"]->Divide(nVtx_newSoftMuon[i]["nVtx_newSoftMuon"], nVtx_denominator[i]["nVtx_denominator"], 1, 1, "B") ;
-    nVtx_newSoftMuonEff[i]["nVtx_newSoftMuonEff"]->SetMinimum( 0.5 ) ;
+    nVtx_newSoftMuonEff[i]["nVtx_newSoftMuonEff"]->SetMinimum( 0.5 ) ; nVtx_newSoftMuonEff[i]["nVtx_newSoftMuonEff"]->SetMaximum( 1.3 ) ;
   }
 
   // draw plots
@@ -652,40 +655,50 @@ HLTEffAnalyzer::endJob()
 
   // pT
   TString logX = "";
-  pT_newSoftMuonEff_h["pT_newSoftMuonEff_h"]->Draw() ;
+  pT_newSoftMuonEff_h["pT_newSoftMuonEff_h"]->SetLineWidth(2) ; pT_newSoftMuonEff_h["pT_newSoftMuonEff_h"]->SetMarkerStyle(3) ;
+  pT_newSoftMuonEff_h["pT_newSoftMuonEff_h"]->Draw("P") ; 
   for (Int_t i = 0; i<=1; i++) {
     gPad->SetLogx(i) ;
     gPad->GetLogx() == 0 ? logX = "" : logX = "_logx" ;
     effPlot->SaveAs(TString::Format( "plots/%s/%s%s.png", dir.Data(), pT_newSoftMuonEff_h["pT_newSoftMuonEff_h"]->GetName(), logX.Data() )) ;
-  }
+  } gPad->SetLogx(0) ;
+  //
   // eta
-  gPad->SetLogx(0) ; eta_newSoftMuonEff_h["eta_newSoftMuonEff_h"]->Draw() ;
+  eta_newSoftMuonEff_h["eta_newSoftMuonEff_h"]->SetLineWidth(2) ; eta_newSoftMuonEff_h["eta_newSoftMuonEff_h"]->SetMarkerStyle(3) ;
+  eta_newSoftMuonEff_h["eta_newSoftMuonEff_h"]->Draw("P") ;
   effPlot->SaveAs(TString::Format( "plots/%s/%s.png", dir.Data(), eta_newSoftMuonEff_h["eta_newSoftMuonEff_h"]->GetName() )) ;
+  //
   // nVtx
-  nVtx_newSoftMuonEff_h["nVtx_newSoftMuonEff_h"]->Draw() ;
+  nVtx_newSoftMuonEff_h["nVtx_newSoftMuonEff_h"]->SetLineWidth(2) ; nVtx_newSoftMuonEff_h["nVtx_newSoftMuonEff_h"]->SetMarkerStyle(3) ;
+  nVtx_newSoftMuonEff_h["nVtx_newSoftMuonEff_h"]->Draw("P") ;
   effPlot->SaveAs(TString::Format( "plots/%s/%s.png", dir.Data(), nVtx_newSoftMuonEff_h["nVtx_newSoftMuonEff_h"]->GetName() )) ;
+  //
   // eta with 8 < pT < 20
-  eta_newSoftMuonEff[0]["eta_newSoftMuonEff"]->Draw() ;
+  eta_newSoftMuonEff[0]["eta_newSoftMuonEff"]->SetLineWidth(2) ; eta_newSoftMuonEff[0]["eta_newSoftMuonEff"]->SetMarkerStyle(3) ;
+  eta_newSoftMuonEff[0]["eta_newSoftMuonEff"]->Draw("P") ;
   effPlot->SaveAs(TString::Format( "plots/%s/%s.png", dir.Data(), eta_newSoftMuonEff[0]["eta_newSoftMuonEff"]->GetName() )) ;
 
   for (Int_t j = 0; j < 3; j++) {
-    pT_matchingEff[j]["pT_matchingEff"]->Draw() ;
+    pT_matchingEff[j]["pT_matchingEff"]->SetLineWidth(2) ; pT_matchingEff[j]["pT_matchingEff"]->SetMarkerStyle(3) ;
+    pT_matchingEff[j]["pT_matchingEff"]->Draw("P") ;
     for (Int_t i=0; i<=1; i++) {
       gPad->SetLogx(i) ;
       gPad->GetLogx() == 0 ? logX = "" : logX = "_logx" ;
       effPlot->SaveAs(TString::Format( "plots/%s/%s%s.png", dir.Data(), pT_matchingEff[j]["pT_matchingEff"]->GetName(), logX.Data() )) ;
-    }
+    } gPad->SetLogx(0) ;
     //
-    pT_newSoftMuonEff[j]["pT_newSoftMuonEff"]->Draw() ;
+    pT_newSoftMuonEff[j]["pT_newSoftMuonEff"]->SetLineWidth(2) ; pT_newSoftMuonEff[j]["pT_newSoftMuonEff"]->SetMarkerStyle(3) ;
+    pT_newSoftMuonEff[j]["pT_newSoftMuonEff"]->Draw("P") ;
     for (Int_t i=0; i<=1; i++) {
       gPad->SetLogx(i) ;
       gPad->GetLogx() == 0 ? logX = "" : logX = "_logx" ;
       effPlot->SaveAs(TString::Format( "plots/%s/%s%s.png", dir.Data(), pT_newSoftMuonEff[j]["pT_newSoftMuonEff"]->GetName(), logX.Data() )) ;
-    }
+    } gPad->SetLogx(0) ;
   }
 
   for (Int_t i = 0; i < 5; i++) {
-    nVtx_newSoftMuonEff[i]["nVtx_newSoftMuonEff"]->Draw() ;
+    nVtx_newSoftMuonEff[i]["nVtx_newSoftMuonEff"]->SetLineWidth(2) ; nVtx_newSoftMuonEff[i]["nVtx_newSoftMuonEff"]->SetMarkerStyle(3) ;
+    nVtx_newSoftMuonEff[i]["nVtx_newSoftMuonEff"]->Draw("P") ;
     effPlot->SaveAs(TString::Format( "plots/%s/%s.png", dir.Data(), nVtx_newSoftMuonEff[i]["nVtx_newSoftMuonEff"]->GetName() )) ;
   }
 
