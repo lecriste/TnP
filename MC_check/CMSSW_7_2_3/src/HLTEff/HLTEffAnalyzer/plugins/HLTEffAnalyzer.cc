@@ -460,6 +460,7 @@ HLTEffAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	  //if ( muonMatched.patMuon->globalTrack().isNonnull() ) 
 	  if ( 1 
 	       && muon::isGoodMuon(*muonMatched.patMuon, muon::TMOneStationTight)
+	       //&& muon::isGoodMuon(*muonMatched.patMuon, muon::TMOneStationLoose) // remember to set Kai string
 	       && muonMatched.patMuon->track()->hitPattern().trackerLayersWithMeasurement() > 5
 	       && muonMatched.patMuon->track()->hitPattern().pixelLayersWithMeasurement() > 0
 	       && muonMatched.patMuon->innerTrack()->quality( TrackBase::highPurity )
@@ -653,6 +654,8 @@ HLTEffAnalyzer::endJob()
   else if (dataset == "AOD")
     dir = "AODSIM";
 
+  TString Kai = ""; //Kai = "TMOneStationLoose/";
+
   // pT
   TString logX = "";
   pT_newSoftMuonEff_h["pT_newSoftMuonEff_h"]->SetLineWidth(2) ; pT_newSoftMuonEff_h["pT_newSoftMuonEff_h"]->SetMarkerStyle(3) ;
@@ -660,23 +663,23 @@ HLTEffAnalyzer::endJob()
   for (Int_t i = 0; i<=1; i++) {
     gPad->SetLogx(i) ;
     gPad->GetLogx() == 0 ? logX = "" : logX = "_logx" ;
-    effPlot->SaveAs(TString::Format( "plots/%s/%s%s.png", dir.Data(), pT_newSoftMuonEff_h["pT_newSoftMuonEff_h"]->GetName(), logX.Data() )) ;
+    effPlot->SaveAs(TString::Format( "plots/%s/%s%s%s.png", dir.Data(), Kai.Data(), pT_newSoftMuonEff_h["pT_newSoftMuonEff_h"]->GetName(), logX.Data() )) ;
   } gPad->SetLogx(0) ;
   //
   // eta
   eta_newSoftMuonEff_h["eta_newSoftMuonEff_h"]->SetLineWidth(2) ; eta_newSoftMuonEff_h["eta_newSoftMuonEff_h"]->SetMarkerStyle(3) ;
   eta_newSoftMuonEff_h["eta_newSoftMuonEff_h"]->Draw("P") ;
-  effPlot->SaveAs(TString::Format( "plots/%s/%s.png", dir.Data(), eta_newSoftMuonEff_h["eta_newSoftMuonEff_h"]->GetName() )) ;
+  effPlot->SaveAs(TString::Format( "plots/%s/%s%s.png", dir.Data(), Kai.Data(), eta_newSoftMuonEff_h["eta_newSoftMuonEff_h"]->GetName() )) ;
   //
   // nVtx
   nVtx_newSoftMuonEff_h["nVtx_newSoftMuonEff_h"]->SetLineWidth(2) ; nVtx_newSoftMuonEff_h["nVtx_newSoftMuonEff_h"]->SetMarkerStyle(3) ;
   nVtx_newSoftMuonEff_h["nVtx_newSoftMuonEff_h"]->Draw("P") ;
-  effPlot->SaveAs(TString::Format( "plots/%s/%s.png", dir.Data(), nVtx_newSoftMuonEff_h["nVtx_newSoftMuonEff_h"]->GetName() )) ;
+  effPlot->SaveAs(TString::Format( "plots/%s/%s%s.png", dir.Data(), Kai.Data(), nVtx_newSoftMuonEff_h["nVtx_newSoftMuonEff_h"]->GetName() )) ;
   //
   // eta with 8 < pT < 20
   eta_newSoftMuonEff[0]["eta_newSoftMuonEff"]->SetLineWidth(2) ; eta_newSoftMuonEff[0]["eta_newSoftMuonEff"]->SetMarkerStyle(3) ;
   eta_newSoftMuonEff[0]["eta_newSoftMuonEff"]->Draw("P") ;
-  effPlot->SaveAs(TString::Format( "plots/%s/%s.png", dir.Data(), eta_newSoftMuonEff[0]["eta_newSoftMuonEff"]->GetName() )) ;
+  effPlot->SaveAs(TString::Format( "plots/%s/%s%s.png", dir.Data(), Kai.Data(), eta_newSoftMuonEff[0]["eta_newSoftMuonEff"]->GetName() )) ;
 
   for (Int_t j = 0; j < 3; j++) {
     pT_matchingEff[j]["pT_matchingEff"]->SetLineWidth(2) ; pT_matchingEff[j]["pT_matchingEff"]->SetMarkerStyle(3) ;
@@ -684,7 +687,7 @@ HLTEffAnalyzer::endJob()
     for (Int_t i=0; i<=1; i++) {
       gPad->SetLogx(i) ;
       gPad->GetLogx() == 0 ? logX = "" : logX = "_logx" ;
-      effPlot->SaveAs(TString::Format( "plots/%s/%s%s.png", dir.Data(), pT_matchingEff[j]["pT_matchingEff"]->GetName(), logX.Data() )) ;
+      effPlot->SaveAs(TString::Format( "plots/%s/%s%s%s.png", dir.Data(), Kai.Data(), pT_matchingEff[j]["pT_matchingEff"]->GetName(), logX.Data() )) ;
     } gPad->SetLogx(0) ;
     //
     pT_newSoftMuonEff[j]["pT_newSoftMuonEff"]->SetLineWidth(2) ; pT_newSoftMuonEff[j]["pT_newSoftMuonEff"]->SetMarkerStyle(3) ;
@@ -692,14 +695,14 @@ HLTEffAnalyzer::endJob()
     for (Int_t i=0; i<=1; i++) {
       gPad->SetLogx(i) ;
       gPad->GetLogx() == 0 ? logX = "" : logX = "_logx" ;
-      effPlot->SaveAs(TString::Format( "plots/%s/%s%s.png", dir.Data(), pT_newSoftMuonEff[j]["pT_newSoftMuonEff"]->GetName(), logX.Data() )) ;
+      effPlot->SaveAs(TString::Format( "plots/%s/%s%s%s.png", dir.Data(), Kai.Data(), pT_newSoftMuonEff[j]["pT_newSoftMuonEff"]->GetName(), logX.Data() )) ;
     } gPad->SetLogx(0) ;
   }
 
   for (Int_t i = 0; i < 5; i++) {
     nVtx_newSoftMuonEff[i]["nVtx_newSoftMuonEff"]->SetLineWidth(2) ; nVtx_newSoftMuonEff[i]["nVtx_newSoftMuonEff"]->SetMarkerStyle(3) ;
     nVtx_newSoftMuonEff[i]["nVtx_newSoftMuonEff"]->Draw("P") ;
-    effPlot->SaveAs(TString::Format( "plots/%s/%s.png", dir.Data(), nVtx_newSoftMuonEff[i]["nVtx_newSoftMuonEff"]->GetName() )) ;
+    effPlot->SaveAs(TString::Format( "plots/%s/%s%s.png", dir.Data(), Kai.Data(), nVtx_newSoftMuonEff[i]["nVtx_newSoftMuonEff"]->GetName() )) ;
   }
 
 }
