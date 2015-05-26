@@ -131,8 +131,8 @@ private:
   EDGetTokenT<View<GenParticle> > prunedGenToken_;
 
   //InputTag muonLabel_;
-  EDGetTokenT<pat::MuonCollection> muonToken_; // miniAOD
-  //EDGetTokenT<reco::MuonCollection> muonToken_; // AOD
+  //EDGetTokenT<pat::MuonCollection> muonToken_; // miniAOD
+  EDGetTokenT<reco::MuonCollection> muonToken_; // AOD
   InputTag triggerResultsTag_;
   InputTag triggerEvent_;
   HLTConfigProvider hltConfig;
@@ -184,8 +184,8 @@ prop2_(iConfig.getParameter<edm::ParameterSet>("propM2"))
     vtxHT_ = consumes< vector<reco::Vertex> >( iConfig.getParameter< InputTag >("vtxTag") ) ;
     prunedGenToken_ = consumes< View< GenParticle > >(iConfig.getParameter< InputTag >("pruned")) ;
     //muonLabel_ = iConfig.getUntrackedParameter<edm::InputTag>("MuonCollectionLabel");
-    muonToken_ = consumes<pat::MuonCollection>(iConfig.getParameter< InputTag >("MuonCollectionLabel")) ; // miniAOD
-    //muonToken_ = consumes<reco::MuonCollection>(iConfig.getParameter< InputTag >("MuonCollectionLabel")) ; // AOD
+    //muonToken_ = consumes<pat::MuonCollection>(iConfig.getParameter< InputTag >("MuonCollectionLabel")) ; // miniAOD
+    muonToken_ = consumes<reco::MuonCollection>(iConfig.getParameter< InputTag >("MuonCollectionLabel")) ; // AOD
     triggerResultsTag_ = iConfig.getParameter< InputTag >("triggerResultsTag");
     triggerEvent_ = iConfig.getParameter< InputTag >("triggerEvent");
 
@@ -222,23 +222,21 @@ HLTEffAnalyzer::~HLTEffAnalyzer()
 //=======================================================================
 void HLTEffAnalyzer::beginRun(edm::Run const& iRun, edm::EventSetup const& iSetup)
 {
-  /*
+  ///*
     bool changed = true;
     if (hltConfig.init(iRun, iSetup, triggerResultsTag_.process(), changed)) {
         // if init returns TRUE, initialisation has succeeded!
-        edm::LogInfo("TriggerBlock") << "HLT config with process name "
-        << triggerResultsTag_.process() << " successfully extracted";
+        edm::LogInfo("TriggerBlock") << "HLT config with process name " << triggerResultsTag_.process() << " successfully extracted";
     }
     else {
         // if init returns FALSE, initialisation has NOT succeeded, which indicates a problem
         // with the file and/or code and needs to be investigated!
-        edm::LogError("TriggerBlock") << "Error! HLT config extraction with process name "
-        << triggerResultsTag_.process() << " failed";
+        edm::LogError("TriggerBlock") << "Error! HLT config extraction with process name " << triggerResultsTag_.process() << " failed";
         // In this case, all access methods will return empty values!
     }
-  */
-  //prop1_.init(iSetup);
-  //prop2_.init(iSetup);
+    //*/
+  prop1_.init(iSetup);
+  prop2_.init(iSetup);
 }
 
 // ------------ method called once each job just before starting event loop  ------------
@@ -351,8 +349,8 @@ HLTEffAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     Handle<reco::TrackCollection> staTracks;
     iEvent.getByLabel("globalMuons", staTracks);
     */    
-    //Handle<reco::MuonCollection> muons; // AOD
-    Handle<pat::MuonCollection> muons; // miniAOD
+    Handle<reco::MuonCollection> muons; // AOD
+    //Handle<pat::MuonCollection> muons; // miniAOD
 
     //iEvent.getByLabel(muonLabel_, muons);
     iEvent.getByToken(muonToken_, muons);
@@ -401,8 +399,8 @@ HLTEffAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     //vector< const pat::Muon* > patMuon( muons->size(), 0) ;
     //vector< Float_t > deltaR_temp( muons->size(), 1.) ;
     struct matchingInfo {
-      const pat::Muon* patMuon = 0; // miniAOD
-      //const reco::Muon* patMuon = 0; // AOD
+      //const pat::Muon* patMuon = 0; // miniAOD
+      const reco::Muon* patMuon = 0; // AOD
       const Candidate* genMuon = 0;
       Float_t deltaR = 1.;
       Bool_t isNewSoftMuon = kFALSE ;
@@ -490,24 +488,22 @@ HLTEffAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     */
 
     for (UInt_t i = 1; i<matchedMuons.size(); i++) {
-      /*
+      
       // Propagate to station 1
-      cout <<"before" <<endl ;
       TrajectoryStateOnSurface prop1_M1 = prop1_.extrapolate( *dynamic_cast<const reco::RecoCandidate *>(matchedMuons[i].patMuon) );
-      cout <<"middle" <<endl ;
       TrajectoryStateOnSurface prop2_M1 = prop1_.extrapolate( *dynamic_cast<const reco::RecoCandidate *>(matchedMuons[i-1].patMuon) );
-      cout <<"after" <<endl ;
       if (prop1_M1.isValid() && prop2_M1.isValid()) {
 	Float_t dphiM1 = deltaPhi<float>(prop1_M1.globalPosition().phi(), prop2_M1.globalPosition().phi());
 	Float_t drM1 = hypot(dphiM1, std::abs<float>(prop1_M1.globalPosition().eta() - prop2_M1.globalPosition().eta()));
-      */
+      
         //if ( deltaR(*genMuon[j],*genMuon[j-1]) < deltaR_cowBoys ) {
-	//if ( drM1 < deltaR_cowBoys ) {
-        if ( deltaR(*matchedMuons[i].genMuon,*matchedMuons[i-1].genMuon) < deltaR_cowBoys ) {
+	if ( drM1 < deltaR_cowBoys ) {
+	//if ( deltaR(*matchedMuons[i].genMuon,*matchedMuons[i-1].genMuon) < deltaR_cowBoys ) {
+
 	  matchedMuons[i].isCowBoy = kTRUE ;
 	  matchedMuons[i-1].isCowBoy = kTRUE ;
 	}
-      //}
+      }
     }
     	
 
@@ -524,7 +520,7 @@ HLTEffAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	      pT_denominator_h["pT_denominator_h"]->Fill( matchedMuons[i].genMuon->pt() ) ;
 	      eta_denominator_h["eta_denominator_h"]->Fill( matchedMuons[i].genMuon->eta() ) ;
 	      nVtx_denominator_h["nVtx_denominator_h"]->Fill( goodPvCol.size() ) ;
-	      if (Debug) cout <<"\nafter first kind of fills" <<endl ;
+
 	      pT_numerator_h["pT_numerator_h"]->Fill( matchedMuons[i].patMuon->pt() ) ;
 	      eta_numerator_h["eta_numerator_h"]->Fill( matchedMuons[i].patMuon->eta() ) ;
 	      //nVtx_numerator_h["nVtx_numerator_h"]->Fill( ->size() ) ;
@@ -583,7 +579,7 @@ HLTEffAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     } // for (UInt_t i = 0; i<matchedMuons.size(); i++)
     if (Debug) cout <<"\nafter fills" <<endl;
 
-    /*
+    ///*
     edm::Handle<edm::TriggerResults> triggerResults;
     iEvent.getByLabel(triggerResultsTag_, triggerResults);
     
@@ -591,21 +587,23 @@ HLTEffAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     iEvent.getByLabel(triggerEvent_, handleTriggerEvent );
 
     const vector<string>& pathList = hltConfig.triggerNames();
-    if (Debug) cout <<"path size = " <<pathList.size() <<endl;
+    //if (Debug) cout <<"path size = " <<pathList.size() <<endl;
+    cout <<"path size = " <<pathList.size() <<endl;
     for (vector<string>::const_iterator it = pathList.begin(); it != pathList.end(); ++it) {
-        if (Debug) cout <<"path list x run " <<*it <<endl;  
-        }
+      //if (Debug) cout <<"path list x run " <<*it <<endl;  
+      cout <<"path list x run " <<*it <<endl;  
+    }
     
     const trigger::TriggerObjectCollection & toc(handleTriggerEvent->getObjects());
     
     for ( size_t ia = 0; ia < handleTriggerEvent->sizeFilters(); ++ ia) {
-        const trigger::Keys & k = handleTriggerEvent->filterKeys(ia);
-        for (trigger::Keys::const_iterator ki = k.begin(); ki !=k.end(); ++ki ) {
-            if (Debug) cout<<" trigger obj pt "<<toc[*ki].pt()<<" id "<< toc[*ki].id()<<" mass "<<toc[*ki].mass()<<endl;
-    
-        }
+      const trigger::Keys & k = handleTriggerEvent->filterKeys(ia);
+      for (trigger::Keys::const_iterator ki = k.begin(); ki !=k.end(); ++ki ) {
+	//if (Debug) cout<<" trigger obj pt "<<toc[*ki].pt()<<" id "<< toc[*ki].id()<<" mass "<<toc[*ki].mass()<<endl;
+	cout<<" trigger obj pt "<<toc[*ki].pt()<<" id "<< toc[*ki].id()<<" mass "<<toc[*ki].mass()<<endl;
+      }
     }
-    */
+    //*/
 }
 
 
@@ -615,32 +613,51 @@ HLTEffAnalyzer::endJob()
 { // efficiency calculations
   if (Debug) cout <<"\nbefore efficiencies calculations" <<endl;
 
-  pT_matchingEff_h["pT_matchingEff_h"]->Divide(pT_numerator_h["pT_numerator_h"], pT_denominator_h["pT_denominator_h"], 1, 1, "B") ; 
-  eta_matchingEff_h["eta_matchingEff_h"]->Divide(eta_numerator_h["eta_numerator_h"], eta_denominator_h["eta_denominator_h"], 1, 1, "B") ; 
-  eta_matchingEff_h["eta_matchingEff_h"]->SetMinimum( 0.5 ) ;
+  if ( pT_denominator_h["pT_denominator_h"]->GetEntries() )
+    pT_matchingEff_h["pT_matchingEff_h"]->Divide(pT_numerator_h["pT_numerator_h"], pT_denominator_h["pT_denominator_h"], 1, 1, "B") ; 
+  if ( eta_denominator_h["eta_denominator_h"]->GetEntries() ) {
+    eta_matchingEff_h["eta_matchingEff_h"]->Divide(eta_numerator_h["eta_numerator_h"], eta_denominator_h["eta_denominator_h"], 1, 1, "B") ; 
+    eta_matchingEff_h["eta_matchingEff_h"]->SetMinimum( 0.5 ) ;
+  } 
 
-  pT_newSoftMuonEff_h["pT_newSoftMuonEff_h"]->Divide(pT_newSoftMuon_h["pT_newSoftMuon_h"], pT_denominator_h["pT_denominator_h"], 1, 1, "B") ;
-  //pT_newSoftMuonEff_h["pT_newSoftMuonEff_h"]->SetMaximum( 1.05 ) ; 
-  eta_newSoftMuonEff_h["eta_newSoftMuonEff_h"]->Divide(eta_newSoftMuon_h["eta_newSoftMuon_h"], eta_denominator_h["eta_denominator_h"], 1, 1, "B") ; 
-  eta_newSoftMuonEff_h["eta_newSoftMuonEff_h"]->SetMinimum( 0.5 ) ;
-  nVtx_newSoftMuonEff_h["nVtx_newSoftMuonEff_h"]->Divide(nVtx_newSoftMuon_h["nVtx_newSoftMuon_h"], nVtx_denominator_h["nVtx_denominator_h"], 1, 1, "B") ; 
-  nVtx_newSoftMuonEff_h["nVtx_newSoftMuonEff_h"]->SetMinimum( 0.5 ) ;  nVtx_newSoftMuonEff_h["nVtx_newSoftMuonEff_h"]->SetMaximum( 1.3 ) ;
+  if ( pT_denominator_h["pT_denominator_h"]->GetEntries() ) {
+    pT_newSoftMuonEff_h["pT_newSoftMuonEff_h"]->Divide(pT_newSoftMuon_h["pT_newSoftMuon_h"], pT_denominator_h["pT_denominator_h"], 1, 1, "B") ;
+    //pT_newSoftMuonEff_h["pT_newSoftMuonEff_h"]->SetMaximum( 1.05 ) ; 
+  }
+  if ( eta_denominator_h["eta_denominator_h"]->GetEntries() ) {
+    eta_newSoftMuonEff_h["eta_newSoftMuonEff_h"]->Divide(eta_newSoftMuon_h["eta_newSoftMuon_h"], eta_denominator_h["eta_denominator_h"], 1, 1, "B") ; 
+    eta_newSoftMuonEff_h["eta_newSoftMuonEff_h"]->SetMinimum( 0.5 ) ;
+  }
+  if ( nVtx_denominator_h["nVtx_denominator_h"]->GetEntries() ) {
+    nVtx_newSoftMuonEff_h["nVtx_newSoftMuonEff_h"]->Divide(nVtx_newSoftMuon_h["nVtx_newSoftMuon_h"], nVtx_denominator_h["nVtx_denominator_h"], 1, 1, "B") ; 
+    nVtx_newSoftMuonEff_h["nVtx_newSoftMuonEff_h"]->SetMinimum( 0.5 ) ;  nVtx_newSoftMuonEff_h["nVtx_newSoftMuonEff_h"]->SetMaximum( 1.3 ) ;
+  }
   // 8 < pT < 20
-  eta_matchingEff[0]["eta_matchingEff"]->Divide(eta_numerator[0]["eta_numerator"], eta_denominator[0]["eta_denominator"], 1, 1, "B") ; 
-  eta_matchingEff[0]["eta_matchingEff"]->SetMinimum( 0 ) ;
-  eta_newSoftMuonEff[0]["eta_newSoftMuonEff"]->Divide(eta_newSoftMuon[0]["eta_newSoftMuon"], eta_denominator[0]["eta_denominator"], 1, 1, "B") ; 
-  eta_newSoftMuonEff[0]["eta_newSoftMuonEff"]->SetMinimum( 0.5 ) ; eta_newSoftMuonEff[0]["eta_newSoftMuonEff"]->SetMaximum( 1.3 ) ;
+  if ( eta_denominator[0]["eta_denominator"]->GetEntries() ) {
+    eta_matchingEff[0]["eta_matchingEff"]->Divide(eta_numerator[0]["eta_numerator"], eta_denominator[0]["eta_denominator"], 1, 1, "B") ; 
+    eta_matchingEff[0]["eta_matchingEff"]->SetMinimum( 0 ) ;
+  }
+  if ( eta_denominator[0]["eta_denominator"]->GetEntries() ) {
+    eta_newSoftMuonEff[0]["eta_newSoftMuonEff"]->Divide(eta_newSoftMuon[0]["eta_newSoftMuon"], eta_denominator[0]["eta_denominator"], 1, 1, "B") ; 
+    eta_newSoftMuonEff[0]["eta_newSoftMuonEff"]->SetMinimum( 0.5 ) ; eta_newSoftMuonEff[0]["eta_newSoftMuonEff"]->SetMaximum( 1.3 ) ;
+  }
 
   for (Int_t i = 0; i<3; i++) {
-    pT_matchingEff[i]["pT_matchingEff"]->Divide(pT_numerator[i]["pT_numerator"], pT_denominator[i]["pT_denominator"], 1, 1, "B") ; 
-    pT_matchingEff[i]["pT_matchingEff"]->SetMinimum( 0. ) ; //pT_matchingEff[i]["pT_matchingEff"]->SetMaximum( 1.05 ) ;
-    pT_newSoftMuonEff[i]["pT_newSoftMuonEff"]->Divide(pT_newSoftMuon[i]["pT_newSoftMuon"], pT_denominator[i]["pT_denominator"], 1, 1, "B") ; 
-    pT_newSoftMuonEff[i]["pT_newSoftMuonEff"]->SetMinimum( 0 ) ; pT_newSoftMuonEff[i]["pT_newSoftMuonEff"]->SetMaximum( 1.8 ) ; // Ilse  
+    if ( pT_denominator[i]["pT_denominator"]->GetEntries() ) {
+      pT_matchingEff[i]["pT_matchingEff"]->Divide(pT_numerator[i]["pT_numerator"], pT_denominator[i]["pT_denominator"], 1, 1, "B") ; 
+      pT_matchingEff[i]["pT_matchingEff"]->SetMinimum( 0. ) ; //pT_matchingEff[i]["pT_matchingEff"]->SetMaximum( 1.05 ) ;
+    }
+    if ( pT_denominator[i]["pT_denominator"]->GetEntries() ) {
+      pT_newSoftMuonEff[i]["pT_newSoftMuonEff"]->Divide(pT_newSoftMuon[i]["pT_newSoftMuon"], pT_denominator[i]["pT_denominator"], 1, 1, "B") ; 
+      pT_newSoftMuonEff[i]["pT_newSoftMuonEff"]->SetMinimum( 0 ) ; pT_newSoftMuonEff[i]["pT_newSoftMuonEff"]->SetMaximum( 1.8 ) ; // Ilse  
+    }
   }
 
   for (Int_t i = 0; i<5; i++) {
-    nVtx_newSoftMuonEff[i]["nVtx_newSoftMuonEff"]->Divide(nVtx_newSoftMuon[i]["nVtx_newSoftMuon"], nVtx_denominator[i]["nVtx_denominator"], 1, 1, "B") ;
-    nVtx_newSoftMuonEff[i]["nVtx_newSoftMuonEff"]->SetMinimum( 0.5 ) ; nVtx_newSoftMuonEff[i]["nVtx_newSoftMuonEff"]->SetMaximum( 1.3 ) ;
+    if ( nVtx_denominator[i]["nVtx_denominator"]->GetEntries() ) {
+      nVtx_newSoftMuonEff[i]["nVtx_newSoftMuonEff"]->Divide(nVtx_newSoftMuon[i]["nVtx_newSoftMuon"], nVtx_denominator[i]["nVtx_denominator"], 1, 1, "B") ;
+      nVtx_newSoftMuonEff[i]["nVtx_newSoftMuonEff"]->SetMinimum( 0.5 ) ; nVtx_newSoftMuonEff[i]["nVtx_newSoftMuonEff"]->SetMaximum( 1.3 ) ;
+    }
   }
 
   // draw plots
@@ -682,6 +699,8 @@ HLTEffAnalyzer::endJob()
   effPlot->SaveAs(TString::Format( "plots/%s/%s%s.png", dir.Data(), Kai.Data(), eta_newSoftMuonEff[0]["eta_newSoftMuonEff"]->GetName() )) ;
 
   for (Int_t j = 0; j < 3; j++) {
+    // matching eff
+    /*
     pT_matchingEff[j]["pT_matchingEff"]->SetLineWidth(2) ; pT_matchingEff[j]["pT_matchingEff"]->SetMarkerStyle(3) ;
     pT_matchingEff[j]["pT_matchingEff"]->Draw("P") ;
     for (Int_t i=0; i<=1; i++) {
@@ -689,7 +708,8 @@ HLTEffAnalyzer::endJob()
       gPad->GetLogx() == 0 ? logX = "" : logX = "_logx" ;
       effPlot->SaveAs(TString::Format( "plots/%s/%s%s%s.png", dir.Data(), Kai.Data(), pT_matchingEff[j]["pT_matchingEff"]->GetName(), logX.Data() )) ;
     } gPad->SetLogx(0) ;
-    //
+    */
+    // newSoftMuon eff
     pT_newSoftMuonEff[j]["pT_newSoftMuonEff"]->SetLineWidth(2) ; pT_newSoftMuonEff[j]["pT_newSoftMuonEff"]->SetMarkerStyle(3) ;
     pT_newSoftMuonEff[j]["pT_newSoftMuonEff"]->Draw("P") ;
     for (Int_t i=0; i<=1; i++) {
