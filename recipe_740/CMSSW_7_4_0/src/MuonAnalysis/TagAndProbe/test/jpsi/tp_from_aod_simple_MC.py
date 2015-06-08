@@ -10,7 +10,7 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 100
 process.source = cms.Source("PoolSource", 
     fileNames = cms.untracked.vstring(),
 )
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32( 100 ) )    
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32( -1 ) )    
 
 
 process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
@@ -201,6 +201,11 @@ process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
 
 process.load("MuonAnalysis.TagAndProbe.muon.tag_probe_muon_extraIso_cfi")
 
+#process.load("TrackPropagation.SteppingHelixPropagator.SteppingHelixPropagatorAny_cfi")
+#process.load("TrackPropagation.SteppingHelixPropagator.SteppingHelixPropagatorAlong_cfi")
+#process.load("TrackPropagation.SteppingHelixPropagator.SteppingHelixPropagatorOpposite_cfi")
+#process.load("RecoMuon.DetLayers.muonDetLayerGeometry_cfi")
+
 process.tnpSimpleSequence = cms.Sequence(
     process.tagMuons   * process.tagMuonsMCMatch   +
     process.oneTag     +
@@ -209,7 +214,7 @@ process.tnpSimpleSequence = cms.Sequence(
     process.onePair    +
     process.muonDxyPVdzmin +
     process.nverticesModule +
-    #process.tagProbeSeparation +
+    process.tagProbeSeparation +
     process.computeCorrectedIso + 
     process.probeMultiplicity + 
     process.splitTrackTagger +
