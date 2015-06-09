@@ -40,7 +40,7 @@ class NearbyMuonsInfo : public edm::EDProducer {
       virtual void produce(edm::Event & iEvent, const edm::EventSetup & iSetup);
       virtual void beginRun(edm::Run & iRun, const edm::EventSetup & iSetup);
     private:
-	//virtual void beginRun(edm::Run & iRun, const edm::EventSetup & iSetup);
+	//virtual void beginRun(edm::Run & iRun, const edm::EventSetup & iSetup) override ;
         edm::InputTag src_;
         PropagateToMuon prop1_, prop2_;
 
@@ -86,6 +86,9 @@ NearbyMuonsInfo::produce(edm::Event & iEvent, const edm::EventSetup & iSetup) {
     iEvent.getByLabel(src_, src);
     edm::ESHandle<MagneticField> theMF;
     iSetup.get<IdealMagneticFieldRecord>().get(theMF);
+
+    prop1_.init(iSetup);
+    prop2_.init(iSetup);
 
     size_t n = src->size();
     std::vector<float> dphiVtxTimesQ(n), drVtx(n), DCA(n, -999);

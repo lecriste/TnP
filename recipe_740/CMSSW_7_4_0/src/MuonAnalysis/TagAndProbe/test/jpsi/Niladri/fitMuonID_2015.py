@@ -22,7 +22,7 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 
 process.source = cms.Source("EmptySource")
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100000) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )
 
 Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     NumCPU = cms.uint32(1),
@@ -65,10 +65,16 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         PF = cms.vstring("PF", "dummy[pass=1,fail=0]"),
         Track_HP = cms.vstring("Track_HP", "dummy[pass=1,fail=0]"),
         Tight2012 = cms.vstring("Tight Muon", "dummy[pass=1,fail=0]"),
-        Mu5_Track2_Jpsi_TK = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
-        Mu7_Track7_Jpsi_TK = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
-        tag_Mu5_Track2_Jpsi_MU = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
-        tag_Mu7_Track7_Jpsi_MU = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+	# old
+        #Mu5_Track2_Jpsi_TK = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        #Mu7_Track7_Jpsi_TK = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        #tag_Mu5_Track2_Jpsi_MU = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        #tag_Mu7_Track7_Jpsi_MU = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+	# new
+        Mu7p5_Track2_Jpsi_TK = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        #Mu7_Track7_Jpsi_TK = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        tag_Mu7p5_Track2_Jpsi_MU = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        #tag_Mu7_Track7_Jpsi_MU = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
         ## added 06/06/15
 	#Mu8 = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
 	#Mu17 = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
@@ -78,12 +84,13 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         tag_DoubleMu17TkMu8_TkMu8leg = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
 	#
         mcTrue = cms.vstring("MC true", "dummy[true=1,false=0]"),
-        Mu5_Track0_Jpsi_TK = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
-        Mu3_Track3_Jpsi_TK = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
-        Mu5_Track5_Jpsi_TK = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
-        tag_Mu5_Track0_Jpsi_MU = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
-        tag_Mu3_Track3_Jpsi_MU = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
-        tag_Mu5_Track5_Jpsi_MU = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+	# old
+        #Mu5_Track0_Jpsi_TK = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        #Mu3_Track3_Jpsi_TK = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        #Mu5_Track5_Jpsi_TK = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        #tag_Mu5_Track0_Jpsi_MU = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        #tag_Mu3_Track3_Jpsi_MU = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        #tag_Mu5_Track5_Jpsi_MU = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
     ),
 
 
@@ -143,8 +150,8 @@ SEPARATED = cms.PSet(pair_drM1 = cms.vdouble(0.5,10),
 
 PT_ETA_BINS = cms.PSet(SEPARATED,
                        #pt     = cms.vdouble(2, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.5, 5.0, 5.5, 6.0, 7.0, 9.0, 11.0, 14.0, 17.0, 20.0, 25., 30., 35., 40.),
-                       #pt = cms.vdouble(2.0, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.5, 5.0, 6.0, 8.0, 10.0, 15.0, 20.0),
-                       pt = cms.vdouble(2.0,3.0,4.0),
+                       pt = cms.vdouble(2.0, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.5, 5.0, 6.0, 8.0, 10.0, 15.0, 20.0),
+                       #pt = cms.vdouble(2.0,3.0,4.0),
                        abseta = cms.vdouble(0.0,0.9)
                        #pt = cms.vdouble(2.0, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.5, 5.0, 6.0, 8.0, 10.0, 20.0),
                        #abseta = cms.vdouble(0.9,1.2)
@@ -202,14 +209,13 @@ IDS = ["newSoft2012"]
 #IDS = [ "Glb", "TMOST", "VBTF", "PF" ]
 #TRIGS = [ (2,'Mu5_Track2'), (7,'Mu7_Track7') ]
 #TRIGS = [ (0,'Mu8'), (0,'Mu17') ] 
-TRIGS = [ (0,'DoubleMu17TkMu8_TkMu8leg') ]
-#TRIGS = [ (2,'Mu7p5_L2Mu2_Jpsi'), (2,'Mu7p5_Track2_Jpsi') ]
-
+#TRIGS = [ (0,'DoubleMu17TkMu8_TkMu8leg') ]
+TRIGS = [ (2,'Mu7p5_L2Mu2_Jpsi'), (2,'Mu7p5_Track2_Jpsi') ]
 
 if "mc" in scenario:
-     #process.TnP_MuonID.InputFileNames = [PREFIX+'tnpJPsi_MC53X.root']
-     process.TnP_MuonID.InputFileNames = ['tnpJPsi_MC_v2_JpsiMuMu.root']
-#     process.TnP_MuonID.InputFileNames = ['tnpJpsi_MC.root']
+     process.TnP_MuonID.InputFileNames = [PREFIX+'tnpJPsi_MC53X.root']
+     #process.TnP_MuonID.InputFileNames = ['tnpJPsi_MC_v2_JpsiMuMu.root']
+     #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC.root']
      #process.TnP_MuonID.InputFileNames = ['tnpJPsi_MC_v2_BuToJpsiK.root']
 
 #ALLBINS =  [("plateau_abseta",PLATEAU_ABSETA)]

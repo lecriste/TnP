@@ -275,7 +275,8 @@ process.tpTreeSta = process.tpTree.clone(
     ),
     flags = cms.PSet(
         outerValidHits = cms.string("outerTrack.numberOfValidHits > 0"),
-        Mu5_L2Mu3_Jpsi_L2 = LowPtTriggerFlagsEfficienciesProbe.Mu5_L2Mu3_Jpsi_L2,
+        #Mu5_L2Mu3_Jpsi_L2 = LowPtTriggerFlagsEfficienciesProbe.Mu5_L2Mu3_Jpsi_L2,
+        Mu7p5_L2Mu2_Jpsi_L2 = LowPtTriggerFlagsEfficienciesProbe.Mu7p5_L2Mu2_Jpsi_L2,
         TM  = cms.string("isTrackerMuon"),
         Glb = cms.string("isGlobalMuon"),
     ),
@@ -283,7 +284,8 @@ process.tpTreeSta = process.tpTree.clone(
         nVertices = cms.InputTag("nverticesModule"),
     ),
     tagFlags = cms.PSet(
-        Mu5_L2Mu3_Jpsi_MU = LowPtTriggerFlagsEfficienciesTag.Mu5_L2Mu3_Jpsi_MU,
+        #Mu5_L2Mu3_Jpsi_MU = LowPtTriggerFlagsEfficienciesTag.Mu5_L2Mu3_Jpsi_MU,
+        Mu7p5_L2Mu2_Jpsi_MU = LowPtTriggerFlagsEfficienciesTag.Mu7p5_L2Mu2_Jpsi_MU,
     ),
     pairVariables = cms.PSet(),
     pairFlags     = cms.PSet(),
