@@ -96,27 +96,27 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
 
     Expressions = cms.PSet(
      LooseVar = cms.vstring("LooseVar", "PF==1 && (Glb==1 || TM==1) ", "PF", "Glb", "TM"),
-     SoftVar = cms.vstring("SoftVar", "TMOST ==1 && tkTrackerLay > 5 && tkPixelLay > 1 && tkChi2 < 1.8 && abs(dzPV) < 30 && abs(dB) < 3", "TMOST","tkTrackerLay", "tkPixelLay", "tkChi2", "dzPV", "dB"),
+     oldSoftVar = cms.vstring("oldSoftVar", "TMOST ==1 && tkTrackerLay > 5 && tkPixelLay > 1 && tkChi2 < 1.8 && abs(dzPV) < 30 && abs(dB) < 3", "TMOST","tkTrackerLay", "tkPixelLay", "tkChi2", "dzPV", "dB"),
      #without chi2 cut
-     #SoftVar = cms.vstring("SoftVar", "TMOST ==1 && tkTrackerLay > 5 && tkPixelLay > 1 && abs(dzPV) < 30 && abs(dB) < 3", "TMOST","tkTrackerLay", "tkPixelLay", "dzPV", "dB"),
+     #oldSoftVar = cms.vstring("oldSoftVar", "TMOST ==1 && tkTrackerLay > 5 && tkPixelLay > 1 && abs(dzPV) < 30 && abs(dB) < 3", "TMOST","tkTrackerLay", "tkPixelLay", "dzPV", "dB"),
      #changed cuts
-     #SoftVar = cms.vstring("SoftVar", "TMOST ==1", "TMOST"),
-     #SoftVar = cms.vstring("SoftVar", "TMOST ==1 && abs(dzPV) < 20", "TMOST", "dzPV"),
-     #SoftVar = cms.vstring("SoftVar", "TMOST ==1 && abs(dzPV) < 20 && abs(dB) < 0.3", "TMOST", "dzPV", "dB"),
-     #SoftVar = cms.vstring("SoftVar", "TMOST ==1 && abs(dzPV) < 20 && abs(dB) < 0.3 && tkPixelLay > 0", "TMOST", "dzPV", "dB", "tkPixelLay"),
-     #SoftVar = cms.vstring("SoftVar", "TMOST ==1 && abs(dzPV) < 20 && abs(dB) < 0.3 && tkPixelLay > 0 && tkTrackerLay > 5", "TMOST", "dzPV", "dB", "tkPixelLay", "tkTrackerLay"),
+     #oldSoftVar = cms.vstring("oldSoftVar", "TMOST ==1", "TMOST"),
+     #oldSoftVar = cms.vstring("oldSoftVar", "TMOST ==1 && abs(dzPV) < 20", "TMOST", "dzPV"),
+     #oldSoftVar = cms.vstring("oldSoftVar", "TMOST ==1 && abs(dzPV) < 20 && abs(dB) < 0.3", "TMOST", "dzPV", "dB"),
+     #oldSoftVar = cms.vstring("oldSoftVar", "TMOST ==1 && abs(dzPV) < 20 && abs(dB) < 0.3 && tkPixelLay > 0", "TMOST", "dzPV", "dB", "tkPixelLay"),
+     #oldSoftVar = cms.vstring("oldSoftVar", "TMOST ==1 && abs(dzPV) < 20 && abs(dB) < 0.3 && tkPixelLay > 0 && tkTrackerLay > 5", "TMOST", "dzPV", "dB", "tkPixelLay", "tkTrackerLay"),
      #newID
-     newSoftVar = cms.vstring("newSoftVar", "TMOST ==1 && tkTrackerLay > 5 && tkPixelLay > 0 && abs(dzPV) < 20 && abs(dB) < 0.3 && Track_HP == 1", "TMOST","tkTrackerLay", "tkPixelLay", "dzPV", "dB", "Track_HP"),
+     SoftVar = cms.vstring("SoftVar", "TMOST ==1 && tkTrackerLay > 5 && tkPixelLay > 0 && abs(dzPV) < 20 && abs(dB) < 0.3 && Track_HP == 1", "TMOST","tkTrackerLay", "tkPixelLay", "dzPV", "dB", "Track_HP"),
      ),
 
     Cuts = cms.PSet(
      Loose2012 = cms.vstring("Loose", "LooseVar", "0.5"),
-     Soft2012 = cms.vstring("Soft", "SoftVar", "0.5"),
-     newSoft2012 = cms.vstring("newSoft", "newSoftVar", "0.5"),
+     Soft2012 = cms.vstring("oldSoft", "oldSoftVar", "0.5"),
+     newSoft2012 = cms.vstring("Soft", "SoftVar", "0.5"),
     ),
 
     PDFs = cms.PSet(
-        gaussPlusExpo = cms.vstring(
+        signalPlusBkg = cms.vstring(
             "CBShape::signal(mass, mean[3.1,3.0,3.2], sigma[0.05,0.02,0.06], alpha[3., 0.5, 5.], n[1, 0.1, 100.])",
             #"Chebychev::backgroundPass(mass, {cPass[0,-0.5,0.5], cPass2[0,-0.5,0.5]})",
             #"Chebychev::backgroundFail(mass, {cFail[0,-0.5,0.5], cFail2[0,-0.5,0.5]})",
@@ -213,9 +213,9 @@ IDS = ["newSoft2012"]
 TRIGS = [ (2,'Mu7p5_L2Mu2_Jpsi'), (2,'Mu7p5_Track2_Jpsi') ]
 
 if "mc" in scenario:
-     process.TnP_MuonID.InputFileNames = [PREFIX+'tnpJPsi_MC53X.root']
+     #process.TnP_MuonID.InputFileNames = [PREFIX+'tnpJPsi_MC53X.root']
      #process.TnP_MuonID.InputFileNames = ['tnpJPsi_MC_v2_JpsiMuMu.root']
-     #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC.root']
+     process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC.root']
      #process.TnP_MuonID.InputFileNames = ['tnpJPsi_MC_v2_BuToJpsiK.root']
 
 #ALLBINS =  [("plateau_abseta",PLATEAU_ABSETA)]
@@ -239,7 +239,7 @@ for ID in IDS:
                else:
                     #if TRIG != "Mu7_Track7": continue # use only one trigger except for turn-on
                     ##if TRIG != "Mu5_Track2": continue # use only one trigger except for turn-on
-                    if TRIG != "Mu17": continue # use only one trigger except for turn-on
+                    if TRIG != "Mu7p5_Track2": continue # use only one trigger except for turn-on
                     #if TRIG != "Mu7p5_L2Mu2_Jpsi": continue # use only one trigger except for turn-on 
                DEN = B.clone()
                if hasattr(DEN, "pt"):
@@ -253,7 +253,7 @@ for ID in IDS:
                    EfficiencyCategoryAndState = cms.vstring(ID,"above"),     # ??
                    UnbinnedVariables = cms.vstring("mass"),
                    BinnedVariables = DEN,
-                   BinToPDFmap = cms.vstring("gaussPlusExpo")
+                   BinToPDFmap = cms.vstring("signalPlusBkg")
                ))
                #if "plateau" in X: module.SaveWorkspace = True
                ## mc efficiency, if scenario is mc
