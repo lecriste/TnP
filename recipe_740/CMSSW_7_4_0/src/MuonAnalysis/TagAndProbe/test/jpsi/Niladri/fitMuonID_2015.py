@@ -106,13 +106,13 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
      #oldSoftVar = cms.vstring("oldSoftVar", "TMOST ==1 && abs(dzPV) < 20 && abs(dB) < 0.3 && tkPixelLay > 0", "TMOST", "dzPV", "dB", "tkPixelLay"),
      #oldSoftVar = cms.vstring("oldSoftVar", "TMOST ==1 && abs(dzPV) < 20 && abs(dB) < 0.3 && tkPixelLay > 0 && tkTrackerLay > 5", "TMOST", "dzPV", "dB", "tkPixelLay", "tkTrackerLay"),
      #newID
-     SoftVar = cms.vstring("SoftVar", "TMOST ==1 && tkTrackerLay > 5 && tkPixelLay > 0 && abs(dzPV) < 20 && abs(dB) < 0.3 && Track_HP == 1", "TMOST","tkTrackerLay", "tkPixelLay", "dzPV", "dB", "Track_HP"),
+     newSoftVar = cms.vstring("SoftVar", "TMOST ==1 && tkTrackerLay > 5 && tkPixelLay > 0 && abs(dzPV) < 20 && abs(dB) < 0.3 && Track_HP == 1", "TMOST","tkTrackerLay", "tkPixelLay", "dzPV", "dB", "Track_HP"),
      ),
 
     Cuts = cms.PSet(
      Loose2012 = cms.vstring("Loose", "LooseVar", "0.5"),
      Soft2012 = cms.vstring("oldSoft", "oldSoftVar", "0.5"),
-     newSoft2012 = cms.vstring("Soft", "SoftVar", "0.5"),
+     newSoft2012 = cms.vstring("Soft", "newSoftVar", "0.5"),
     ),
 
     PDFs = cms.PSet(
