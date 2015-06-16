@@ -105,12 +105,14 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
      #oldSoftVar = cms.vstring("oldSoftVar", "TMOST ==1 && abs(dzPV) < 20 && abs(dB) < 0.3", "TMOST", "dzPV", "dB"),
      #oldSoftVar = cms.vstring("oldSoftVar", "TMOST ==1 && abs(dzPV) < 20 && abs(dB) < 0.3 && tkPixelLay > 0", "TMOST", "dzPV", "dB", "tkPixelLay"),
      #oldSoftVar = cms.vstring("oldSoftVar", "TMOST ==1 && abs(dzPV) < 20 && abs(dB) < 0.3 && tkPixelLay > 0 && tkTrackerLay > 5", "TMOST", "dzPV", "dB", "tkPixelLay", "tkTrackerLay"),
+     TightVar = cms.vstring("TightVar", "PF==1 && Glb==1", "tkChi2 < 10", "glbValidMuHits > 8", "numberOfMatchedStations > 1", "dB < 0.2", "tkValidPixelHits > 0", "tkTrackerLay > 5", "PF", "Glb", "tkChi2", "glbValidMuHits", "numberOfMatchedStations", "dB", "tkValidPixelHits", "tkTrackerLay" ),
      #newID
      SoftVar = cms.vstring("SoftVar", "TMOST ==1 && tkTrackerLay > 5 && tkPixelLay > 0 && abs(dzPV) < 20 && abs(dB) < 0.3 && Track_HP == 1", "TMOST","tkTrackerLay", "tkPixelLay", "dzPV", "dB", "Track_HP"),
      ),
 
     Cuts = cms.PSet(
      Loose2012 = cms.vstring("Loose", "LooseVar", "0.5"),
+     Tight2012 = cms.vstring("Tight", "TightVar", "0.5"),
      Soft2012 = cms.vstring("oldSoft", "oldSoftVar", "0.5"),
      newSoft2012 = cms.vstring("Soft", "SoftVar", "0.5"),
     ),
