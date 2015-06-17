@@ -39,7 +39,16 @@ elif "CMSSW_7_4_" in os.environ['CMSSW_VERSION']:
     process.source.fileNames = [
         '/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/60000/183C894F-C008-E511-AFB5-0025905A606A.root',
         '/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/60000/3615E328-D708-E511-B2F9-003048FFD752.root',
-        '/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/60000/561562A2-D708-E511-B06E-0025905B8576.root'
+        '/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/60000/561562A2-D708-E511-B06E-0025905B8576.root',
+        '/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/60000/6E145BC4-D708-E511-99CF-002481E94BCA.root',
+        '/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/60000/7E81F237-C808-E511-90F4-00261894383E.root',
+        '/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/60000/888136A8-D708-E511-823C-002590A2CD68.root',
+        '/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/70000/08135FA6-6E0C-E511-9A97-002618943948.root',
+        '/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/70000/283882C6-860C-E511-AB1C-0026189438C9.root',
+        '/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/70000/76BD42C8-FE08-E511-BAB9-0025905A60DE.root',
+        '/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/70000/9AA472CE-FE08-E511-BEE3-0025905B8582.root',
+        '/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/70000/C81001CF-860C-E511-A5B7-0025905A6088.root',
+        '/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/70000/F87F150E-710C-E511-9F33-0025905A60BC.root'
     ]
 else: raise RuntimeError, "Unknown CMSSW version %s" % os.environ['CMSSW_VERSION']
 
