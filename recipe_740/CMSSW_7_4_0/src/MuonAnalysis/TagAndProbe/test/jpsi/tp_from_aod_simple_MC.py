@@ -10,7 +10,7 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 100
 process.source = cms.Source("PoolSource", 
     fileNames = cms.untracked.vstring(),
 )
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32( -1 ) )    
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32( 1000 ) )    
 
 
 process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
@@ -279,19 +279,10 @@ process.tpTreeSta = process.tpTree.clone(
     flags = cms.PSet(
         outerValidHits = cms.string("outerTrack.numberOfValidHits > 0"),
                      #Mu5_L2Mu3_Jpsi_L2 = LowPtTriggerFlagsEfficienciesProbe.Mu5_L2Mu3_Jpsi_L2,
-                     #Mu7p5_Track2_Jpsi_MU = LowPtTriggerFlagsEfficienciesProbe.Mu7p5_Track2_Jpsi_TK,
-                     #Mu7p5_Track3p5_Jpsi_MU = LowPtTriggerFlagsEfficienciesProbe.Mu7p5_Track3p5_Jpsi_TK,
-                     #Mu7p5_Track7_Jpsi_MU = LowPtTriggerFlagsEfficienciesProbe.Mu7p5_Track7_Jpsi_TK,
-                     #Mu7p5_Track2_Jpsi_TK_Iter = LowPtTriggerFlagsEfficienciesProbe.Mu7p5_Track2_Jpsi_TK_Iter,
-                     #Mu7p5_Track2_Jpsi_TK_Cands = LowPtTriggerFlagsEfficienciesProbe.Mu7p5_Track2_Jpsi_TK_Cands,
-                     #Mu7p5_Track2_Jpsi_TK_Muon = LowPtTriggerFlagsEfficienciesProbe.Mu7p5_Track2_Jpsi_TK_Muon,
                      Mu7p5_L2Mu2_Jpsi_L2 = LowPtTriggerFlagsEfficienciesProbe.Mu7p5_L2Mu2_Jpsi_L2,
-                     Mu7p5_Track2_Jpsi_TK = cms.string("!triggerObjectMatchesByCollection('hltL3MuonCandidates').empty() && "+
-                    " triggerObjectMatchesByCollection('hltL3MuonCandidates').at(0).hasFilterLabel('hltMu7p5Track2JpsiTrackMassFiltered')"),
-                     Mu7p5_Track3p5_Jpsi_TK = cms.string("!triggerObjectMatchesByCollection('hltL3MuonCandidates').empty() && "+
-                    " triggerObjectMatchesByCollection('hltL3MuonCandidates').at(0).hasFilterLabel('hltMu7p5Track3p5JpsiTrackMassFiltered')"),
-                     Mu7p5_Track7_Jpsi_TK = cms.string("!triggerObjectMatchesByCollection('hltL3MuonCandidates').empty() && "+
-                    " triggerObjectMatchesByCollection('hltL3MuonCandidates').at(0).hasFilterLabel('hltMu7p5Track7JpsiTrackMassFiltered')"),
+                     Mu7p5_Track2_Jpsi_TK = LowPtTriggerFlagsEfficienciesProbe.Mu7p5_Track2_Jpsi_TK,
+                     Mu7p5_Track3p5_Jpsi_TK = LowPtTriggerFlagsEfficienciesProbe.Mu7p5_Track3p5_Jpsi_TK,
+                     Mu7p5_Track7_Jpsi_TK = LowPtTriggerFlagsEfficienciesProbe.Mu7p5_Track7_Jpsi_TK,
         TM  = cms.string("isTrackerMuon"),
         Glb = cms.string("isGlobalMuon"),
     ),
@@ -300,11 +291,11 @@ process.tpTreeSta = process.tpTree.clone(
     ),
     tagFlags = cms.PSet(
         #Mu5_L2Mu3_Jpsi_MU = LowPtTriggerFlagsEfficienciesTag.Mu5_L2Mu3_Jpsi_MU,
-        Mu7p5_L2Mu2_Jpsi_MU = LowPtTriggerFlagsEfficienciesTag.Mu7p5_L2Mu2_Jpsi_MU,
+        Mu7p5_L2Mu2_Jpsi_MU = LowPtTriggerFlagsEfficienciesTag.Mu7p5_L2Mu2_Jpsi_MU,    
         Mu7p5_Track2_Jpsi_MU =  LowPtTriggerFlagsEfficienciesTag.Mu7p5_Track2_Jpsi_MU,
         Mu7p5_Track3p5_Jpsi_MU =  LowPtTriggerFlagsEfficienciesTag.Mu7p5_Track3p5_Jpsi_MU,
         Mu7p5_Track7_Jpsi_MU =  LowPtTriggerFlagsEfficienciesTag.Mu7p5_Track7_Jpsi_MU,
-    ),
+        ),
     pairVariables = cms.PSet(),
     pairFlags     = cms.PSet(),
     allProbes     = "probeMuonsSta",
