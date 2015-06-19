@@ -56,7 +56,8 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         # Added by Monika Sharma for mediumVar
         validFraction = cms.vstring("innerTrack.validFraction","9999","9999",""),
         chi2LPosition = cms.vstring("combinedQuality.chi2LocalPosition","9999","9999",""),
-        tkKink = cms.vstring("combinedQuality.trkKink","9999","9999","")
+        tkKink = cms.vstring("combinedQuality.trkKink","9999","9999",""),
+        segmComp = cms.vstring("segmentCompatibility","-1","5","")
     ),
 
     Categories = cms.PSet(
@@ -79,7 +80,7 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     Expressions = cms.PSet(
      LooseVar = cms.vstring("LooseVar", "PF==1 && (Glb==1 || TM==1) ", "PF", "Glb", "TM"),
      oldSoftVar = cms.vstring("oldSoftVar", "TMOST ==1 && tkTrackerLay > 5 && tkPixelLay > 1 && tkChi2 < 1.8 && abs(dzPV) < 30 && abs(dB) < 3", "TMOST","tkTrackerLay", "tkPixelLay", "tkChi2", "dzPV", "dB"),
-     MediumVar = cms.vstring("MediumVar", "Loose==0 && validFraction < 0.8 && tkChi2 < 3 && chi2LPosition < 12 && tkKink < 20", "Loose", "validFraction", "tkChi2", "chi2LPosition", "tkKink"),
+     MediumVar = cms.vstring("MediumVar", "Loose==1 && validFraction > 0.8 && ((Glb==1 && glbChi2 < 3 && chi2LPosition < 12 && tkKink < 20 && segmComp > 0.303) || segmComp> 0.451)", "Loose", "validFraction", "Glb", "glbChi2", "chi2LPosition", "tkKink", "segmComp"),
      TightVar = cms.vstring("TightVar", "PF==1 && Glb==1 && tkChi2 < 10 && glbValidMuHits > 0 && numberOfMatchedStations > 1 && abs(dB) < 0.2 && abs(dzPV) < 0.5 && tkValidPixelHits > 0 && tkTrackerLay > 5", "PF", "Glb", "tkChi2", "glbValidMuHits", "numberOfMatchedStations", "dB",  "dzPV", "tkValidPixelHits", "tkTrackerLay" ),
      #newID
      SoftVar = cms.vstring("SoftVar", "TMOST ==1 && tkTrackerLay > 5 && tkPixelLay > 0 && abs(dzPV) < 20 && abs(dB) < 0.3 && Track_HP == 1", "TMOST","tkTrackerLay", "tkPixelLay", "dzPV", "dB", "Track_HP"),
