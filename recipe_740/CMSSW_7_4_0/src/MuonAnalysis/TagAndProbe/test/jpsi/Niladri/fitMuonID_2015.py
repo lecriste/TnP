@@ -79,7 +79,7 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     Expressions = cms.PSet(
      LooseVar = cms.vstring("LooseVar", "PF==1 && (Glb==1 || TM==1) ", "PF", "Glb", "TM"),
      oldSoftVar = cms.vstring("oldSoftVar", "TMOST ==1 && tkTrackerLay > 5 && tkPixelLay > 1 && tkChi2 < 1.8 && abs(dzPV) < 30 && abs(dB) < 3", "TMOST","tkTrackerLay", "tkPixelLay", "tkChi2", "dzPV", "dB"),
-     MediumVar = cms.vstring("MediumVar", "Loose==0 && validFraction < 0.8 && tkChi2 < 3 && chi2LPosition < 12 && tkKink < 20", "validFraction", "tkChi2", "chi2LPosition", "tkKink"),
+     MediumVar = cms.vstring("MediumVar", "Loose==0 && validFraction < 0.8 && tkChi2 < 3 && chi2LPosition < 12 && tkKink < 20", "Loose", "validFraction", "tkChi2", "chi2LPosition", "tkKink"),
      TightVar = cms.vstring("TightVar", "PF==1 && Glb==1 && tkChi2 < 10 && glbValidMuHits > 0 && numberOfMatchedStations > 1 && abs(dB) < 0.2 && abs(dzPV) < 0.5 && tkValidPixelHits > 0 && tkTrackerLay > 5", "PF", "Glb", "tkChi2", "glbValidMuHits", "numberOfMatchedStations", "dB",  "dzPV", "tkValidPixelHits", "tkTrackerLay" ),
      #newID
      SoftVar = cms.vstring("SoftVar", "TMOST ==1 && tkTrackerLay > 5 && tkPixelLay > 0 && abs(dzPV) < 20 && abs(dB) < 0.3 && Track_HP == 1", "TMOST","tkTrackerLay", "tkPixelLay", "dzPV", "dB", "Track_HP"),
