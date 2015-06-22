@@ -258,6 +258,7 @@ massSearchReplaceAnyInputTag(process.patMuonsWithTriggerSequenceSta, "mergedMuon
 process.probeMuonsSta = cms.EDFilter("PATMuonSelector",
     src = cms.InputTag("patMuonsWithTriggerSta"),
     cut = cms.string("outerTrack.isNonnull && !triggerObjectMatchesByCollection('hltL2MuonCandidates').empty()"), 
+    #cut = cms.string("outerTrack.isNonnull && !triggerObjectMatchesByCollection('hltTracksIter').empty()"), 
 )
 process.probeMuonsMCMatchSta = process.tagMuonsMCMatch.clone(src = "probeMuonsSta")
 process.tpPairsSta = process.tpPairs.clone(decay = "tagMuons@+ probeMuonsSta@-", cut = "2 < mass < 5")
@@ -280,11 +281,15 @@ process.tpTreeSta = process.tpTree.clone(
     ),
     flags = cms.PSet(
         outerValidHits = cms.string("outerTrack.numberOfValidHits > 0"),
-                     #Mu5_L2Mu3_Jpsi_L2 = LowPtTriggerFlagsEfficienciesProbe.Mu5_L2Mu3_Jpsi_L2,
-                     Mu7p5_L2Mu2_Jpsi_L2 = LowPtTriggerFlagsEfficienciesProbe.Mu7p5_L2Mu2_Jpsi_L2,
-                     Mu7p5_Track2_Jpsi_TK = LowPtTriggerFlagsEfficienciesProbe.Mu7p5_Track2_Jpsi_TK,
-                     Mu7p5_Track3p5_Jpsi_TK = LowPtTriggerFlagsEfficienciesProbe.Mu7p5_Track3p5_Jpsi_TK,
-                     Mu7p5_Track7_Jpsi_TK = LowPtTriggerFlagsEfficienciesProbe.Mu7p5_Track7_Jpsi_TK,
+                     ##Mu5_L2Mu3_Jpsi_L2 = LowPtTriggerFlagsEfficienciesProbe.Mu5_L2Mu3_Jpsi_L2,
+                     #Mu7p5_L2Mu2_Jpsi_L2 = LowPtTriggerFlagsEfficienciesProbe.Mu7p5_L2Mu2_Jpsi_L2,
+                     #Mu7p5_Track2_Jpsi_TK = LowPtTriggerFlagsEfficienciesProbe.Mu7p5_Track2_Jpsi_TK,
+                     #Mu7p5_Track3p5_Jpsi_TK = LowPtTriggerFlagsEfficienciesProbe.Mu7p5_Track3p5_Jpsi_TK,
+                     #Mu7p5_Track7_Jpsi_TK = LowPtTriggerFlagsEfficienciesProbe.Mu7p5_Track7_Jpsi_TK,
+                     Mu7p5_L2Mu2_Jpsi_L2 = LowPtTriggerFlagsEfficienciesProbe_L2.Mu7p5_L2Mu2_Jpsi_L2,
+                     Mu7p5_Track2_Jpsi_TK = LowPtTriggerFlagsEfficienciesProbe_L2.Mu7p5_Track2_Jpsi_TK,
+                     Mu7p5_Track3p5_Jpsi_TK = LowPtTriggerFlagsEfficienciesProbe_L2.Mu7p5_Track3p5_Jpsi_TK,
+                     Mu7p5_Track7_Jpsi_TK = LowPtTriggerFlagsEfficienciesProbe_L2.Mu7p5_Track7_Jpsi_TK,
         TM  = cms.string("isTrackerMuon"),
         Glb = cms.string("isGlobalMuon"),
     ),
