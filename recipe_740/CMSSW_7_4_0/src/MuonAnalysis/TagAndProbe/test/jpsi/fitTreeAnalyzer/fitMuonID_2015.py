@@ -54,9 +54,9 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         glbValidMuHits = cms.vstring("globalTrack.numberOfValidMuonHits", "-1", "9999", ""),
         caloComp = cms.vstring("caloCompatibility","-1","5",""),
         # Added by Monika Sharma for mediumVar
-        validFraction = cms.vstring("innerTrack.validFraction","9999","9999",""),
-        chi2LPosition = cms.vstring("combinedQuality.chi2LocalPosition","9999","9999",""),
-        tkKink = cms.vstring("combinedQuality.trkKink","9999","9999",""),
+        validFraction = cms.vstring("innerTrack.validFraction","-9999","9999",""),
+        chi2LPosition = cms.vstring("combinedQuality.chi2LocalPosition","-9999","9999",""),
+        tkKink = cms.vstring("combinedQuality.trkKink","-9999","9999",""),
         segmComp = cms.vstring("segmentCompatibility","-1","5","")
     ),
 
@@ -113,10 +113,11 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
 SEPARATED = cms.PSet(pair_drM1 = cms.vdouble(0.5,10),
                      pair_probeMultiplicity = cms.vdouble(0.5,1.5),
                      )
+
 PT_ETA_BINS = cms.PSet(SEPARATED,
-                    pt = cms.vdouble(2.0, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.5, 5.0, 6.0, 8.0, 10.0, 15.0, 20.0),
-                    abseta = cms.vdouble(0.0,0.9)
-                    )
+                       pt = cms.vdouble(2.0, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.5, 5.0, 6.0, 8.0, 10.0, 15.0, 20.0),
+                       abseta = cms.vdouble(0.0,0.9)
+                       )
 
 VTX_BINS = cms.PSet(SEPARATED,
                     abseta = cms.vdouble(0.0, 2.1),
@@ -135,9 +136,9 @@ PLATEAU_ABSETA = cms.PSet(SEPARATED,
                     )
 
 PT_ABSETA_WIDE = cms.PSet(SEPARATED,
-                    abseta = cms.vdouble(0.0, 1.2, 2.4),
-                    pt     = cms.vdouble(5.0, 7.0, 20.0),
-                    )
+                          abseta = cms.vdouble(0.0, 1.2, 2.4),
+                          pt     = cms.vdouble(5.0, 7.0, 20.0),
+                          )
 
 # Prefix should be "./" only
 PREFIX="/afs/cern.ch/work/l/lecriste/TnP/Ilse/CMSSW_5_3_22/test/"
@@ -150,6 +151,7 @@ process.TnP_MuonID = Template.clone(
     ),
     InputTreeName = cms.string("fitter_tree"),
     InputDirectoryName = cms.string("tpTree"),
+    #InputDirectoryName = cms.string("tpTreeSta"),
     OutputFileName = cms.string("TnP_MuonID_%s.root" % scenario),
     Efficiencies = cms.PSet(),
 )
@@ -159,14 +161,23 @@ TRIGS = [ (2,'Mu7p5_L2Mu2_Jpsi'), (2,'Mu7p5_Track2_Jpsi') ]
 
 if "mc" in scenario:
      process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC.root']
-     ALLBINS =  [("pt_abseta",PT_ETA_BINS)]
+     #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_oldMatching.root']
+     #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_oldTriggers.root']
+
+ALLBINS =  [("pt_abseta",PT_ETA_BINS)]
 
 for ID in IDS:
      if len(args) > 1 and args[1] in IDS and ID != args[1]: continue
      for X,B in ALLBINS:
           if len(args) > 2 and X not in args[2:]: continue
           module = process.TnP_MuonID.clone(OutputFileName = cms.string("TnP_MuonID_%s_%s_%s.root" % (scenario, ID, X)))
-          
+          #setattr(module.Efficiencies, ID+"_"+X, cms.PSet(
+          #          EfficiencyCategoryAndState = cms.vstring(ID,"above"),     # ??
+          #          UnbinnedVariables = cms.vstring("mass"),
+          #          BinnedVariables = DEN,
+          #          BinToPDFmap = cms.vstring("signalPlusBkg")
+          #          )
+          #        )
           for PTMIN, TRIG in TRIGS:
                TRIGLABEL=""
                if "pt_" in X:
@@ -178,12 +189,11 @@ for ID in IDS:
                     DEN.pt = cms.vdouble(*[i for i in B.pt if i >= PTMIN])
                     if len(DEN.pt) == 1: DEN.pt = cms.vdouble(PTMIN, DEN.pt[0])
                setattr(module.Efficiencies, ID+"_"+X+TRIGLABEL, cms.PSet(
-                         EfficiencyCategoryAndState = cms.vstring(ID,"above"),     # ??
-                         UnbinnedVariables = cms.vstring("mass"),
-                         BinnedVariables = DEN,
-                         BinToPDFmap = cms.vstring("signalPlusBkg")
-                         )
-                       )
+                   EfficiencyCategoryAndState = cms.vstring(ID,"above"),     # ??
+                   UnbinnedVariables = cms.vstring("mass"),
+                   BinnedVariables = DEN,
+                   BinToPDFmap = cms.vstring("signalPlusBkg")
+               ))
                if "mc" in scenario:
                     setattr(module.Efficiencies, ID+"_"+X+TRIGLABEL+"_mcTrue", cms.PSet(
                         EfficiencyCategoryAndState = cms.vstring(ID,"above"),  # ?? "pass"
