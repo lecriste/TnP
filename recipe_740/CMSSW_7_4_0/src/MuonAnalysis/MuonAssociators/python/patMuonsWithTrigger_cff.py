@@ -116,29 +116,27 @@ patTriggerMatchers1Mu = cms.Sequence(
       #muonMatchHLTL1 +   # keep off by default, since it is slow and usually not needed
       muonMatchHLTL2 +
       muonMatchHLTL3 +
-      muonMatchHLTL3T +
-      muonMatchHLTTracksIter
+      muonMatchHLTL3T
 )
 patTriggerMatchers1MuInputTags = [
     #cms.InputTag('muonMatchHLTL1','propagatedReco'), # fake, will match if and only if he muon did propagate to station 2
     #cms.InputTag('muonMatchHLTL1'),
     cms.InputTag('muonMatchHLTL2'),
     cms.InputTag('muonMatchHLTL3'),
-    cms.InputTag('muonMatchHLTL3T'),
-    cms.InputTag('muonMatchHLTTracksIter'),
+    cms.InputTag('muonMatchHLTL3T')
 ]
 
 patTriggerMatchers2Mu = cms.Sequence(
     muonMatchHLTCtfTrack  +
     muonMatchHLTCtfTrack2 +
-    muonMatchHLTTrackMu   
-                                     #   muonMatchHLTTracksIter
+    muonMatchHLTTrackMu   +
+    muonMatchHLTTracksIter
 )
 patTriggerMatchers2MuInputTags = [
     cms.InputTag('muonMatchHLTCtfTrack'),
     cms.InputTag('muonMatchHLTCtfTrack2'),
     cms.InputTag('muonMatchHLTTrackMu'),
-                                  #   cms.InputTag('muonMatchHLTTracksIter'),
+    cms.InputTag('muonMatchHLTTracksIter')
 ]
 
 ## ==== Embed ====
