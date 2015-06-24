@@ -72,6 +72,7 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         Tight2012 = cms.vstring("Tight Muon", "dummy[pass=1,fail=0]"),
         Mu7p5_Track2_Jpsi_TK = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
         tag_Mu7p5_Track2_Jpsi_MU = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        # test
         DoubleMu17TkMu8_TkMu8leg = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
         tag_DoubleMu17TkMu8_TkMu8leg = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
         mcTrue = cms.vstring("MC true", "dummy[true=1,false=0]")
