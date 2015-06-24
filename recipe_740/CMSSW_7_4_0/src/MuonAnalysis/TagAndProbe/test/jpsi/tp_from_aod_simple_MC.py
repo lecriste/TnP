@@ -263,8 +263,8 @@ massSearchReplaceAnyInputTag(process.patMuonsWithTriggerSequenceSta, "mergedMuon
 ## Define probes and T&P pairs
 process.probeMuonsSta = cms.EDFilter("PATMuonSelector",
     src = cms.InputTag("patMuonsWithTriggerSta"),
-    cut = cms.string("outerTrack.isNonnull && !triggerObjectMatchesByCollection('hltL2MuonCandidates').empty()"), 
-    #cut = cms.string("outerTrack.isNonnull && !triggerObjectMatchesByCollection('hltTracksIter').empty()"), 
+                                     #cut = cms.string("outerTrack.isNonnull && !triggerObjectMatchesByCollection('hltL2MuonCandidates').empty()"),
+    cut = cms.string("outerTrack.isNonnull && !triggerObjectMatchesByCollection('hltTracksIter').empty()"),
 )
 process.probeMuonsMCMatchSta = process.tagMuonsMCMatch.clone(src = "probeMuonsSta")
 process.tpPairsSta = process.tpPairs.clone(decay = "tagMuons@+ probeMuonsSta@-", cut = "2 < mass < 5")
@@ -301,11 +301,11 @@ process.tpTreeSta = process.tpTree.clone(
     ),
     tagFlags = cms.PSet(
         #Mu5_L2Mu3_Jpsi_MU = LowPtTriggerFlagsEfficienciesTag.Mu5_L2Mu3_Jpsi_MU,
-        LowPtTriggerFlagsEfficienciesTag,
-        #Mu7p5_L2Mu2_Jpsi_MU = LowPtTriggerFlagsEfficienciesTag.Mu7p5_L2Mu2_Jpsi_MU,    
-        #Mu7p5_Track2_Jpsi_MU =  LowPtTriggerFlagsEfficienciesTag.Mu7p5_Track2_Jpsi_MU,
-        #Mu7p5_Track3p5_Jpsi_MU =  LowPtTriggerFlagsEfficienciesTag.Mu7p5_Track3p5_Jpsi_MU,
-        #Mu7p5_Track7_Jpsi_MU =  LowPtTriggerFlagsEfficienciesTag.Mu7p5_Track7_Jpsi_MU,
+                        LowPtTriggerFlagsEfficienciesTag,
+                        #Mu7p5_L2Mu2_Jpsi_MU = LowPtTriggerFlagsEfficienciesTag.Mu7p5_L2Mu2_Jpsi_MU,
+                        #Mu7p5_Track2_Jpsi_MU =  LowPtTriggerFlagsEfficienciesTag.Mu7p5_Track2_Jpsi_MU,
+                        #Mu7p5_Track3p5_Jpsi_MU =  LowPtTriggerFlagsEfficienciesTag.Mu7p5_Track3p5_Jpsi_MU,
+                        #Mu7p5_Track7_Jpsi_MU =  LowPtTriggerFlagsEfficienciesTag.Mu7p5_Track7_Jpsi_MU,
         ),
     pairVariables = cms.PSet(),
     pairFlags     = cms.PSet(),
