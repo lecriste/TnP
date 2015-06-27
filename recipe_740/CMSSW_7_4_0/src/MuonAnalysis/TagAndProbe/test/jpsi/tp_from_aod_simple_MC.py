@@ -10,7 +10,7 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 100
 process.source = cms.Source("PoolSource", 
     fileNames = cms.untracked.vstring(),
 )
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32( 1000 ) )    
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32( -1 ) )    
 
 
 process.load('Configuration.StandardSequences.GeometryRecoDB_cff')

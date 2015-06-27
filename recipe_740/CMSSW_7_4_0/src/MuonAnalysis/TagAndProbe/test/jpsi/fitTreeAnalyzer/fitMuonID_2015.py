@@ -117,7 +117,7 @@ SEPARATED = cms.PSet(pair_drM1 = cms.vdouble(0.5,10),
 
 PT_ETA_BINS = cms.PSet(SEPARATED,
                        pt = cms.vdouble(2.0, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.5, 5.0, 6.0, 8.0, 10.0, 15.0, 20.0),
-                       abseta = cms.vdouble(0.0,0.9)
+                       abseta = cms.vdouble(0.0,0.9,1.2,2.1)
                        )
 
 VTX_BINS = cms.PSet(SEPARATED,
@@ -158,7 +158,7 @@ process.TnP_MuonID = Template.clone(
 )
 
 IDS = ["newSoft2012"]
-TRIGS = [ (2,'Mu7p5_L2Mu2_Jpsi'), (2,'Mu7p5_Track2_Jpsi') ]
+TRIGS = [ (2,'Mu7p5_L2Mu2_Jpsi'), (2,'Mu7p5_Track2_Jpsi'), (3.5,'Mu7p5_Track3p5_Jpsi'), (7,'Mu7p5_Track7_Jpsi') ]
 
 if "mc" in scenario:
      process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC.root']
