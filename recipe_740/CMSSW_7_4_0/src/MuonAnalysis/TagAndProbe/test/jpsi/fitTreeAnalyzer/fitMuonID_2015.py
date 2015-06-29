@@ -72,11 +72,19 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         Tight2012 = cms.vstring("Tight Muon", "dummy[pass=1,fail=0]"),
         Mu7p5_Track2_Jpsi_TK = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
         tag_Mu7p5_Track2_Jpsi_MU = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        Mu7p5_Track3p5_Jpsi_TK = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        tag_Mu7p5_Track3p5_Jpsi_MU = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        Mu7p5_Track7_Jpsi_TK = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        tag_Mu7p5_Track7_Jpsi_MU = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        Mu7p5_L2Mu2_Jpsi_TK = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        tag_Mu7p5_L2Mu2_Jpsi_MU = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
         # test
         DoubleMu17TkMu8_TkMu8leg = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
         tag_DoubleMu17TkMu8_TkMu8leg = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
-        mcTrue = cms.vstring("MC true", "dummy[true=1,false=0]")
-    ),
+        mcTrue = cms.vstring("MC true", "dummy[true=1,false=0]"),
+        Mu8 = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        tag_Mu8 = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        ),
 
     Expressions = cms.PSet(
      LooseVar = cms.vstring("LooseVar", "PF==1 && (Glb==1 || TM==1) ", "PF", "Glb", "TM"),
@@ -90,8 +98,8 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     Cuts = cms.PSet(
      Loose2012 = cms.vstring("Loose", "LooseVar", "0.5"),
      Tight2012 = cms.vstring("Tight", "TightVar", "0.5"),
-     Soft2012 = cms.vstring("oldSoft", "oldSoftVar", "0.5"),
-     newSoft2012 = cms.vstring("Soft", "SoftVar", "0.5"),
+     oldSoft2012 = cms.vstring("oldSoft", "oldSoftVar", "0.5"),
+     Soft2012 = cms.vstring("Soft", "SoftVar", "0.5"),
     ),
 
     PDFs = cms.PSet(
@@ -157,11 +165,15 @@ process.TnP_MuonID = Template.clone(
     Efficiencies = cms.PSet(),
 )
 
-IDS = ["newSoft2012"]
+IDS = ["Soft2012"]
 TRIGS = [ (2,'Mu7p5_L2Mu2_Jpsi'), (2,'Mu7p5_Track2_Jpsi'), (3.5,'Mu7p5_Track3p5_Jpsi'), (7,'Mu7p5_Track7_Jpsi') ]
+#TRIGS = [ (0,'Mu8') ]
 
 if "mc" in scenario:
-     process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC.root']
+     process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_benchmark_1k.root']
+     #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_Mu8.root']
+     #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_noFilter.root']
+     #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC.root']
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_oldMatching.root']
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_oldTriggers.root']
 
@@ -172,13 +184,16 @@ for ID in IDS:
      for X,B in ALLBINS:
           if len(args) > 2 and X not in args[2:]: continue
           module = process.TnP_MuonID.clone(OutputFileName = cms.string("TnP_MuonID_%s_%s_%s.root" % (scenario, ID, X)))
-          #setattr(module.Efficiencies, ID+"_"+X, cms.PSet(
-          #          EfficiencyCategoryAndState = cms.vstring(ID,"above"),     # ??
-          #          UnbinnedVariables = cms.vstring("mass"),
-          #          BinnedVariables = DEN,
-          #          BinToPDFmap = cms.vstring("signalPlusBkg")
-          #          )
-          #        )
+          #
+          DEN = B.clone()
+          setattr(module.Efficiencies, ID+"_"+X, cms.PSet(
+                    EfficiencyCategoryAndState = cms.vstring(ID,"above"),     # ??
+                    UnbinnedVariables = cms.vstring("mass"),
+                    BinnedVariables = DEN,
+                    BinToPDFmap = cms.vstring("signalPlusBkg")
+                    )
+                  )
+          #
           for PTMIN, TRIG in TRIGS:
                TRIGLABEL=""
                if "pt_" in X:
@@ -189,6 +204,10 @@ for ID in IDS:
                if hasattr(DEN, "pt"):
                     DEN.pt = cms.vdouble(*[i for i in B.pt if i >= PTMIN])
                     if len(DEN.pt) == 1: DEN.pt = cms.vdouble(PTMIN, DEN.pt[0])
+               setattr(DEN, "tag_%s_MU" % TRIG, cms.vstring("pass"))
+               setattr(DEN,     "%s_TK" % TRIG, cms.vstring("pass"))
+               #setattr(DEN, "TM", cms.vstring("pass"))
+               #if "calomu" in scenario: DEN.Calo = cms.vstring("pass")
                setattr(module.Efficiencies, ID+"_"+X+TRIGLABEL, cms.PSet(
                    EfficiencyCategoryAndState = cms.vstring(ID,"above"),     # ??
                    UnbinnedVariables = cms.vstring("mass"),
