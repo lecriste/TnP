@@ -170,7 +170,8 @@ TRIGS = [ (2,'Mu7p5_L2Mu2_Jpsi'), (2,'Mu7p5_Track2_Jpsi'), (3.5,'Mu7p5_Track3p5_
 #TRIGS = [ (0,'Mu8') ]
 
 if "mc" in scenario:
-     process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_benchmark_1k.root']
+     process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_Monika.root']
+     #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_benchmark_10k.root']
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_Mu8.root']
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_noFilter.root']
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC.root']

@@ -10,7 +10,7 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 100
 process.source = cms.Source("PoolSource", 
     fileNames = cms.untracked.vstring(),
 )
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32( -1 ) )    
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32( 10000 ) ) # 4.8Mb in 1h on 84597 (=-1) events
 
 
 process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
@@ -74,8 +74,10 @@ process.triggerResultsFilter.l1tResults = ''
 process.triggerResultsFilter.throw = True
 #process.triggerResultsFilter.hltResults = cms.InputTag( "TriggerResults", "", "REDIGI38XPU" )
 process.triggerResultsFilter.hltResults = cms.InputTag( "TriggerResults", "", "HLT" )
-process.HLTMu   = process.triggerResultsFilter.clone(triggerConditions = [ 'HLT_Mu*_L2Mu*' ])
-process.HLTBoth = process.triggerResultsFilter.clone(triggerConditions = [ 'HLT_Mu*_L2Mu*', 'HLT_Mu*_Track*_Jpsi*' ])
+process.HLTMu   = process.triggerResultsFilter.clone(triggerConditions = [ 'HLT_Mu*_L2Mu*'])
+process.HLTBoth = process.triggerResultsFilter.clone(triggerConditions = [ 'HLT_Mu*_L2Mu*', 'HLT_Mu*_Track*_Jpsi*'])
+#process.HLTMu   = process.triggerResultsFilter.clone(triggerConditions = [ 'HLT_Mu*_L2Mu*', 'HLT_Mu*' ])
+#process.HLTBoth = process.triggerResultsFilter.clone(triggerConditions = [ 'HLT_Mu*_L2Mu*', 'HLT_Mu*_Track*_Jpsi*', 'HLT_Mu*' ])
 
 ##    __  __                       
 ##   |  \/  |_   _  ___  _ __  ___ 
@@ -112,7 +114,7 @@ process.load("MuonAnalysis.TagAndProbe.common_modules_cff")
 
 process.tagMuons = cms.EDFilter("PATMuonSelector",
     src = cms.InputTag("patMuonsWithTrigger"),
-    cut = cms.string("(isGlobalMuon || numberOfMatchedStations > 1) && pt > 5 && !triggerObjectMatchesByCollection('hltL3MuonCandidates').empty()"),
+    cut = cms.string("(isGlobalMuon || numberOfMatchedStations > 1) && pt > 7.5 && !triggerObjectMatchesByCollection('hltL3MuonCandidates').empty()"),
 )
 
 process.oneTag  = cms.EDFilter("CandViewCountFilter", src = cms.InputTag("tagMuons"), minNumber = cms.uint32(1))
@@ -121,6 +123,7 @@ process.probeMuons = cms.EDFilter("PATMuonSelector",
     src = cms.InputTag("patMuonsWithTrigger"),
     #cut = cms.string("track.isNonnull && (!triggerObjectMatchesByCollection('hltMuTrackJpsiEffCtfTrackCands').empty() || !triggerObjectMatchesByCollection('hltMuTrackJpsiCtfTrackCands').empty() || !triggerObjectMatchesByCollection('hltL2MuonCandidates').empty())"),
     cut = cms.string("track.isNonnull && !triggerObjectMatchesByCollection('hltTracksIter').empty()"),
+    #cut = cms.string("")
     #cut = cms.string("track.isNonnull && !triggerObjectMatchesByCollection('hltL2MuonCandidates').empty()"),
 )
 
@@ -300,11 +303,11 @@ process.tpTreeSta = process.tpTree.clone(
     ),
     tagFlags = cms.PSet(
         #Mu5_L2Mu3_Jpsi_MU = LowPtTriggerFlagsEfficienciesTag.Mu5_L2Mu3_Jpsi_MU,
-                        LowPtTriggerFlagsEfficienciesTag,
-                        #Mu7p5_L2Mu2_Jpsi_MU = LowPtTriggerFlagsEfficienciesTag.Mu7p5_L2Mu2_Jpsi_MU,
-                        #Mu7p5_Track2_Jpsi_MU =  LowPtTriggerFlagsEfficienciesTag.Mu7p5_Track2_Jpsi_MU,
-                        #Mu7p5_Track3p5_Jpsi_MU =  LowPtTriggerFlagsEfficienciesTag.Mu7p5_Track3p5_Jpsi_MU,
-                        #Mu7p5_Track7_Jpsi_MU =  LowPtTriggerFlagsEfficienciesTag.Mu7p5_Track7_Jpsi_MU,
+        LowPtTriggerFlagsEfficienciesTag,
+        #Mu7p5_L2Mu2_Jpsi_MU = LowPtTriggerFlagsEfficienciesTag.Mu7p5_L2Mu2_Jpsi_MU,
+        #Mu7p5_Track2_Jpsi_MU =  LowPtTriggerFlagsEfficienciesTag.Mu7p5_Track2_Jpsi_MU,
+        #Mu7p5_Track3p5_Jpsi_MU =  LowPtTriggerFlagsEfficienciesTag.Mu7p5_Track3p5_Jpsi_MU,
+        #Mu7p5_Track7_Jpsi_MU =  LowPtTriggerFlagsEfficienciesTag.Mu7p5_Track7_Jpsi_MU,
         ),
     pairVariables = cms.PSet(),
     pairFlags     = cms.PSet(),
