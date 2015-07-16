@@ -124,8 +124,10 @@ SEPARATED = cms.PSet(pair_drM1 = cms.vdouble(0.5,10),
                      )
 
 PT_ETA_BINS = cms.PSet(SEPARATED,
-                       pt = cms.vdouble(2.0, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.5, 5.0, 6.0, 8.0, 10.0, 15.0, 20.0),
-                       abseta = cms.vdouble(0.0,0.9,1.2,2.1)
+                       #pt = cms.vdouble(2.0, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.5, 5.0, 6.0, 8.0, 10.0, 15.0, 20.0),
+                       pt = cms.vdouble(2.0, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.5, 5.0, 6.0, 8.0, 10.0, 15.0, 20.0, 30.0, 40.0),
+                       #abseta = cms.vdouble(0.0,0.9,1.2,2.1)
+                       abseta = cms.vdouble(0.0,0.9,1.2,2.1,2.4)
                        )
 
 VTX_BINS = cms.PSet(SEPARATED,
@@ -152,12 +154,14 @@ PT_ABSETA_WIDE = cms.PSet(SEPARATED,
 # Prefix should be "./" only
 PREFIX="/afs/cern.ch/work/l/lecriste/TnP/Ilse/CMSSW_5_3_22/test/"
 process.TnP_MuonID = Template.clone(
-    InputFileNames = cms.vstring(
-        PREFIX+'tnpJPsi_Run2012A.root',
-        PREFIX+'tnpJPsi_Run2012B.root',
-        PREFIX+'tnpJPsi_Run2012C.root',
-        PREFIX+'tnpJPsi_Run2012D.root',
-    ),
+    #InputFileNames = cms.vstring(
+    #    PREFIX+'tnpJPsi_Run2012A.root',
+    #    PREFIX+'tnpJPsi_Run2012B.root',
+    #    PREFIX+'tnpJPsi_Run2012C.root',
+    #    PREFIX+'tnpJPsi_Run2012D.root',
+    #),
+    InputFileNames = cms.vstring('/afs/cern.ch/user/m/msharma/public/tnpJPsi_Data.root'),
+
     InputTreeName = cms.string("fitter_tree"),
     InputDirectoryName = cms.string("tpTree"),
     #InputDirectoryName = cms.string("tpTreeSta"),
@@ -170,7 +174,9 @@ TRIGS = [ (2,'Mu7p5_L2Mu2_Jpsi'), (2,'Mu7p5_Track2_Jpsi'), (3.5,'Mu7p5_Track3p5_
 #TRIGS = [ (0,'Mu8') ]
 
 if "mc" in scenario:
-     process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_Monika.root']
+     process.TnP_MuonID.InputFileNames = ['root://cmsxrootd.fnal.gov///store/user/lecriste/TnP/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/crab_TnP_MC_request/150710_153845/0000/tnpJPsi_MC_1.root']
+     #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_Mu8.root']
+     #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_Monika.root']
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_benchmark_10k.root']
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_Mu8.root']
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_noFilter.root']
@@ -205,8 +211,12 @@ for ID in IDS:
                if hasattr(DEN, "pt"):
                     DEN.pt = cms.vdouble(*[i for i in B.pt if i >= PTMIN])
                     if len(DEN.pt) == 1: DEN.pt = cms.vdouble(PTMIN, DEN.pt[0])
-               setattr(DEN, "tag_%s_MU" % TRIG, cms.vstring("pass"))
-               setattr(DEN,     "%s_TK" % TRIG, cms.vstring("pass"))
+               if TRIG != "Mu8":
+                    setattr(DEN, "tag_%s_MU" % TRIG, cms.vstring("pass"))
+                    setattr(DEN,     "%s_TK" % TRIG, cms.vstring("pass"))
+               else:
+                    setattr(DEN, "tag_%s" % TRIG, cms.vstring("pass"))
+                    setattr(DEN,     "%s" % TRIG, cms.vstring("pass"))
                #setattr(DEN, "TM", cms.vstring("pass"))
                #if "calomu" in scenario: DEN.Calo = cms.vstring("pass")
                setattr(module.Efficiencies, ID+"_"+X+TRIGLABEL, cms.PSet(
