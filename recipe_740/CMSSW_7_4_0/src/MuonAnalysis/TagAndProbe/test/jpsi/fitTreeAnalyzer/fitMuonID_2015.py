@@ -8,7 +8,7 @@ import FWCore.ParameterSet.Config as cms
 
 import sys
 args = sys.argv[1:]
-if (sys.argv[0] == "cmsRun"): args =sys.argv[2:]
+if (sys.argv[0] == "cmsRun"): args = sys.argv[2:]
 scenario = "data_all"
 if len(args) > 0: scenario = args[0]
 print "Will run scenario ", scenario
@@ -27,6 +27,7 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )
 Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     NumCPU = cms.uint32(1),
     SaveWorkspace = cms.bool(False),
+
     Variables = cms.PSet(
         mass = cms.vstring("Tag-muon Mass", "2.9", "3.3", "GeV/c^{2}"), #2.8-3.35
         p  = cms.vstring("muon p", "0", "1000", "GeV/c"),
@@ -53,7 +54,7 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         glbChi2 = cms.vstring("global.normalizedChi2", "-9999", "9999", ""),
         glbValidMuHits = cms.vstring("globalTrack.numberOfValidMuonHits", "-1", "9999", ""),
         caloComp = cms.vstring("caloCompatibility","-1","5",""),
-        # Added by Monika Sharma for mediumVar
+        # Added for mediumVar
         validFraction = cms.vstring("innerTrack.validFraction","-9999","9999",""),
         chi2LPosition = cms.vstring("combinedQuality.chi2LocalPosition","-9999","9999",""),
         tkKink = cms.vstring("combinedQuality.trkKink","-9999","9999",""),
@@ -70,6 +71,12 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         PF = cms.vstring("PF", "dummy[pass=1,fail=0]"),
         Track_HP = cms.vstring("Track_HP", "dummy[pass=1,fail=0]"),
         Tight2012 = cms.vstring("Tight Muon", "dummy[pass=1,fail=0]"),
+	# 2012 triggers
+        #Mu5_Track2_Jpsi_TK = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        #Mu7_Track7_Jpsi_TK = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        #tag_Mu5_Track2_Jpsi_MU = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        #tag_Mu7_Track7_Jpsi_MU = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+	# 2015 triggers
         Mu7p5_Track2_Jpsi_TK = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
         tag_Mu7p5_Track2_Jpsi_MU = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
         Mu7p5_Track3p5_Jpsi_TK = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
@@ -78,10 +85,11 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         tag_Mu7p5_Track7_Jpsi_MU = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
         Mu7p5_L2Mu2_Jpsi_TK = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
         tag_Mu7p5_L2Mu2_Jpsi_MU = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        #
+        mcTrue = cms.vstring("MC true", "dummy[true=1,false=0]"),
         # test
         DoubleMu17TkMu8_TkMu8leg = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
         tag_DoubleMu17TkMu8_TkMu8leg = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
-        mcTrue = cms.vstring("MC true", "dummy[true=1,false=0]"),
         Mu8 = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
         tag_Mu8 = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
         ),
@@ -89,9 +97,17 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     Expressions = cms.PSet(
      LooseVar = cms.vstring("LooseVar", "PF==1 && (Glb==1 || TM==1) ", "PF", "Glb", "TM"),
      oldSoftVar = cms.vstring("oldSoftVar", "TMOST ==1 && tkTrackerLay > 5 && tkPixelLay > 1 && tkChi2 < 1.8 && abs(dzPV) < 30 && abs(dB) < 3", "TMOST","tkTrackerLay", "tkPixelLay", "tkChi2", "dzPV", "dB"),
+     # without chi2 cut
+     #oldSoftVar = cms.vstring("oldSoftVar", "TMOST ==1 && tkTrackerLay > 5 && tkPixelLay > 1 && abs(dzPV) < 30 && abs(dB) < 3", "TMOST","tkTrackerLay", "tkPixelLay", "dzPV", "dB"),
+     #changed cuts
+     #oldSoftVar = cms.vstring("oldSoftVar", "TMOST ==1", "TMOST"),
+     #oldSoftVar = cms.vstring("oldSoftVar", "TMOST ==1 && abs(dzPV) < 20", "TMOST", "dzPV"),
+     #oldSoftVar = cms.vstring("oldSoftVar", "TMOST ==1 && abs(dzPV) < 20 && abs(dB) < 0.3", "TMOST", "dzPV", "dB"),
+     #oldSoftVar = cms.vstring("oldSoftVar", "TMOST ==1 && abs(dzPV) < 20 && abs(dB) < 0.3 && tkPixelLay > 0", "TMOST", "dzPV", "dB", "tkPixelLay"),
+     #oldSoftVar = cms.vstring("oldSoftVar", "TMOST ==1 && abs(dzPV) < 20 && abs(dB) < 0.3 && tkPixelLay > 0 && tkTrackerLay > 5", "TMOST", "dzPV", "dB", "tkPixelLay", "tkTrackerLay"),
      MediumVar = cms.vstring("MediumVar", "Loose==1 && validFraction > 0.8 && ((Glb==1 && glbChi2 < 3 && chi2LPosition < 12 && tkKink < 20 && segmComp > 0.303) || segmComp> 0.451)", "Loose", "validFraction", "Glb", "glbChi2", "chi2LPosition", "tkKink", "segmComp"),
      TightVar = cms.vstring("TightVar", "PF==1 && Glb==1 && tkChi2 < 10 && glbValidMuHits > 0 && numberOfMatchedStations > 1 && abs(dB) < 0.2 && abs(dzPV) < 0.5 && tkValidPixelHits > 0 && tkTrackerLay > 5", "PF", "Glb", "tkChi2", "glbValidMuHits", "numberOfMatchedStations", "dB",  "dzPV", "tkValidPixelHits", "tkTrackerLay" ),
-     #newID
+     # new SoftMuon ID 2012
      SoftVar = cms.vstring("SoftVar", "TMOST ==1 && tkTrackerLay > 5 && tkPixelLay > 0 && abs(dzPV) < 20 && abs(dB) < 0.3 && Track_HP == 1", "TMOST","tkTrackerLay", "tkPixelLay", "dzPV", "dB", "Track_HP"),
      ),
 
@@ -105,6 +121,9 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     PDFs = cms.PSet(
         signalPlusBkg = cms.vstring(
             "CBShape::signal(mass, mean[3.1,3.0,3.2], sigma[0.05,0.02,0.06], alpha[3., 0.5, 5.], n[1, 0.1, 100.])",
+            #"Chebychev::backgroundPass(mass, {cPass[0,-0.5,0.5], cPass2[0,-0.5,0.5]})",
+            #"Chebychev::backgroundFail(mass, {cFail[0,-0.5,0.5], cFail2[0,-0.5,0.5]})",
+            #"Gaussian::signal(mass, mean[3.1,3.0,3.2], sigma[0.05,0.02,0.1])",
             "Exponential::backgroundPass(mass, lp[0,-5,5])",
             "Exponential::backgroundFail(mass, lf[0,-5,5])",
             "efficiency[0.9,0,1]",
@@ -121,7 +140,16 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
 # pick muons that bend apart from each other
 SEPARATED = cms.PSet(pair_drM1 = cms.vdouble(0.5,10),
                      pair_probeMultiplicity = cms.vdouble(0.5,1.5),
+                     #pair_dz = cms.vdouble(-0.1,0.1),
+                     #caloComp = cms.vdouble(0.5,5),
                      )
+#                     pair_distM1 = cms.vdouble(200,1000))
+#SEPARATED = cms.PSet(pair_dphiVtxTimesQ = cms.vdouble(-3.14,0), #seagulls
+#                     pair_drM1 = cms.vdouble(0.5,10),
+#                     pair_distM1 = cms.vdouble(200,1000))
+#SEPARATED = cms.PSet(pair_dphiVtxTimesQ = cms.vdouble(0,3.14),) #cowboys
+#                     pair_drM1 = cms.vdouble(0.5,10),
+#                     pair_distM1 = cms.vdouble(200,1000))
 
 PT_ETA_BINS = cms.PSet(SEPARATED,
                        #pt = cms.vdouble(2.0, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.5, 5.0, 6.0, 8.0, 10.0, 15.0, 20.0),
@@ -134,6 +162,7 @@ VTX_BINS = cms.PSet(SEPARATED,
                     abseta = cms.vdouble(0.0, 2.1),
                     pt     = cms.vdouble(8.0, 20.0),
                     tag_nVertices = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5)
+                    #tag_nVerticesDA = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5)
                     )
 
 ETA_BINS = cms.PSet(SEPARATED,
@@ -154,27 +183,36 @@ PT_ABSETA_WIDE = cms.PSet(SEPARATED,
 # Prefix should be "./" only
 PREFIX="/afs/cern.ch/work/l/lecriste/TnP/Ilse/CMSSW_5_3_22/test/"
 process.TnP_MuonID = Template.clone(
-    #InputFileNames = cms.vstring(
-    #    PREFIX+'tnpJPsi_Run2012A.root',
-    #    PREFIX+'tnpJPsi_Run2012B.root',
-    #    PREFIX+'tnpJPsi_Run2012C.root',
-    #    PREFIX+'tnpJPsi_Run2012D.root',
-    #),
-    InputFileNames = cms.vstring('/afs/cern.ch/user/m/msharma/public/tnpJPsi_Data.root'),
+     #InputFileNames = cms.vstring(
+     #    PREFIX+'tnpJPsi_Run2012A.root',
+     #    PREFIX+'tnpJPsi_Run2012B.root',
+     #    PREFIX+'tnpJPsi_Run2012C.root',
+     #    PREFIX+'tnpJPsi_Run2012D.root',
+     #),
+     #InputFileNames = cms.vstring('/afs/cern.ch/user/m/msharma/public/tnpJPsi_Data.root'), # 400k events
+     InputFileNames = cms.vstring('/afs/cern.ch/user/m/msharma/public/tnpJPsi_DataJuly232015.root'), # 800k events
 
-    InputTreeName = cms.string("fitter_tree"),
-    InputDirectoryName = cms.string("tpTree"),
-    #InputDirectoryName = cms.string("tpTreeSta"),
-    OutputFileName = cms.string("TnP_MuonID_%s.root" % scenario),
-    Efficiencies = cms.PSet(),
+     InputTreeName = cms.string("fitter_tree"),
+     InputDirectoryName = cms.string("tpTree"),
+     #InputDirectoryName = cms.string("tpTreeSta"),
+     OutputFileName = cms.string("TnP_MuonID_%s.root" % scenario),
+     Efficiencies = cms.PSet(),
 )
 
 IDS = ["Soft2012"]
+#IDS = ["oldSoft2012"]
+#IDS = ["Loose2012"]
+#IDS = ["Loose2012", "Soft2012", "newSoft2012"]
+#IDS = [ "Glb", "TMOST", "VBTF", "PF" ]
+
 TRIGS = [ (2,'Mu7p5_L2Mu2_Jpsi'), (2,'Mu7p5_Track2_Jpsi'), (3.5,'Mu7p5_Track3p5_Jpsi'), (7,'Mu7p5_Track7_Jpsi') ]
 #TRIGS = [ (0,'Mu8') ]
+#TRIGS = [ (0,'Mu8'), (0,'Mu17') ] 
+#TRIGS = [ (0,'DoubleMu17TkMu8_TkMu8leg') ]
 
 if "mc" in scenario:
-     process.TnP_MuonID.InputFileNames = ['root://cmsxrootd.fnal.gov///store/user/lecriste/TnP/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/crab_TnP_MC_request/150710_153845/0000/tnpJPsi_MC_1.root']
+     process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_total.root']
+     #process.TnP_MuonID.InputFileNames = ['root://cmsxrootd.fnal.gov///store/user/lecriste/TnP/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/crab_TnP_MC_request/150710_153845/0000/tnpJPsi_MC_1.root']
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_Mu8.root']
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_Monika.root']
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_benchmark_10k.root']
@@ -184,7 +222,13 @@ if "mc" in scenario:
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_oldMatching.root']
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_oldTriggers.root']
 
+#ALLBINS =  [("plateau_abseta",PLATEAU_ABSETA)]
 ALLBINS =  [("pt_abseta",PT_ETA_BINS)]
+#ALLBINS =  [("vtx",VTX_BINS)]
+#ALLBINS =  [("plateau_abseta",PLATEAU_ABSETA), ("vtx",VTX_BINS), ("eta",ETA_BINS)]
+#ALLBINS =  [("pt_abseta",PT_ETA_BINS), ("vtx",VTX_BINS), ("eta",ETA_BINS)]
+#ALLBINS =  [("pt_abseta",PT_ETA_BINS), ("vtx",VTX_BINS), ("plateau",PLATEAU_ABSETA)]
+#ALLBINS += [("pt_abseta_wide",PT_ABSETA_WIDE)]
 
 for ID in IDS:
      if len(args) > 1 and args[1] in IDS and ID != args[1]: continue
@@ -225,6 +269,8 @@ for ID in IDS:
                    BinnedVariables = DEN,
                    BinToPDFmap = cms.vstring("signalPlusBkg")
                ))
+               #if "plateau" in X: module.SaveWorkspace = True
+               ## mc efficiency, if scenario is mc
                if "mc" in scenario:
                     setattr(module.Efficiencies, ID+"_"+X+TRIGLABEL+"_mcTrue", cms.PSet(
                         EfficiencyCategoryAndState = cms.vstring(ID,"above"),  # ?? "pass"
