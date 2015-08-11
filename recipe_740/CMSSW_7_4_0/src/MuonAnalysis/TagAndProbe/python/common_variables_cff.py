@@ -208,6 +208,9 @@ LowPtTriggerFlagsEfficienciesProbe = cms.PSet(
     Mu7p5_L2Mu2_Jpsi_L2 = cms.string(   "!triggerObjectMatchesByCollection('hltL2MuonCandidates').empty()"
                                         + "&& triggerObjectMatchesByCollection('hltL2MuonCandidates').at(0).hasFilterLabel('hltMu7p5L2Mu2JpsiTrackMassFiltered')"
                                         ),
+    Mu7p5_L2Mu2_L2 = cms.string(        "!triggerObjectMatchesByCollection('hltL2MuonCandidates').empty() && "
+                                        + " triggerObjectMatchesByCollection('hltL2MuonCandidates').at(0).hasFilterLabel('hltDiMuonL2PreFiltered0')"
+                                        ),
    
     )
 

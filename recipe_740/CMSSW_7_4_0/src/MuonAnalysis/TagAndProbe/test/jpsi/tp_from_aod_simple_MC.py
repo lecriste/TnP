@@ -10,7 +10,9 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 100
 process.source = cms.Source("PoolSource", 
     fileNames = cms.untracked.vstring(),
 )
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32( 10000 ) ) # 4.8Mb in 1h on 84597 (=-1) events
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(
+                                                                     100000 ) # 281Kb in 48' on 10K events for the official BPH MC, 4.8Mb in 1h on 84597 (=-1) events for the MC from Muon POG 
+                                        )  
 
 
 process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
@@ -35,20 +37,31 @@ elif "CMSSW_5_2_" in os.environ['CMSSW_VERSION']:
         '/store/relval/CMSSW_5_2_3/RelValJpsiMM/GEN-SIM-RECO/START52_V5-v1/0043/304746CC-097A-E111-A71F-003048FFD76E.root',
     ]
 elif "CMSSW_7_4_" in os.environ['CMSSW_VERSION']:
-    process.GlobalTag.globaltag = cms.string('MCRUN2_74_V7')
+    process.GlobalTag.globaltag = cms.string('MCRUN2_74_V9')
     process.source.fileNames = [
-        '/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/60000/183C894F-C008-E511-AFB5-0025905A606A.root',
-        '/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/60000/3615E328-D708-E511-B2F9-003048FFD752.root',
-        '/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/60000/561562A2-D708-E511-B06E-0025905B8576.root',
-        '/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/60000/6E145BC4-D708-E511-99CF-002481E94BCA.root',
-        '/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/60000/7E81F237-C808-E511-90F4-00261894383E.root',
-        '/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/60000/888136A8-D708-E511-823C-002590A2CD68.root',
-        '/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/70000/08135FA6-6E0C-E511-9A97-002618943948.root',
-        '/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/70000/283882C6-860C-E511-AB1C-0026189438C9.root',
-        '/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/70000/76BD42C8-FE08-E511-BAB9-0025905A60DE.root',
-        '/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/70000/9AA472CE-FE08-E511-BEE3-0025905B8582.root',
-        '/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/70000/C81001CF-860C-E511-A5B7-0025905A6088.root',
-        '/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/70000/F87F150E-710C-E511-9F33-0025905A60BC.root'
+        # MC from Muon POG
+        #'/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/60000/183C894F-C008-E511-AFB5-0025905A606A.root',
+        #'/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/60000/3615E328-D708-E511-B2F9-003048FFD752.root',
+        #'/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/60000/561562A2-D708-E511-B06E-0025905B8576.root',
+        #'/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/60000/6E145BC4-D708-E511-99CF-002481E94BCA.root',
+        #'/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/60000/7E81F237-C808-E511-90F4-00261894383E.root',
+        #'/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/60000/888136A8-D708-E511-823C-002590A2CD68.root',
+        #'/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/70000/08135FA6-6E0C-E511-9A97-002618943948.root',
+        #'/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/70000/283882C6-860C-E511-AB1C-0026189438C9.root',
+        #'/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/70000/76BD42C8-FE08-E511-BAB9-0025905A60DE.root',
+        #'/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/70000/9AA472CE-FE08-E511-BEE3-0025905B8582.root',
+        #'/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/70000/C81001CF-860C-E511-A5B7-0025905A6088.root',
+        #'/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/70000/F87F150E-710C-E511-9F33-0025905A60BC.root'
+        #
+        # BPH MC
+        '/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/20000/0072AAD1-7028-E511-8448-0025905A612E.root',
+        '/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/20000/00C6C123-0428-E511-92F2-D4AE526A091F.root',
+        '/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/20000/026710B4-5F27-E511-B9D3-B8CA3A70A520.root',
+        '/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/20000/02D22B1C-D626-E511-8850-002590D60026.root',
+        '/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/20000/04C3F72A-D126-E511-B12F-00238BBD7594.root',
+        '/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/20000/08FCBA7F-D126-E511-99C8-0025905964A6.root',
+        '/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/20000/0A4AB9B0-3827-E511-8277-0025905B857C.root',
+        '/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/20000/0C175E3E-E627-E511-ADEB-6C3BE5B58000.root',
     ]
 else: raise RuntimeError, "Unknown CMSSW version %s" % os.environ['CMSSW_VERSION']
 
@@ -74,10 +87,10 @@ process.triggerResultsFilter.l1tResults = ''
 process.triggerResultsFilter.throw = True
 #process.triggerResultsFilter.hltResults = cms.InputTag( "TriggerResults", "", "REDIGI38XPU" )
 process.triggerResultsFilter.hltResults = cms.InputTag( "TriggerResults", "", "HLT" )
-process.HLTMu   = process.triggerResultsFilter.clone(triggerConditions = [ 'HLT_Mu*_L2Mu*'])
-process.HLTBoth = process.triggerResultsFilter.clone(triggerConditions = [ 'HLT_Mu*_L2Mu*', 'HLT_Mu*_Track*_Jpsi*'])
-#process.HLTMu   = process.triggerResultsFilter.clone(triggerConditions = [ 'HLT_Mu*_L2Mu*', 'HLT_Mu*' ])
-#process.HLTBoth = process.triggerResultsFilter.clone(triggerConditions = [ 'HLT_Mu*_L2Mu*', 'HLT_Mu*_Track*_Jpsi*', 'HLT_Mu*' ])
+process.HLTMu   = process.triggerResultsFilter.clone(triggerConditions = [ 'HLT_Mu*_L2Mu*' ])
+process.HLTBoth = process.triggerResultsFilter.clone(triggerConditions = [ 'HLT_Mu*_L2Mu*', 'HLT_Mu*_Track*_Jpsi*' ])
+#process.HLTMu   = process.triggerResultsFilter.clone(triggerConditions = [ 'HLT_Mu*_L2Mu*', 'HLT_Mu*' ]) # for Mu8 test
+#process.HLTBoth = process.triggerResultsFilter.clone(triggerConditions = [ 'HLT_Mu*_L2Mu*', 'HLT_Mu*_Track*_Jpsi*', 'HLT_Mu*' ]) # for Mu8 test
 
 ##    __  __                       
 ##   |  \/  |_   _  ___  _ __  ___ 
@@ -123,7 +136,7 @@ process.probeMuons = cms.EDFilter("PATMuonSelector",
     src = cms.InputTag("patMuonsWithTrigger"),
     #cut = cms.string("track.isNonnull && (!triggerObjectMatchesByCollection('hltMuTrackJpsiEffCtfTrackCands').empty() || !triggerObjectMatchesByCollection('hltMuTrackJpsiCtfTrackCands').empty() || !triggerObjectMatchesByCollection('hltL2MuonCandidates').empty())"),
     cut = cms.string("track.isNonnull && !triggerObjectMatchesByCollection('hltTracksIter').empty()"),
-    #cut = cms.string("")
+    #cut = cms.string("") # for Mu8 test
     #cut = cms.string("track.isNonnull && !triggerObjectMatchesByCollection('hltL2MuonCandidates').empty()"),
 )
 
@@ -167,12 +180,6 @@ process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
        HighPtTriggerFlagsDebug,
        LowPtTriggerFlagsPhysics,
        LowPtTriggerFlagsEfficienciesProbe,
-       # 
-       #Mu7p5_L2Mu2_Jpsi_L2 = LowPtTriggerFlagsEfficienciesProbe_L2.Mu7p5_L2Mu2_Jpsi_L2,
-       #Mu7p5_Track2_Jpsi_TK = LowPtTriggerFlagsEfficienciesProbe_L2.Mu7p5_Track2_Jpsi_TK,
-       #Mu7p5_Track3p5_Jpsi_TK = LowPtTriggerFlagsEfficienciesProbe_L2.Mu7p5_Track3p5_Jpsi_TK,
-       #Mu7p5_Track7_Jpsi_TK = LowPtTriggerFlagsEfficienciesProbe_L2.Mu7p5_Track7_Jpsi_TK,
-       #
        Acc_JPsi = cms.string("(abs(eta) <= 1.3 && pt > 3.3) || (1.3 < abs(eta) <= 2.2 && p > 2.9) || (2.2 < abs(eta) <= 2.4  && pt > 0.8)"),
     ),
     tagVariables = cms.PSet(
@@ -266,7 +273,7 @@ massSearchReplaceAnyInputTag(process.patMuonsWithTriggerSequenceSta, "mergedMuon
 ## Define probes and T&P pairs
 process.probeMuonsSta = cms.EDFilter("PATMuonSelector",
     src = cms.InputTag("patMuonsWithTriggerSta"),
-    cut = cms.string("outerTrack.isNonnull && !triggerObjectMatchesByCollection('hltL2MuonCandidates').empty()")
+    cut = cms.string("outerTrack.isNonnull && !triggerObjectMatchesByCollection('hltL2MuonCandidates').empty()"),
 )
 process.probeMuonsMCMatchSta = process.tagMuonsMCMatch.clone(src = "probeMuonsSta")
 process.tpPairsSta = process.tpPairs.clone(decay = "tagMuons@+ probeMuonsSta@-", cut = "2 < mass < 5")
@@ -288,13 +295,9 @@ process.tpTreeSta = process.tpTree.clone(
         tk_deltaEta_NoBestJPsi   = cms.InputTag("staToTkMatchNoBestJPsi","deltaEta"),
     ),
     flags = cms.PSet(
-        outerValidHits = cms.string("outerTrack.numberOfValidHits > 0"),
         #Mu5_L2Mu3_Jpsi_L2 = LowPtTriggerFlagsEfficienciesProbe.Mu5_L2Mu3_Jpsi_L2,
-        #LowPtTriggerFlagsEfficienciesProbe,
-        Mu7p5_L2Mu2_Jpsi_L2 = LowPtTriggerFlagsEfficienciesProbe.Mu7p5_L2Mu2_Jpsi_L2,
-        Mu7p5_Track2_Jpsi_TK = LowPtTriggerFlagsEfficienciesProbe.Mu7p5_Track2_Jpsi_TK,
-        Mu7p5_Track3p5_Jpsi_TK = LowPtTriggerFlagsEfficienciesProbe.Mu7p5_Track3p5_Jpsi_TK,
-        Mu7p5_Track7_Jpsi_TK = LowPtTriggerFlagsEfficienciesProbe.Mu7p5_Track7_Jpsi_TK,
+        LowPtTriggerFlagsEfficienciesProbe,
+        outerValidHits = cms.string("outerTrack.numberOfValidHits > 0"),
         TM  = cms.string("isTrackerMuon"),
         Glb = cms.string("isGlobalMuon"),
     ),
@@ -304,10 +307,6 @@ process.tpTreeSta = process.tpTree.clone(
     tagFlags = cms.PSet(
         #Mu5_L2Mu3_Jpsi_MU = LowPtTriggerFlagsEfficienciesTag.Mu5_L2Mu3_Jpsi_MU,
         LowPtTriggerFlagsEfficienciesTag,
-        #Mu7p5_L2Mu2_Jpsi_MU = LowPtTriggerFlagsEfficienciesTag.Mu7p5_L2Mu2_Jpsi_MU,
-        #Mu7p5_Track2_Jpsi_MU =  LowPtTriggerFlagsEfficienciesTag.Mu7p5_Track2_Jpsi_MU,
-        #Mu7p5_Track3p5_Jpsi_MU =  LowPtTriggerFlagsEfficienciesTag.Mu7p5_Track3p5_Jpsi_MU,
-        #Mu7p5_Track7_Jpsi_MU =  LowPtTriggerFlagsEfficienciesTag.Mu7p5_Track7_Jpsi_MU,
         ),
     pairVariables = cms.PSet(),
     pairFlags     = cms.PSet(),
@@ -327,20 +326,23 @@ process.tnpSimpleSequenceSta = cms.Sequence(
     process.tpTreeSta
 )
 
-process.tagAndProbeSta = cms.Path( 
-    process.fastFilter +
-    process.HLTMu      +
-    process.muonsSta                       +
-    process.patMuonsWithTriggerSequenceSta +
-    process.tnpSimpleSequenceSta
-)
+#process.tagAndProbeSta = cms.Path( 
+#    process.fastFilter +
+#    process.HLTMu      +
+#    process.muonsSta                       +
+#    process.patMuonsWithTriggerSequenceSta +
+#    process.tnpSimpleSequenceSta
+#)
 
 #process.load("MuonAnalysis.TagAndProbe.fakerate_all_cff")
 
 process.RandomNumberGeneratorService.tkTracksNoJPsi = cms.PSet( initialSeed = cms.untracked.uint32(81) )
 process.RandomNumberGeneratorService.tkTracksNoBestJPsi = cms.PSet( initialSeed = cms.untracked.uint32(81) ) # 81?
 
-process.TFileService = cms.Service("TFileService", fileName = cms.string("tnpJPsi_MC.root"))
+process.TFileService = cms.Service("TFileService",
+                                   #fileName = cms.string("tnpJPsi_MC.root")
+                                   fileName = cms.string("tnpJPsi_officialBPHMC.root")
+                                   )
 
 # use this if you want to compute also 'unbiased' efficiencies, 
 # - you have to remove all filters

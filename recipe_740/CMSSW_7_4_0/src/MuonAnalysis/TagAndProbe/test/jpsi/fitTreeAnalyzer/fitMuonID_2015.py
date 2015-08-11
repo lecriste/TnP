@@ -108,7 +108,7 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
      MediumVar = cms.vstring("MediumVar", "Loose==1 && validFraction > 0.8 && ((Glb==1 && glbChi2 < 3 && chi2LPosition < 12 && tkKink < 20 && segmComp > 0.303) || segmComp> 0.451)", "Loose", "validFraction", "Glb", "glbChi2", "chi2LPosition", "tkKink", "segmComp"),
      TightVar = cms.vstring("TightVar", "PF==1 && Glb==1 && tkChi2 < 10 && glbValidMuHits > 0 && numberOfMatchedStations > 1 && abs(dB) < 0.2 && abs(dzPV) < 0.5 && tkValidPixelHits > 0 && tkTrackerLay > 5", "PF", "Glb", "tkChi2", "glbValidMuHits", "numberOfMatchedStations", "dB",  "dzPV", "tkValidPixelHits", "tkTrackerLay" ),
      # new SoftMuon ID 2012
-     SoftVar = cms.vstring("SoftVar", "TMOST ==1 && tkTrackerLay > 5 && tkPixelLay > 0 && abs(dzPV) < 20 && abs(dB) < 0.3 && Track_HP == 1", "TMOST","tkTrackerLay", "tkPixelLay", "dzPV", "dB", "Track_HP"),
+     SoftVar = cms.vstring("SoftVar", "TMOST == 1 && tkTrackerLay > 5 && tkPixelLay > 0 && abs(dzPV) < 20 && abs(dB) < 0.3 && Track_HP == 1", "TMOST","tkTrackerLay", "tkPixelLay", "dzPV", "dB", "Track_HP"),
      ),
 
     Cuts = cms.PSet(
@@ -158,6 +158,11 @@ PT_ETA_BINS = cms.PSet(SEPARATED,
                        abseta = cms.vdouble(0.0,0.9,1.2,2.1,2.4)
                        )
 
+PT_BINS = cms.PSet(    SEPARATED,
+                       #pt = cms.vdouble(2.0, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.5, 5.0, 6.0, 8.0, 10.0, 15.0, 20.0),
+                       pt = cms.vdouble(2.0, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.5, 5.0, 6.0, 8.0, 10.0, 15.0, 20.0, 30.0, 40.0),
+                   )
+
 VTX_BINS = cms.PSet(SEPARATED,
                     abseta = cms.vdouble(0.0, 2.1),
                     pt     = cms.vdouble(8.0, 20.0),
@@ -189,9 +194,9 @@ process.TnP_MuonID = Template.clone(
      #    PREFIX+'tnpJPsi_Run2012C.root',
      #    PREFIX+'tnpJPsi_Run2012D.root',
      #),
-     #InputFileNames = cms.vstring('/afs/cern.ch/user/m/msharma/public/tnpJPsi_Data.root'), # 400k events
-     InputFileNames = cms.vstring('/afs/cern.ch/user/m/msharma/public/tnpJPsi_DataJuly232015.root'), # 800k events
-
+     #InputFileNames = cms.vstring('/afs/cern.ch/user/m/msharma/public/tnpJPsi_Data.root'), # 400k events, no JSON
+     #InputFileNames = cms.vstring('/afs/cern.ch/user/m/msharma/public/tnpJPsi_DataJuly232015.root'), # 800k events, no JSON
+     InputFileNames = cms.vstring('/afs/cern.ch/user/m/msharma/public/tnpJPsi_Data_246908-251883_JSON_MuonPhys_v2.root'),
      InputTreeName = cms.string("fitter_tree"),
      InputDirectoryName = cms.string("tpTree"),
      #InputDirectoryName = cms.string("tpTreeSta"),
@@ -206,6 +211,8 @@ IDS = ["Soft2012"]
 #IDS = [ "Glb", "TMOST", "VBTF", "PF" ]
 
 TRIGS = [ (2,'Mu7p5_L2Mu2_Jpsi'), (2,'Mu7p5_Track2_Jpsi'), (3.5,'Mu7p5_Track3p5_Jpsi'), (7,'Mu7p5_Track7_Jpsi') ]
+#TRIGS = [ (2,'Mu7p5_Track2_Jpsi'), (7,'Mu7p5_Track7_Jpsi') ]
+#TRIGS = [ (2,'Mu7p5_Track2_Jpsi') ]
 #TRIGS = [ (0,'Mu8') ]
 #TRIGS = [ (0,'Mu8'), (0,'Mu17') ] 
 #TRIGS = [ (0,'DoubleMu17TkMu8_TkMu8leg') ]
@@ -223,7 +230,8 @@ if "mc" in scenario:
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_oldTriggers.root']
 
 #ALLBINS =  [("plateau_abseta",PLATEAU_ABSETA)]
-ALLBINS =  [("pt_abseta",PT_ETA_BINS)]
+#ALLBINS =  [("pt_abseta",PT_ETA_BINS)]
+ALLBINS =  [("pt_abseta",PT_ETA_BINS), ("pt",PT_BINS)]
 #ALLBINS =  [("vtx",VTX_BINS)]
 #ALLBINS =  [("plateau_abseta",PLATEAU_ABSETA), ("vtx",VTX_BINS), ("eta",ETA_BINS)]
 #ALLBINS =  [("pt_abseta",PT_ETA_BINS), ("vtx",VTX_BINS), ("eta",ETA_BINS)]
@@ -234,7 +242,7 @@ for ID in IDS:
      if len(args) > 1 and args[1] in IDS and ID != args[1]: continue
      for X,B in ALLBINS:
           if len(args) > 2 and X not in args[2:]: continue
-          module = process.TnP_MuonID.clone(OutputFileName = cms.string("TnP_MuonID_%s_%s_%s.root" % (scenario, ID, X)))
+          module = process.TnP_MuonID.clone(OutputFileName = cms.string("TnP_MuonID__%s__%s_%s.root" % (scenario, ID, X)))
           #
           DEN = B.clone()
           setattr(module.Efficiencies, ID+"_"+X, cms.PSet(
@@ -247,7 +255,8 @@ for ID in IDS:
           #
           for PTMIN, TRIG in TRIGS:
                TRIGLABEL=""
-               if "pt_" in X:
+               #if "pt_" in X:
+               if "pt" in X:
                     TRIGLABEL="_"+TRIG
                else:
                     if TRIG != "Mu7p5_Track2": continue # use only one trigger except for turn-on
@@ -277,6 +286,6 @@ for ID in IDS:
                         UnbinnedVariables = cms.vstring("mass"),
                         BinnedVariables = DEN.clone(mcTrue = cms.vstring("true"))
                     ))
-          setattr(process, "TnP_MuonID_"+ID+"_"+X, module)
+          setattr(process, "TnP_MuonID__"+ID+"_"+X, module)
           setattr(process, "run_"+ID+"_"+X, cms.Path(module))
 
