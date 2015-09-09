@@ -170,6 +170,10 @@ LowPtTriggerFlagsPhysics = cms.PSet(
                                    )
 
 LowPtTriggerFlagsEfficienciesTag = cms.PSet(
+   ########## Mu ########## 
+   Mu7p5_MU = cms.string("!triggerObjectMatchesByCollection('hltL3MuonCandidates').empty()"
+                         + "&& triggerObjectMatchesByCollection('hltL3MuonCandidates').at(0).hasFilterLabel('hltL3fLMu7p5TrackL3Filtered7p5')"
+                         ),
    ########## Mu + Track ########## 
    Mu7p5_Track2_Jpsi_MU = cms.string(  "!triggerObjectMatchesByCollection('hltL3MuonCandidates').empty()"
                                        + "&& triggerObjectMatchesByCollection('hltL3MuonCandidates').at(0).hasFilterLabel('hltMu7p5Track2JpsiTrackMassFiltered')"
@@ -209,7 +213,7 @@ LowPtTriggerFlagsEfficienciesProbe = cms.PSet(
                                         + "&& triggerObjectMatchesByCollection('hltL2MuonCandidates').at(0).hasFilterLabel('hltMu7p5L2Mu2JpsiTrackMassFiltered')"
                                         ),
     Mu7p5_L2Mu2_L2 = cms.string(        "!triggerObjectMatchesByCollection('hltL2MuonCandidates').empty() && "
-                                        + " triggerObjectMatchesByCollection('hltL2MuonCandidates').at(0).hasFilterLabel('hltDiMuonL2PreFiltered0')"
+                                        + " triggerObjectMatchesByCollection('hltL2MuonCandidates').at(0).hasFilterLabel('hltL2fMu7p5TrackL2Filtered7')"
                                         ),
    
     )

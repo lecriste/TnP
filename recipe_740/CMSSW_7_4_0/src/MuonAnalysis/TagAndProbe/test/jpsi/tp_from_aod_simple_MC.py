@@ -11,7 +11,8 @@ process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(),
 )
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(
-                                                                     100000 ) # 281Kb in 48' on 10K events for the official BPH MC, 4.8Mb in 1h on 84597 (=-1) events for the MC from Muon POG 
+                                                                     10000 ) # 180Kb in 5.5' on 10K events for the official BPH MC
+                                        # 4.8Mb in 1h on 84597 (=-1) events for the MC from Muon POG 
                                         )  
 
 
@@ -87,10 +88,10 @@ process.triggerResultsFilter.l1tResults = ''
 process.triggerResultsFilter.throw = True
 #process.triggerResultsFilter.hltResults = cms.InputTag( "TriggerResults", "", "REDIGI38XPU" )
 process.triggerResultsFilter.hltResults = cms.InputTag( "TriggerResults", "", "HLT" )
-process.HLTMu   = process.triggerResultsFilter.clone(triggerConditions = [ 'HLT_Mu*_L2Mu*' ])
-process.HLTBoth = process.triggerResultsFilter.clone(triggerConditions = [ 'HLT_Mu*_L2Mu*', 'HLT_Mu*_Track*_Jpsi*' ])
-#process.HLTMu   = process.triggerResultsFilter.clone(triggerConditions = [ 'HLT_Mu*_L2Mu*', 'HLT_Mu*' ]) # for Mu8 test
-#process.HLTBoth = process.triggerResultsFilter.clone(triggerConditions = [ 'HLT_Mu*_L2Mu*', 'HLT_Mu*_Track*_Jpsi*', 'HLT_Mu*' ]) # for Mu8 test
+#process.HLTMu   = process.triggerResultsFilter.clone(triggerConditions = [ 'HLT_Mu*_L2Mu*' ])
+#process.HLTBoth = process.triggerResultsFilter.clone(triggerConditions = [ 'HLT_Mu*_L2Mu*', 'HLT_Mu*_Track*_Jpsi*' ])
+process.HLTMu   = process.triggerResultsFilter.clone(triggerConditions = [ 'HLT_Mu*_L2Mu*', 'HLT_Mu*' ]) # for Mu8 test
+process.HLTBoth = process.triggerResultsFilter.clone(triggerConditions = [ 'HLT_Mu*_L2Mu*', 'HLT_Mu*_Track*_Jpsi*', 'HLT_Mu*' ]) # for Mu8 test
 
 ##    __  __                       
 ##   |  \/  |_   _  ___  _ __  ___ 
@@ -134,9 +135,9 @@ process.oneTag  = cms.EDFilter("CandViewCountFilter", src = cms.InputTag("tagMuo
 
 process.probeMuons = cms.EDFilter("PATMuonSelector",
     src = cms.InputTag("patMuonsWithTrigger"),
-    #cut = cms.string("track.isNonnull && (!triggerObjectMatchesByCollection('hltMuTrackJpsiEffCtfTrackCands').empty() || !triggerObjectMatchesByCollection('hltMuTrackJpsiCtfTrackCands').empty() || !triggerObjectMatchesByCollection('hltL2MuonCandidates').empty())"),
-    cut = cms.string("track.isNonnull && !triggerObjectMatchesByCollection('hltTracksIter').empty()"),
-    #cut = cms.string("") # for Mu8 test
+    #cut = cms.string("track.isNonnull && (!triggerObjectMatchesByCollection('hltMuTrackJpsiEffCtfTrackCands').empty() || !triggerObjectMatchesByCollection('hltMuTrackJpsiCtfTrackCands').empty() || !triggerObjectMatchesByCollection('hltL2MuonCandidates').empty())"), # Run-I
+    #cut = cms.string("track.isNonnull && !triggerObjectMatchesByCollection('hltTracksIter').empty()"),
+    cut = cms.string("track.isNonnull") # for Mu8 test
     #cut = cms.string("track.isNonnull && !triggerObjectMatchesByCollection('hltL2MuonCandidates').empty()"),
 )
 
@@ -326,13 +327,13 @@ process.tnpSimpleSequenceSta = cms.Sequence(
     process.tpTreeSta
 )
 
-#process.tagAndProbeSta = cms.Path( 
-#    process.fastFilter +
-#    process.HLTMu      +
-#    process.muonsSta                       +
-#    process.patMuonsWithTriggerSequenceSta +
-#    process.tnpSimpleSequenceSta
-#)
+process.tagAndProbeSta = cms.Path( 
+    process.fastFilter +
+    process.HLTMu      +
+    process.muonsSta                       +
+    process.patMuonsWithTriggerSequenceSta +
+    process.tnpSimpleSequenceSta
+)
 
 #process.load("MuonAnalysis.TagAndProbe.fakerate_all_cff")
 
