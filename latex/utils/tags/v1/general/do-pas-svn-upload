@@ -1,0 +1,61 @@
+#!/usr/bin/env perl
+
+use strict;
+use File::Temp qw/ tempfile tempdir /;
+use Cwd; # like Unix pwd but more portable
+use Getopt::Long qw(:config require_order auto_version);
+
+
+    my $VERSION = sprintf "%d.%03d", q$Revision: 1.2 $ =~ /(\d+)/g;
+
+    my $help = '';
+    my $reload = '';
+    GetOptions ('help|?' => \$help,
+                'reload=i' => \$reload);
+    if ( $help || substr($ARGV[0],0,1) eq 'h' || @ARGV == 0 )
+    {
+        &print_usage();
+        exit;
+    }
+    my $numArgs = $#ARGV + 1;
+    my $target = shift;
+    my $dataMC = 'd';
+    my $newTagNo = 0;
+    if ($numArgs > 1) { $newTagNo = shift; }
+    if ($numArgs > 2) { $dataMC = shift; }
+    if ($dataMC !~ 'm') { $dataMC = 'd'; }
+    my $svnroot = "svn+ssh://svn.cern.ch/reps/tdr2";
+    my $tmp_dir = tempdir() or die;
+    my $orig_dir = Cwd::abs_path;
+    chdir($tmp_dir);
+    system("svn co -N $svnroot");
+    chdir("tdr2");
+    system("svn update utils");
+    system("svn update -N notes");
+    system("svn update  -N notes/$target");
+    system("svn update notes/$target/trunk");
+    chdir("notes");
+    local @ARGV;
+    @ARGV = ( "--style", "pas", "--nodraft", "--wrap", "--upload");
+    if ($dataMC) 
+    {
+        push(@ARGV,"--data");
+    }
+    else
+    {
+        push(@ARGV, "--no-data");
+    }
+    if ($reload)
+    {
+        push(@ARGV, "--reload", $reload);
+    }
+    push(@ARGV, "b", $target );
+    local $0 = getcwd()."/tdr";
+    eval { require( "tdr" ) };
+    chdir($orig_dir);
+
+###
+sub print_usage {
+    print "Usage: $0 PAS_IDENTIFIER\nExample: $0 EXO-08-008\n";
+}
+

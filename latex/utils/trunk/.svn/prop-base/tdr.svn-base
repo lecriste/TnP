@@ -1,0 +1,22 @@
+K 13
+svn:eol-style
+V 6
+native
+K 14
+svn:executable
+V 1
+*
+K 12
+svn:keywords
+V 24
+Id Revision Date HeadURL
+K 13
+svn:mergeinfo
+V 64
+/utils/branches/dev/tdr:5700-46536
+/utils/tags/dev/tdr:5528-5699
+K 13
+svn:mime-type
+V 11
+text/x-perl
+END

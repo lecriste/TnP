@@ -1,0 +1,18 @@
+K 13
+svn:eol-style
+V 6
+native
+K 14
+svn:executable
+V 1
+*
+K 12
+svn:keywords
+V 22
+Revision Author URL Id
+K 13
+svn:mergeinfo
+V 94
+/utils/branches/dev/general/pas-bib.py:5700-44191
+/utils/tags/dev/general/pas-bib.py:5528-5699
+END

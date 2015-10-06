@@ -1,0 +1,36 @@
+#!/usr/bin/env perl
+
+use strict;
+use File::Temp qw/ tempfile tempdir /;
+use Cwd; # like Unix pwd but more portable
+use Getopt::Long qw(:config require_order);
+
+
+    my $VERSION = sprintf "%d.%03d", q$Revision: 1.2 $ =~ /(\d+)/g;
+
+    my $help = '';
+    GetOptions ('help|?' => \$help);
+    if ( $help || substr($ARGV[0],0,1) eq 'h' || @ARGV == 0 )
+    {
+        &print_usage();
+        exit;
+    }
+    my $target = shift;
+    my $cvsroot = ":gserver:isscvs.cern.ch/local/reps/tdr";
+    my $tmp_dir = tempdir() or die;
+    my $orig_dir = Cwd::abs_path;
+    chdir($tmp_dir);
+    system("cvs -d $cvsroot co -l notes");
+    chdir("notes");
+    system("cvs -d $cvsroot -r update -d -f -r PAS notes/$target");
+    local @ARGV;
+    @ARGV = ( "--style", "pas", "--nodraft", "--upload", "b", $target );
+    local $0 = getcwd()."/tdr";
+    eval { require( "tdr" ) };
+    chdir($orig_dir);
+
+###
+sub print_usage {
+    print "Usage: $0 PAS_IDENTIFIER\nExample: $0 EXO-08-008\n";
+}
+

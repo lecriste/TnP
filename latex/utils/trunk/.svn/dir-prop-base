@@ -1,0 +1,15 @@
+K 10
+svn:ignore
+V 40
+*.bak
+tmp
+biblist-plb.tex
+tdrx
+tdrx.tex
+
+K 13
+svn:mergeinfo
+V 56
+/utils/branches/dev:5700-39666
+/utils/tags/dev:5528-5699
+END

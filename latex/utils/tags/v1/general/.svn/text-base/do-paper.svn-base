@@ -1,0 +1,50 @@
+#!/usr/bin/env perl
+
+use strict;
+use File::Temp qw/ tempfile tempdir /;
+use Cwd; # like Unix pwd but more portable
+use Getopt::Long qw(:config require_order);
+
+
+    my $VERSION = sprintf "%d", q$Revision$ =~ /(\d+)/g;
+
+    my $help = '';
+    GetOptions ('help|?' => \$help);
+    if ( $help || substr($ARGV[0],0,1) eq 'h' || @ARGV == 0 )
+    {
+        &print_usage();
+        exit;
+    }
+    my $svn = ($#ARGV > 0);
+    my $target = shift;
+    my $tmp_dir = tempdir() or die;
+    my $orig_dir = Cwd::abs_path;
+    chdir($tmp_dir);
+    @ARGV = ( "--style", "paper", "--export", "b", $target );
+    if ($svn)
+    {
+        my $url  = "svn+ssh://svn.cern.ch/reps/tdr2";
+        system("svn co -N $url");
+        chdir("tdr2");
+        system("svn update utils");
+        system("svn update -N papers");
+        system("svn update papers/$target");
+        chdir("papers");
+    }
+    else
+    {
+        my $cvsroot = ":gserver:isscvs.cern.ch/local/reps/tdr";
+        system("cvs -d $cvsroot co -l papers");
+        chdir("papers");
+        system("cvs -d $cvsroot update -d papers/$target");
+    }
+
+    local $0 = getcwd()."/tdr";
+    eval { require( "tdr" ) };
+    chdir($orig_dir);
+###
+sub print_usage {
+    print "$0: generates paper and meta-information for in draft format\n";
+    print "Usage: $0 PAPER_IDENTIFIER\nExample: $0 EXO-08-008\n";
+}
+
