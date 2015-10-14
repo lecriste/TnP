@@ -88,10 +88,10 @@ process.triggerResultsFilter.l1tResults = ''
 process.triggerResultsFilter.throw = True
 #process.triggerResultsFilter.hltResults = cms.InputTag( "TriggerResults", "", "REDIGI38XPU" )
 process.triggerResultsFilter.hltResults = cms.InputTag( "TriggerResults", "", "HLT" )
-process.HLTMu   = process.triggerResultsFilter.clone(triggerConditions = [ 'HLT_Mu*_L2Mu*' ])
-process.HLTBoth = process.triggerResultsFilter.clone(triggerConditions = [ 'HLT_Mu*_L2Mu*', 'HLT_Mu*_Track*_Jpsi*' ])
-#process.HLTMu   = process.triggerResultsFilter.clone(triggerConditions = [ 'HLT_Mu*_L2Mu*', 'HLT_Mu*' ]) # for Mu8 test
-#process.HLTBoth = process.triggerResultsFilter.clone(triggerConditions = [ 'HLT_Mu*_L2Mu*', 'HLT_Mu*_Track*_Jpsi*', 'HLT_Mu*' ]) # for Mu8 test
+process.HLTMu   = process.triggerResultsFilter.clone(triggerConditions = ['HLT_Mu*_L2Mu*'])
+process.HLTBoth = process.triggerResultsFilter.clone(triggerConditions = ['HLT_Mu*_L2Mu*', 'HLT_Mu*_Track*_Jpsi*'])
+#process.HLTMu   = process.triggerResultsFilter.clone(triggerConditions = ['HLT_Mu*_L2Mu*', 'HLT_Mu*']) # for Mu8 test
+#process.HLTBoth = process.triggerResultsFilter.clone(triggerConditions = ['HLT_Mu*_L2Mu*', 'HLT_Mu*_Track*_Jpsi*', 'HLT_Mu*']) # for Mu8 test
 
 ##    __  __                       
 ##   |  \/  |_   _  ___  _ __  ___ 

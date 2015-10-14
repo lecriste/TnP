@@ -182,7 +182,7 @@ process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
     pairFlags = cms.PSet(),
     isMC           = cms.bool(False),
     addRunLumiInfo = cms.bool(True),
-#    allProbes              = cms.InputTag("probeMuons"), # missing
+    allProbes = cms.InputTag("probeMuons"), # was missing
 )
 
 
@@ -268,7 +268,7 @@ process.tpTreeSta = process.tpTree.clone(
     ),
     pairVariables = cms.PSet(),
     pairFlags     = cms.PSet(),
-#    allProbes     = "probeMuonsSta", # missing
+    allProbes     = "probeMuonsSta", # was missing w.r.t. MC
 )
 
 process.tnpSimpleSequenceSta = cms.Sequence(
@@ -283,13 +283,13 @@ process.tnpSimpleSequenceSta = cms.Sequence(
     process.tpTreeSta
 )
 
-#process.tagAndProbeSta = cms.Path( 
-#    process.fastFilter +
-#    process.HLTMu      +
-#    process.muonsSta                       +
-#    process.patMuonsWithTriggerSequenceSta +
-#    process.tnpSimpleSequenceSta
-#)
+process.tagAndProbeSta = cms.Path( 
+    process.fastFilter +
+    process.HLTMu      +
+    process.muonsSta                       +
+    process.patMuonsWithTriggerSequenceSta +
+    process.tnpSimpleSequenceSta
+)
 
 #process.load("MuonAnalysis.TagAndProbe.fakerate_all_cff")
 

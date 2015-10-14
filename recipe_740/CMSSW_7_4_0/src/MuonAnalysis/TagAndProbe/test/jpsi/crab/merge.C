@@ -19,8 +19,12 @@ int main() {
   //TString outputFile = "MuOniaParked_Run2012C_22Jan2013v1_MuMuPiKPAT";
   //TString outputFile = "official_BdToPsiKpi_18Mar_MuMuPiKPAT";
   //TString inputFile = "MuOniaRun2012C_25Apr_MuMuPiPiPAT_ntpl";
-  TString inputFile = "tnpJPsi_officialBPHMC";
-  TString outputFile = inputFile ;
+  //TString inputFile = "tnpJPsi_officialBPHMC";
+  TString inputFile = "tnpJPsi_Data";
+
+  TString outputFile = "full50nsRun" ;
+  //TString outputFile = "last50nsRun" ;
+  //TString outputFile = inputFile ;
   //TString outputFile = "MuOniaRun2012D_25Apr_MuMuPiPiPAT_ntpl" ;
   //FILE *fp = fopen( TString::Format("./%s.root",outputFile.Data()), "r" );
   //TFile *fp = TFile::Open( TString::Format("./%s.root",outputFile.Data()), "r" );
@@ -32,7 +36,13 @@ int main() {
 
   //TTree::SetMaxTreeSize(250000000000); // for TChain
 
-  for (Int_t i=0; i<=9; i++) {
+  TString eos = "/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select" ;
+  //TString prefix = "root://eoscms.cern.ch//eos/cms/store/group/phys_muon/lecriste/TnP/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/crab_TnP_fullMC_standardCfg_withL2Filter/150912_151902/" ;
+  //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/Charmonium/crab_TnP_last50nsRun_standardCfg_withL2Filter/150922_224126/" ;
+  TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/Charmonium/crab_TnP_full50nsData_standardCfg_withL2Filter/150921_075028/" ;
+  TString rootPrefix = "root://eoscms.cern.ch/"+prefix ;
+
+  for (Int_t i=0; i<=3; i++) {
     TString path = TString::Format("000%d",i);
     //TFile *fp = new TFile(TString::Format("./%s_%s.root",inputFile.Data(),path.Data()), "recreate");
     //fp->mkdir("tpTree")->cd(); // gives error
@@ -60,11 +70,9 @@ int main() {
     // with hadd command
     TString intermediateFile = outputFile + "_" + path + ".root" ;
     TString intermediateLog = "hadd_" + path + "_log.txt" ;
-    TString prefix = "root://eoscms.cern.ch//eos/cms/store/group/phys_muon/lecriste/TnP/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/crab_TnP_fullMC_Mu8/150909_164454/" ;
     //gSystem->Exec(TString::Format("hadd -f -k -v 1 %s %s%s/%s*.root > %s", intermediateFile.Data(), prefix.Data(), path.Data(), inputFile.Data(), intermediateLog.Data())) ;
     // for eos
-    TString eos = "/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select" ;
-    gSystem->Exec(TString::Format("%s ls %s%s/ | grep .root | awk '{ printf \"%s%s/\"; print }' | xargs hadd -f -k -v 1 %s > %s", eos.Data(), prefix.Data(), path.Data(), prefix.Data(), path.Data(), intermediateFile.Data(), intermediateLog.Data() )) ;
+    gSystem->Exec(TString::Format("%s ls %s%s/ | grep .root | awk '{ printf \"%s%s/\"; print }' | xargs hadd -f -k -v 1 %s > %s", eos.Data(), rootPrefix.Data(), path.Data(), rootPrefix.Data(), path.Data(), intermediateFile.Data(), intermediateLog.Data() )) ;
 
   }
 
@@ -77,7 +85,7 @@ int main() {
 
 
   // with hadd command
-  gSystem->Exec(TString::Format("hadd -f -k -v 1 %s.root %s*.root > hadd_log.txt", outputFile.Data(), outputFile.Data())) ;
+  gSystem->Exec(TString::Format("hadd -f -k -v 1 %s.root %s_000*.root > hadd_log.txt", outputFile.Data(), outputFile.Data())) ;
 
   return 0 ;
 }

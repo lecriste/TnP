@@ -1,9 +1,9 @@
 all:	pdf
 
 pdf:	*.tex
-	#eval `../../tdr runtime -tcsh`
-	tdr -style an b AN_EarlyBHadron2015 
-	open ../tmp/AN_EarlyBHadron2015_temp.pdf
+	eval `../tdr runtime -sh`
+	tdr -style an b AN-15-TnP 
+	acroread ../tmp/AN-15-TnP_temp.pdf &
 
 clean:
 	rm -rf ../tmp/*

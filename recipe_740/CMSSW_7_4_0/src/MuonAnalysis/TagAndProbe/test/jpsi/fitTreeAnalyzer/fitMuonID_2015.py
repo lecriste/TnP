@@ -34,7 +34,7 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         pt = cms.vstring("muon p_{T}", "0", "1000", "GeV/c"),
         eta = cms.vstring("muon #eta", "-2.5", "2.5", ""),
         abseta = cms.vstring("muon |#eta|", "0", "2.5", ""),
-        tag_pt = cms.vstring("Tag p_{T}",    "0", "1000", "GeV/c"),
+        tag_pt = cms.vstring("Tag p_{T}", "0", "1000", "GeV/c"),
         tag_nVertices = cms.vstring("Number of vertices", "0", "999", ""),
         tag_nVerticesDA = cms.vstring("Number of vertices", "0", "999", ""),
         pair_dphiVtxTimesQ = cms.vstring("q1 * (#phi1-#phi2)", "-6", "6", ""),
@@ -83,8 +83,9 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         tag_Mu7p5_Track3p5_Jpsi_MU = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
         Mu7p5_Track7_Jpsi_TK = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
         tag_Mu7p5_Track7_Jpsi_MU = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
-        Mu7p5_L2Mu2_Jpsi_TK = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        Mu7p5_L2Mu2_Jpsi_L2 = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
         tag_Mu7p5_L2Mu2_Jpsi_MU = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        Mu7p5_L2Mu2_L2 = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
         #
         mcTrue = cms.vstring("MC true", "dummy[true=1,false=0]"),
         # test
@@ -143,6 +144,20 @@ SEPARATED = cms.PSet(pair_drM1 = cms.vdouble(0.5,10),
                      #pair_dz = cms.vdouble(-0.1,0.1),
                      #caloComp = cms.vdouble(0.5,5),
                      )
+SEPARATED_allPairs = cms.PSet(pair_drM1 = cms.vdouble(0.5,10),
+                     #pair_dz = cms.vdouble(-0.1,0.1),
+                     #caloComp = cms.vdouble(0.5,5),
+                     )
+NOTSEPARATED = cms.PSet(#pair_drM1 = cms.vdouble(0.5,10),
+                     pair_probeMultiplicity = cms.vdouble(0.5,1.5),
+                     #pair_dz = cms.vdouble(-0.1,0.1),
+                     #caloComp = cms.vdouble(0.5,5),
+                     )
+NOTSEPARATED_allPairs = cms.PSet(#pair_drM1 = cms.vdouble(0.5,10),
+                     #pair_probeMultiplicity = cms.vdouble(0.5,1.5),
+                     #pair_dz = cms.vdouble(-0.1,0.1),
+                     #caloComp = cms.vdouble(0.5,5),
+                     )
 #                     pair_distM1 = cms.vdouble(200,1000))
 #SEPARATED = cms.PSet(pair_dphiVtxTimesQ = cms.vdouble(-3.14,0), #seagulls
 #                     pair_drM1 = cms.vdouble(0.5,10),
@@ -151,38 +166,71 @@ SEPARATED = cms.PSet(pair_drM1 = cms.vdouble(0.5,10),
 #                     pair_drM1 = cms.vdouble(0.5,10),
 #                     pair_distM1 = cms.vdouble(200,1000))
 
-PT_ETA_BINS = cms.PSet(SEPARATED,
-                       #pt = cms.vdouble(2.0, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.5, 5.0, 6.0, 8.0, 10.0, 15.0, 20.0),
-                       pt = cms.vdouble(2.0, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.5, 5.0, 6.0, 8.0, 10.0, 15.0, 20.0, 30.0, 40.0),
-                       #abseta = cms.vdouble(0.0,0.9,1.2,2.1)
-                       abseta = cms.vdouble(0.0,0.9,1.2,2.1,2.4)
+pT_binning_2012 = cms.vdouble(2.0, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.5, 5.0, 6.0, 8.0, 10.0, 15.0, 20.0) # 2012
+pT_binning_2015 = cms.vdouble(2.0, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.5, 5.0, 6.0, 8.0, 10.0, 15.0, 20.0, 30.0, 40.0)
+pT_binning_47ipb = cms.vdouble(2.0, 2.5, 3.0, 3.5, 4.0, 4.75, 5.5, 7.5, 10.0, 20.0, 40.0)
+
+PT_ETA_BINS = cms.PSet(   SEPARATED,
+                          #pt = pT_binning_2012,
+                          #pt = pT_binning_2015,
+                          pt = pT_binning_47ipb,
+                          eta = cms.vdouble(-2.4,-2.1,-1.2,-0.9,0.0,0.9,1.2,2.1,2.4)
                        )
 
-PT_BINS = cms.PSet(    SEPARATED,
-                       #pt = cms.vdouble(2.0, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.5, 5.0, 6.0, 8.0, 10.0, 15.0, 20.0),
-                       pt = cms.vdouble(2.0, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.5, 5.0, 6.0, 8.0, 10.0, 15.0, 20.0, 30.0, 40.0),
-                   )
+PT_ABSETA_BINS = cms.PSet(   SEPARATED,
+                          #pt = pT_binning_2012,
+                          #pt = pT_binning_2015,
+                          pt = pT_binning_47ipb,
+                          #abseta = cms.vdouble(0.0,0.9,1.2,2.1) # 2012
+                          abseta = cms.vdouble(0.0,0.9,1.2,2.1,2.4)
+                       )
 
-VTX_BINS = cms.PSet(SEPARATED,
-                    abseta = cms.vdouble(0.0, 2.1),
-                    pt     = cms.vdouble(8.0, 20.0),
-                    tag_nVertices = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5)
-                    #tag_nVerticesDA = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5)
-                    )
+PT_ABSETA_BINS_allPairs = cms.PSet(   SEPARATED_allPairs,
+                          #pt = pT_binning_2012,
+                          #pt = pT_binning_2015,
+                          pt = pT_binning_47ipb,
+                          #abseta = cms.vdouble(0.0,0.9,1.2,2.1) # 2012
+                          abseta = cms.vdouble(0.0,0.9,1.2,2.1,2.4)
+                       )
 
-ETA_BINS = cms.PSet(SEPARATED,
-                    pt     = cms.vdouble(8.0, 20.0),
-                    eta = cms.vdouble(-2.1,-1.6,-1.2,-0.9,-0.6,-0.3,-0.2,0.2,0.3,0.6,0.9,1.2,1.6,2.1,),
-                    )
+PT_ABSETA_BINS_notSeparated = cms.PSet(   NOTSEPARATED,
+                          #pt = pT_binning_2012,
+                          #pt = pT_binning_2015,
+                          pt = pT_binning_47ipb,
+                          #abseta = cms.vdouble(0.0,0.9,1.2,2.1) # 2012
+                          abseta = cms.vdouble(0.0,0.9,1.2,2.1,2.4)
+                       )
+
+PT_BINS = cms.PSet(       SEPARATED,
+                          #pt = pT_binning_2012
+                          pt = pT_binning_2015
+                          )
+
+VTX_BINS = cms.PSet(      SEPARATED,
+                          abseta = cms.vdouble(0.0, 2.1),
+                          pt     = cms.vdouble(8.0, 20.0),
+                          tag_nVertices = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5)
+                          #tag_nVerticesDA = cms.vdouble(0.5,2.5,4.5,6.5,8.5,10.5,12.5,14.5,16.5,18.5,20.5,22.5,24.5,26.5,28.5,30.5)
+                          )
+
+ETA_BINS = cms.PSet(      SEPARATED,
+                          pt     = cms.vdouble(8.0, 20.0),
+                          eta = cms.vdouble(-2.1,-1.6,-1.2,-0.9,-0.6,-0.3,-0.2,0.2,0.3,0.6,0.9,1.2,1.6,2.1,),
+                          )
 
 PLATEAU_ABSETA = cms.PSet(SEPARATED,
-                    abseta = cms.vdouble(0.0, 0.9, 1.2, 2.1),
-                    pt     = cms.vdouble(8.0, 20.0),
-                    )
+                          abseta = cms.vdouble(0.0, 0.9, 1.2, 2.1, 2.4),
+                          pt     = cms.vdouble(8.0, 20.0),
+                          )
 
 PT_ABSETA_WIDE = cms.PSet(SEPARATED,
                           abseta = cms.vdouble(0.0, 1.2, 2.4),
                           pt     = cms.vdouble(5.0, 7.0, 20.0),
+                          )
+
+TURNON_ABSETA = cms.PSet( SEPARATED,
+                          abseta = cms.vdouble(0.0, 0.9, 1.2, 2.1, 2.4),
+                          pt     = cms.vdouble(3.0, 5.0),
                           )
 
 # Prefix should be "./" only
@@ -196,11 +244,13 @@ process.TnP_MuonID = Template.clone(
      #),
      #InputFileNames = cms.vstring('/afs/cern.ch/user/m/msharma/public/tnpJPsi_Data.root'), # 400k events, no JSON
      #InputFileNames = cms.vstring('/afs/cern.ch/user/m/msharma/public/tnpJPsi_DataJuly232015.root'), # 800k events, no JSON
-     InputFileNames = cms.vstring('/afs/cern.ch/user/m/msharma/public/tnpJPsi_Data_246908-251883_JSON_MuonPhys_v2.root'),
+     #InputFileNames = cms.vstring('/afs/cern.ch/user/m/msharma/public/tnpJPsi_Data_246908-251883_JSON_MuonPhys_v2.root'),
+     InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Charmonium_PromptReco_50ns_first47pb.root'),
+     #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Charmonium_PromptReco_50ns.root'),
      InputTreeName = cms.string("fitter_tree"),
      InputDirectoryName = cms.string("tpTree"),
      #InputDirectoryName = cms.string("tpTreeSta"),
-     OutputFileName = cms.string("TnP_MuonID_%s.root" % scenario),
+     OutputFileName = cms.string("TnP_MuonID_%s.root" %scenario),
      Efficiencies = cms.PSet(),
 )
 
@@ -210,15 +260,18 @@ IDS = ["Soft2012"]
 #IDS = ["Loose2012", "Soft2012", "newSoft2012"]
 #IDS = [ "Glb", "TMOST", "VBTF", "PF" ]
 
-TRIGS = [ (2,'Mu7p5_L2Mu2_Jpsi'), (2,'Mu7p5_Track2_Jpsi'), (3.5,'Mu7p5_Track3p5_Jpsi'), (7,'Mu7p5_Track7_Jpsi') ]
+#TRIGS = [ (2,'Mu7p5_L2Mu2_Jpsi'), (2,'Mu7p5_Track2_Jpsi'), (3.5,'Mu7p5_Track3p5_Jpsi'), (7,'Mu7p5_Track7_Jpsi') ]
 #TRIGS = [ (2,'Mu7p5_Track2_Jpsi'), (7,'Mu7p5_Track7_Jpsi') ]
-#TRIGS = [ (2,'Mu7p5_Track2_Jpsi') ]
-#TRIGS = [ (0,'Mu8') ]
+TRIGS = [ (2,'Mu7p5_Track2_Jpsi') ]
+#TRIGS = [ (2,'Mu8') ] # Mu8 test
+#TRIGS = [ (7,'Mu7p5_Track7_Jpsi') ]
 #TRIGS = [ (0,'Mu8'), (0,'Mu17') ] 
 #TRIGS = [ (0,'DoubleMu17TkMu8_TkMu8leg') ]
 
 if "mc" in scenario:
-     process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_total.root']
+     process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC_30M.root']
+     #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC_Mu8.root'] # Mu8 test
+     #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_total.root']
      #process.TnP_MuonID.InputFileNames = ['root://cmsxrootd.fnal.gov///store/user/lecriste/TnP/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/crab_TnP_MC_request/150710_153845/0000/tnpJPsi_MC_1.root']
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_Mu8.root']
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_Monika.root']
@@ -230,19 +283,24 @@ if "mc" in scenario:
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_oldTriggers.root']
 
 #ALLBINS =  [("plateau_abseta",PLATEAU_ABSETA)]
-#ALLBINS =  [("pt_abseta",PT_ETA_BINS)]
-ALLBINS =  [("pt_abseta",PT_ETA_BINS), ("pt",PT_BINS)]
+#ALLBINS =  [("pt_eta",PT_ETA_BINS)]
+ALLBINS =  [("pt_abseta",PT_ABSETA_BINS)]
+#ALLBINS =  [("pt_abseta_allPairs",PT_ABSETA_BINS_allPairs)]
+#ALLBINS =  [("pt_abseta_notSeparated",PT_ABSETA_BINS_notSeparated)]
+#ALLBINS =  [("ptTurnOn_abseta",TURNON_ABSETA)]
+#ALLBINS =  [("pt_abseta",PT_ABSETA_BINS), ("plateau_abseta",PLATEAU_ABSETA)]
 #ALLBINS =  [("vtx",VTX_BINS)]
 #ALLBINS =  [("plateau_abseta",PLATEAU_ABSETA), ("vtx",VTX_BINS), ("eta",ETA_BINS)]
-#ALLBINS =  [("pt_abseta",PT_ETA_BINS), ("vtx",VTX_BINS), ("eta",ETA_BINS)]
-#ALLBINS =  [("pt_abseta",PT_ETA_BINS), ("vtx",VTX_BINS), ("plateau",PLATEAU_ABSETA)]
+#ALLBINS =  [("pt_abseta",PT_ABSETA_BINS), ("vtx",VTX_BINS), ("eta",ETA_BINS)]
+#ALLBINS =  [("pt_abseta",PT_ABSETA_BINS), ("vtx",VTX_BINS), ("plateau",PLATEAU_ABSETA)]
 #ALLBINS += [("pt_abseta_wide",PT_ABSETA_WIDE)]
 
 for ID in IDS:
      if len(args) > 1 and args[1] in IDS and ID != args[1]: continue
      for X,B in ALLBINS:
           if len(args) > 2 and X not in args[2:]: continue
-          module = process.TnP_MuonID.clone(OutputFileName = cms.string("TnP_MuonID__%s__%s_%s.root" % (scenario, ID, X)))
+          module = process.TnP_MuonID.clone(OutputFileName = cms.string(
+                    "TnP_MuonID__%s__%s_%s.root" %(scenario, ID, X)))
           #
           DEN = B.clone()
           setattr(module.Efficiencies, ID+"_"+X, cms.PSet(
@@ -256,20 +314,22 @@ for ID in IDS:
           for PTMIN, TRIG in TRIGS:
                TRIGLABEL=""
                #if "pt_" in X:
-               if "pt" in X:
+               if "pt" in X or "vtx" in X:
                     TRIGLABEL="_"+TRIG
                else:
-                    if TRIG != "Mu7p5_Track2": continue # use only one trigger except for turn-on
+                    #if TRIG != "Mu7p5_Track2_Jpsi": continue # use only one trigger except for turn-on ("turn-on" = ""pt_" in X")
+                    if TRIG != "Mu7p5_Track7_Jpsi" and TRIG != "Mu8": continue # use only one trigger except for turn-on ("turn-on" = ""pt_" in X")
                DEN = B.clone()
                if hasattr(DEN, "pt"):
                     DEN.pt = cms.vdouble(*[i for i in B.pt if i >= PTMIN])
+                    if len(DEN.pt) == 0: raise RuntimeError, "Make sure PTMIN is less than at least one B.pt element!"
                     if len(DEN.pt) == 1: DEN.pt = cms.vdouble(PTMIN, DEN.pt[0])
                if TRIG != "Mu8":
-                    setattr(DEN, "tag_%s_MU" % TRIG, cms.vstring("pass"))
-                    setattr(DEN,     "%s_TK" % TRIG, cms.vstring("pass"))
+                    setattr(DEN, "tag_%s_MU" %TRIG, cms.vstring("pass"))
+                    setattr(DEN,     "%s_TK" %TRIG, cms.vstring("pass"))
                else:
                     setattr(DEN, "tag_%s" % TRIG, cms.vstring("pass"))
-                    setattr(DEN,     "%s" % TRIG, cms.vstring("pass"))
+                    #setattr(DEN,     "%s" % TRIG, cms.vstring("pass"))
                #setattr(DEN, "TM", cms.vstring("pass"))
                #if "calomu" in scenario: DEN.Calo = cms.vstring("pass")
                setattr(module.Efficiencies, ID+"_"+X+TRIGLABEL, cms.PSet(
@@ -278,14 +338,23 @@ for ID in IDS:
                    BinnedVariables = DEN,
                    BinToPDFmap = cms.vstring("signalPlusBkg")
                ))
+               # L2
+               setattr(module.Efficiencies, "L1L2_"+X+TRIGLABEL, cms.PSet(
+                   EfficiencyCategoryAndState = cms.vstring("Mu7p5_L2Mu2_L2","pass"),
+                   UnbinnedVariables = cms.vstring("mass"),
+                   BinnedVariables = DEN.clone( # check variables bounds if input file changes
+                              TMOST = cms.vstring("pass"), tkTrackerLay = cms.vint32(6,18), tkPixelLay = cms.vint32(1,5), dzPV = cms.vdouble(-20,20), dB = cms.vdouble(-0.3,0.3), Track_HP = cms.vstring("pass"),
+                              ),
+                   BinToPDFmap = cms.vstring("signalPlusBkg")
+               ))
                #if "plateau" in X: module.SaveWorkspace = True
                ## mc efficiency, if scenario is mc
-               if "mc" in scenario:
-                    setattr(module.Efficiencies, ID+"_"+X+TRIGLABEL+"_mcTrue", cms.PSet(
-                        EfficiencyCategoryAndState = cms.vstring(ID,"above"),  # ?? "pass"
-                        UnbinnedVariables = cms.vstring("mass"),
-                        BinnedVariables = DEN.clone(mcTrue = cms.vstring("true"))
-                    ))
+               #if "mc" in scenario:
+               #     setattr(module.Efficiencies, ID+"_"+X+TRIGLABEL+"_mcTrue", cms.PSet(
+               #         EfficiencyCategoryAndState = cms.vstring(ID,"above"),  # ?? "pass"
+               #         UnbinnedVariables = cms.vstring("mass"),
+               #         BinnedVariables = DEN.clone(mcTrue = cms.vstring("true"))
+               #     ))
           setattr(process, "TnP_MuonID__"+ID+"_"+X, module)
           setattr(process, "run_"+ID+"_"+X, cms.Path(module))
 
