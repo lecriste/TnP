@@ -108,8 +108,8 @@ process.mergedMuons = cms.EDProducer("CaloMuonMerger",
 ## ==== Trigger matching
 process.load("MuonAnalysis.MuonAssociators.patMuonsWithTrigger_cff")
 ## with some customization
-process.muonMatchHLTL2.maxDeltaR = 0.3 # Zoltan tuning - it was 0.5
-process.muonMatchHLTL3.maxDeltaR = 0.1
+#process.muonMatchHLTL2.maxDeltaR = 0.3 # Zoltan tuning - it was 0.5 # present in Zmumu
+#process.muonMatchHLTL3.maxDeltaR = 0.1 # present in Zmumu
 from MuonAnalysis.MuonAssociators.patMuonsWithTrigger_cff import *
 changeRecoMuonInput(process, "mergedMuons")
 #useExtendedL1Match(process) 
@@ -301,6 +301,17 @@ process.tpTreeSta = process.tpTree.clone(
     pairVariables = cms.PSet(
         dz      = cms.string("daughter(0).vz - daughter(1).vz"),
         pt      = cms.string("pt"), 
+        #
+        dphiVtxTimesQ = cms.InputTag("tagProbeStaSeparation", "dphiVtxTimesQ"),
+        drM1          = cms.InputTag("tagProbeStaSeparation", "drM1"),
+        dphiM1        = cms.InputTag("tagProbeStaSeparation", "dphiM1"),
+        distM1        = cms.InputTag("tagProbeStaSeparation", "distM1"),
+        drM2          = cms.InputTag("tagProbeStaSeparation", "drM2"),
+        dphiM2        = cms.InputTag("tagProbeStaSeparation", "dphiM2"),
+        distM2        = cms.InputTag("tagProbeStaSeparation", "distM2"),
+        drVtx         = cms.InputTag("tagProbeStaSeparation", "drVtx"),
+        probeMultiplicity = cms.InputTag("probeStaMultiplicity"),
+        #
         rapidity = cms.string("rapidity"),
         deltaR   = cms.string("deltaR(daughter(0).eta, daughter(0).phi, daughter(1).eta, daughter(1).phi)"), 
 ),
@@ -315,6 +326,8 @@ process.tnpSimpleSequenceSta = cms.Sequence(
     process.tpPairsSta      +
     process.onePairSta      +
     process.nverticesModule +
+    process.tagProbeStaSeparation +
+    process.probeStaMultiplicity + 
     process.staToTkMatchSequenceJPsi +
     process.l1rate +
     process.tpTreeSta

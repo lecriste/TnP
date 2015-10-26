@@ -267,7 +267,8 @@ process.TnP_MuonID = Template.clone(
      #InputFileNames = cms.vstring('/afs/cern.ch/user/m/msharma/public/tnpJPsi_Data.root'), # 400k events, no JSON
      #InputFileNames = cms.vstring('/afs/cern.ch/user/m/msharma/public/tnpJPsi_DataJuly232015.root'), # 800k events, no JSON
      #InputFileNames = cms.vstring('/afs/cern.ch/user/m/msharma/public/tnpJPsi_Data_246908-251883_JSON_MuonPhys_v2.root'),
-     InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Charmonium_PromptReco_50ns_first47pb.root'),
+     #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Charmonium_PromptReco_50ns_first47pb.root'),
+     InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Charmonium_PromptReco_50ns_first47ipb_OniaTriggersFlags.root'),
      #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Charmonium_PromptReco_50ns.root'),
      InputTreeName = cms.string("fitter_tree"),
      InputDirectoryName = cms.string("tpTree"),
@@ -377,7 +378,7 @@ for ID in IDS:
                     setattr(DEN_SoftID, "tag_Mu7p5_L2Mu2_Jpsi_MU", cms.vstring("pass"))
                     #
                     for L1L2, DEN_L1L2, DEN_L3 in [("Dimuon16_L1L2",DEN_withSoftID.clone(tag_pt = cms.vdouble(10.0, 1000.0)),DEN_SoftID.clone(tag_pt = cms.vdouble(10.0, 1000.0))),("Dimuon10_L1L2",DEN_withSoftID,DEN_SoftID)]:
-                         setattr(module.Efficiencies, L1L2+"_"+X, cms.PSet(
+                         setattr(module.Efficiencies, L1L2+"_"+X+TRIGLABEL, cms.PSet(
                                    EfficiencyCategoryAndState = cms.vstring(L1L2,"pass"),
                                    UnbinnedVariables = cms.vstring("mass"),
                                    BinnedVariables = DEN_L1L2,
@@ -405,19 +406,21 @@ for ID in IDS:
 
 
 ########## Tracking efficiency ########## 
-ALLBINS =  [("pt_abseta_notSeparated_allPairs",PT_ABSETA_BINS_notSeparated_allPairs)]
+#ALLBINS =  [("pt_abseta_notSeparated_allPairs",PT_ABSETA_BINS_notSeparated_allPairs)]
+ALLBINS =  [("pt_abseta",PT_ABSETA_BINS)]
 TRIGS = [ (2,'Mu7p5_L2Mu2_Jpsi') ]
 matches = [(1.0,0.4), (0.7,0.3), (0.5,0.2), (0.3,0.15), (0.1,0.1)]
 #effs    = ["", "_NoJPsi", "_NoBestJPsi"]
 effs    = [""]
 
 process.TnP_Tracking = Template.clone(
-    InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Charmonium_PromptReco_50ns_first47ipb_correctL2.root'),
-    InputDirectoryName = cms.string("tpTreeSta"),
-    InputTreeName = cms.string("fitter_tree"),
-    OutputFileName = cms.string("TnP_Tracking_%s.root" % scenario),
-    Efficiencies = cms.PSet(),
-    #Cuts = cms.PSet(),
+     #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Charmonium_PromptReco_50ns_first47ipb_correctL2.root'),
+     InputFileNames = process.TnP_MuonID.InputFileNames,
+     InputDirectoryName = cms.string("tpTreeSta"),
+     InputTreeName = cms.string("fitter_tree"),
+     OutputFileName = cms.string("TnP_Tracking_%s.root" % scenario),
+     Efficiencies = cms.PSet(),
+     #Cuts = cms.PSet(),
 )
 if "mc" in scenario:
      process.TnP_Tracking.InputFileNames = ['../tnpJPsi_officialBPHMC.root']

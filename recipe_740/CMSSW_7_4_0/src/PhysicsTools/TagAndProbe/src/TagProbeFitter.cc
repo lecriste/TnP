@@ -65,9 +65,13 @@ TagProbeFitter::TagProbeFitter(const std::vector<std::string>& inputFileNames, s
 
   gROOT->SetStyle("Plain");
   gStyle->SetTitleFillColor(0);
+  gStyle->SetTitleBorderSize(0);
   gStyle->SetPalette(1);
   gStyle->SetOptStat(0);
   gStyle->SetPaintTextFormat(".2f");
+  gStyle->SetTitleOffset(1.25,"X") ;
+  gStyle->SetTitleOffset(1.2,"Y") ;
+
 
   quiet = false;
 
@@ -160,7 +164,7 @@ string TagProbeFitter::calculateEfficiency(string dirName,const std::vector<stri
   for(map<string, vector<double> >::iterator v=binnedReals.begin(); v!=binnedReals.end(); v++){
     TString name = v->first;
     if (variables.find(name) == 0) { cerr << "Binned variable '"<<name<<"' not found." << endl; return "Error"; }
-    binnedVariables.addClone(variables[name]); //cout <<"binnedVariable = " <<name <<endl ;
+    binnedVariables.addClone(variables[name]); cout <<"binnedVariable = " <<name <<endl ;
     ((RooRealVar&)binnedVariables[name]).setBinning( RooBinning(v->second.size()-1, &v->second[0]) );
     binCategories.addClone( RooBinningCategory(name+"_bins", name+"_bins", (RooRealVar&)binnedVariables[name]) );
     //
@@ -168,6 +172,7 @@ string TagProbeFitter::calculateEfficiency(string dirName,const std::vector<stri
     for (UInt_t i = 0; i < v->second.size()-1; ++i) {
       binLimits.push_back( TString::Format("%.3gto%.3g",v->second[i],v->second[i+1]) ) ;
       binLimits[i].ReplaceAll(".","p") ;
+      binLimits[i].ReplaceAll("e+03","000") ; // add all other occurences
       //cout <<"binLimits[" <<i <<"] = " <<binLimits[i] <<endl ;
     }
     variable_binLimits[name] = binLimits;
@@ -327,8 +332,10 @@ string TagProbeFitter::calculateEfficiency(string dirName,const std::vector<stri
       if ( dirName.Contains(v->first) )
 	for ( UInt_t i=0; i<v->second.size(); ++i) {
 	  //cout <<"dirName " <<i <<" = " <<dirName <<endl ;
-	  dirName.ReplaceAll( v->first+"_bin"+TString::Itoa(i,10)+"_", v->first+"_"+v->second[i]+"_" )  ;
-	  //dirName.ReplaceAll( TString::Format(v->first+"_bin%d",i), v->first+"_"+v->second[i] ) ;
+	  if (v == variable_binLimits.begin())
+	    dirName.ReplaceAll( v->first+"_bin"+TString::Itoa(i,10)+"_", v->first+"_"+v->second[i]+"_" )  ;
+	  else
+	    dirName.ReplaceAll( "__"+v->first+"_bin"+TString::Itoa(i,10)+"_", "__"+v->first+"_"+v->second[i]+"_" )  ;	  //dirName.ReplaceAll( TString::Format(v->first+"_bin%d",i), v->first+"_"+v->second[i] ) ;
 	  //cout <<"dirName " <<i <<" = " <<dirName <<endl ;
 	}
     //
@@ -787,12 +794,16 @@ void TagProbeFitter::saveEfficiencyPlots(RooDataSet& eff, const TString& effName
           catName.ReplaceAll("{","").ReplaceAll("}","").ReplaceAll(";","_and_");
 	  //
 	  for (map<TString, vector<TString> >::iterator v=variable_binLimits.begin(); v!=variable_binLimits.end(); v++)
-	    if ( catName.Contains(v->first) )
-	      for ( UInt_t i=0; i<v->second.size(); ++i) {
-		//cout <<"catName " <<i <<" = " <<catName <<endl ;
-		catName.ReplaceAll( v->first+"_bin"+TString::Itoa(i,10)+"_", v->first+"_"+v->second[i]+"_" ) ;
-		//cout <<"catName " <<i <<" = " <<catName <<endl ;
-	      }
+	    if (v->first == "tag_pt")
+	      for ( UInt_t i=0; i<v->second.size(); ++i) 
+		catName.ReplaceAll( v->first+"_bin"+TString::Itoa(i,10)+"_", v->first+"_"+v->second[i]+"_" )  ;
+	  
+	  for (map<TString, vector<TString> >::iterator v=variable_binLimits.begin(); v!=variable_binLimits.end(); v++)
+	    for ( UInt_t i=0; i<v->second.size(); ++i) {
+	      //cout <<"catName " <<i <<" = " <<catName <<endl ;
+	      catName.ReplaceAll( v->first+"_bin"+TString::Itoa(i,10)+"_", v->first+"_"+v->second[i]+"_" )  ;
+	      //cout <<"catName " <<i <<" = " <<catName <<endl ;
+	    }
 	  // 
           makeEfficiencyPlot2D(myEff, *v1, *v2, TString::Format("%s_%s_PLOT__%s", v1->GetName(), v2->GetName(), catName.Data()), catName, effName, "allCats1D", t->getVal());
         }        
@@ -812,12 +823,16 @@ void TagProbeFitter::saveEfficiencyPlots(RooDataSet& eff, const TString& effName
         catName.ReplaceAll("{","").ReplaceAll("}","").ReplaceAll(";","_and_");
 	//
 	for (map<TString, vector<TString> >::iterator v=variable_binLimits.begin(); v!=variable_binLimits.end(); v++)
-	  if ( catName.Contains(v->first) )
-	    for ( UInt_t i=0; i<v->second.size(); ++i) {
-	      //cout <<"catName " <<i <<" = " <<catName <<endl ;
-	      catName.ReplaceAll( v->first+"_bin"+TString::Itoa(i,10)+"_", v->first+"_"+v->second[i]+"_" ) ;
-	      //cout <<"catName " <<i <<" = " <<catName <<endl ;
-	    }
+	  if (v->first == "tag_pt")
+	    for ( UInt_t i=0; i<v->second.size(); ++i)
+	      catName.ReplaceAll( v->first+"_bin"+TString::Itoa(i,10)+"_", v->first+"_"+v->second[i]+"_" )  ;
+
+	for (map<TString, vector<TString> >::iterator v=variable_binLimits.begin(); v!=variable_binLimits.end(); v++)
+	  for ( UInt_t i=0; i<v->second.size(); ++i) {
+	    //cout <<"catName " <<i <<" = " <<catName <<endl ;
+	    catName.ReplaceAll( v->first+"_bin"+TString::Itoa(i,10)+"_", v->first+"_"+v->second[i]+"_" )  ;
+	    //cout <<"catName " <<i <<" = " <<catName <<endl ;
+	  }
 	// 
         makeEfficiencyPlot1D(myEff, *v1, TString::Format("%s_PLOT__%s", v1->GetName(), catName.Data()), catName, effName, "allCats1D", t->getVal());
       }

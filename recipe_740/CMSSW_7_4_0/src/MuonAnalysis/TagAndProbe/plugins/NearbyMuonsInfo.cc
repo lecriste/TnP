@@ -38,7 +38,7 @@ class NearbyMuonsInfo : public edm::EDProducer {
       virtual ~NearbyMuonsInfo() { }
 
       virtual void produce(edm::Event & iEvent, const edm::EventSetup & iSetup);
-      virtual void beginRun(edm::Run & iRun, const edm::EventSetup & iSetup);
+      virtual void beginRun(const edm::Run & iRun, const edm::EventSetup & iSetup);
     private:
 	//virtual void beginRun(edm::Run & iRun, const edm::EventSetup & iSetup) override ;
         edm::InputTag src_;
@@ -71,8 +71,7 @@ NearbyMuonsInfo::NearbyMuonsInfo(const edm::ParameterSet & iConfig) :
 }
 
 void 
-NearbyMuonsInfo::beginRun(edm::Run & iRun, const edm::EventSetup & iSetup) {
-    std::cout <<"before init()" <<std::endl ;
+NearbyMuonsInfo::beginRun(const edm::Run & iRun, const edm::EventSetup & iSetup) {
     prop1_.init(iSetup);
     prop2_.init(iSetup);
 }
@@ -86,9 +85,6 @@ NearbyMuonsInfo::produce(edm::Event & iEvent, const edm::EventSetup & iSetup) {
     iEvent.getByLabel(src_, src);
     edm::ESHandle<MagneticField> theMF;
     iSetup.get<IdealMagneticFieldRecord>().get(theMF);
-
-    prop1_.init(iSetup);
-    prop2_.init(iSetup);
 
     size_t n = src->size();
     std::vector<float> dphiVtxTimesQ(n), drVtx(n), DCA(n, -999);
@@ -108,10 +104,16 @@ NearbyMuonsInfo::produce(edm::Event & iEvent, const edm::EventSetup & iSetup) {
         if (mu2 == 0) throw cms::Exception("CorruptData") << "Second daughter of candidate is not a ShallowClone of a reco::RecoCandidate\n";
 
 	//// Start DCA Calculation //////
+	//cout <<"before TrackRef 1" <<endl ;
 	reco::TrackRef tk = mu1->get<reco::TrackRef>();
+	//cout <<"before TrackRef 2" <<endl ;
 	reco::TrackRef tk2nd = mu2->get<reco::TrackRef>();
+	if (tk.isNull() || tk2nd.isNull()) continue ;
+	//cout <<"before TransientTrack 1" <<endl ;
 	reco::TransientTrack transMu1(*tk, &(*theMF) );
+	//cout <<"before TransientTrack 2" <<endl ;
 	reco::TransientTrack transMu2(*tk2nd, &(*theMF) );
+	//cout <<"after TransientTrack 2" <<endl ;
 	TrajectoryStateClosestToPoint mu1TS = transMu1.impactPointTSCP();
 	TrajectoryStateClosestToPoint mu2TS = transMu2.impactPointTSCP();
 	if (mu1TS.isValid() && mu2TS.isValid()) {
