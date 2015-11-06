@@ -166,8 +166,41 @@ HighPtTriggerFlagsDebug = cms.PSet(
 
 
 LowPtTriggerFlagsPhysics = cms.PSet(
-                                    #Empty at the moment
-                                   )
+    ########## Onia triggers filters ########## 
+    Dimuon16_L1L2 = cms.string(         "!triggerObjectMatchesByCollection('hltL2MuonCandidates').empty()"
+                                        + " && triggerObjectMatchesByCollection('hltL2MuonCandidates').at(0).hasFilterLabel('hltL2fL1sL1DoubleMu10MuOpenL1f0L2PreFiltered0')"
+                                        ),
+    Dimuon10_L1L2 = cms.string(         "!triggerObjectMatchesByCollection('hltL2MuonCandidates').empty()"
+                                        + " && triggerObjectMatchesByCollection('hltL2MuonCandidates').at(0).hasFilterLabel('hltL2fL1sL1DoubleMu0er16NoOSL1f0L2PreFiltered0')"
+                                        ),
+    ########## L3 Mu ########## 
+    Mu_L3 = cms.string(                 "!triggerObjectMatchesByCollection('hltL3MuonCandidates').empty()"
+                                        ),
+    ########## Vertexing filters ########## 
+    Dimuon6_Jpsi_NoVertexing = cms.string(    "!triggerObjectMatchesByCollection('hltL3MuonCandidates').empty()"
+                                              + " && triggerObjectMatchesByCollection('hltL3MuonCandidates').at(0).hasFilterLabel('hltDimuon6JpsiL3Filtered')"),
+    Dimuon0er16_Jpsi_NoVertexing = cms.string("!triggerObjectMatchesByCollection('hltL3MuonCandidates').empty()"
+                                              + " && triggerObjectMatchesByCollection('hltL3MuonCandidates').at(0).hasFilterLabel('hltDimuon0JpsiOSL3Filtered')"),
+    Dimuon0er16_Jpsi_NoOS_NoVertexing = cms.string("!triggerObjectMatchesByCollection('hltL3MuonCandidates').empty()"
+                                                   + " && triggerObjectMatchesByCollection('hltL3MuonCandidates').at(0).hasFilterLabel('hltDimuon0JpsiNoOSL3Filtered')"),
+    ########## Final filters ########## 
+    Dimuon16_Jpsi = cms.string("!triggerObjectMatchesByCollection('hltL3MuonCandidates').empty()"
+                               + " && triggerObjectMatchesByCollection('hltL3MuonCandidates').at(0).hasFilterLabel('hltDisplacedmumuFilterDimuon16Jpsi')"),
+    Dimuon20_Jpsi = cms.string("!triggerObjectMatchesByCollection('hltL3MuonCandidates').empty()"
+                               + " && triggerObjectMatchesByCollection('hltL3MuonCandidates').at(0).hasFilterLabel('hltDisplacedmumuFilterDimuon20Jpsi')"),
+    Dimuon10_Jpsi_Barrel = cms.string("!triggerObjectMatchesByCollection('hltL3MuonCandidates').empty()"
+                                      + " && triggerObjectMatchesByCollection('hltL3MuonCandidates').at(0).hasFilterLabel('hltDisplacedmumuFilterDimuon10JpsiBarrel')"),
+    Dimuon13_PsiPrime = cms.string("!triggerObjectMatchesByCollection('hltL3MuonCandidates').empty()"
+                                      + " && triggerObjectMatchesByCollection('hltL3MuonCandidates').at(0).hasFilterLabel('hltDisplacedmumuFilterDimuon13PsiPrime')"),
+    Dimuon8_PsiPrime_Barrel = cms.string("!triggerObjectMatchesByCollection('hltL3MuonCandidates').empty()"
+                                      + " && triggerObjectMatchesByCollection('hltL3MuonCandidates').at(0).hasFilterLabel('hltDisplacedmumuFilterDimuon8PsiPrimeBarrel')"),
+    Dimuon13_Upsilon = cms.string("!triggerObjectMatchesByCollection('hltL3MuonCandidates').empty()"
+                                  + " && triggerObjectMatchesByCollection('hltL3MuonCandidates').at(0).hasFilterLabel('hltDisplacedmumuFilterDimuon13Upsilon')"),
+    Dimuon8_Upsilon_Barrel = cms.string("!triggerObjectMatchesByCollection('hltL3MuonCandidates').empty()"
+                                        + " && triggerObjectMatchesByCollection('hltL3MuonCandidates').at(0).hasFilterLabel('hltDisplacedmumuFilterDimuon8UpsilonBarrel')"),
+    Dimuon0_Phi_Barrel = cms.string("!triggerObjectMatchesByCollection('hltL3MuonCandidates').empty()"
+                                    + " && triggerObjectMatchesByCollection('hltL3MuonCandidates').at(0).hasFilterLabel('hltDisplacedmumuFilterDimuon0PhiBarrel')"),
+    )
 
 LowPtTriggerFlagsEfficienciesTag = cms.PSet(
    ########## Mu ########## 
@@ -219,16 +252,6 @@ LowPtTriggerFlagsEfficienciesProbe = cms.PSet(
     Mu7p5_L2Mu2_Jpsi_L2 = cms.string(   "!triggerObjectMatchesByCollection('hltL2MuonCandidates').empty()"
                                         + " && triggerObjectMatchesByCollection('hltL2MuonCandidates').at(0).hasFilterLabel('hltL2fDoubleMu2L2PreFiltered2')"
                                         + " && triggerObjectMatchesByCollection('hltL2MuonCandidates').at(0).hasFilterLabel('hltMu7p5L2Mu2JpsiTrackMassFiltered')"
-                                        ),
-    ########## Onia triggers filters ########## 
-    Dimuon16_L1L2 = cms.string(         "!triggerObjectMatchesByCollection('hltL2MuonCandidates').empty()"
-                                        + " && triggerObjectMatchesByCollection('hltL2MuonCandidates').at(0).hasFilterLabel('hltL2fL1sL1DoubleMu10MuOpenL1f0L2PreFiltered0')"
-                                        ),
-    Dimuon10_L1L2 = cms.string(         "!triggerObjectMatchesByCollection('hltL2MuonCandidates').empty()"
-                                        + " && triggerObjectMatchesByCollection('hltL2MuonCandidates').at(0).hasFilterLabel('hltL2fL1sL1DoubleMu0er16NoOSL1f0L2PreFiltered0')"
-                                        ),
-    ########## L3 Mu ########## 
-    Mu_L3 = cms.string(                 "!triggerObjectMatchesByCollection('hltL3MuonCandidates').empty()"
                                         ),
    
     )

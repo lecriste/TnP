@@ -19,12 +19,12 @@ int main() {
   //TString outputFile = "MuOniaParked_Run2012C_22Jan2013v1_MuMuPiKPAT";
   //TString outputFile = "official_BdToPsiKpi_18Mar_MuMuPiKPAT";
   //TString inputFile = "MuOniaRun2012C_25Apr_MuMuPiPiPAT_ntpl";
-  //TString inputFile = "tnpJPsi_officialBPHMC";
-  TString inputFile = "tnpJPsi_Data";
+  TString inputFile = "tnpJPsi_officialBPHMC";
+  //TString inputFile = "tnpJPsi_Data";
 
-  TString outputFile = "full50nsRun" ;
+  //TString outputFile = "full50nsRun" ;
   //TString outputFile = "last50nsRun" ;
-  //TString outputFile = inputFile ;
+  TString outputFile = inputFile ;
   //TString outputFile = "MuOniaRun2012D_25Apr_MuMuPiPiPAT_ntpl" ;
   //FILE *fp = fopen( TString::Format("./%s.root",outputFile.Data()), "r" );
   //TFile *fp = TFile::Open( TString::Format("./%s.root",outputFile.Data()), "r" );
@@ -37,12 +37,19 @@ int main() {
   //TTree::SetMaxTreeSize(250000000000); // for TChain
 
   TString eos = "/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select" ;
-  //TString prefix = "root://eoscms.cern.ch//eos/cms/store/group/phys_muon/lecriste/TnP/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/crab_TnP_fullMC_standardCfg_withL2Filter/150912_151902/" ;
+
   //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/Charmonium/crab_TnP_last50nsRun_standardCfg_withL2Filter/150922_224126/" ;
-  TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/Charmonium/crab_TnP_full50nsData_standardCfg_withL2Filter/150921_075028/" ;
+  //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/Charmonium/crab_TnP_full50nsData_standardCfg_withL2Filter/150921_075028/" ;
+  //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/crab_TnP_fullMC_standardCfg_withCorrectL2Filter/151016_215636/" ;
+  //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/Charmonium/crab_TnP_50nsFirst47ipb_standardCfg_withCorrectL2Filter/151018_154048/" ;
+  //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/Charmonium/crab_TnP_50nsFirst47ipb_OniaTriggersFlags/151024_112308/" ;
+  //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/crab_TnP_fullMC_OniaTriggersFlags/151023_225039/" ;
+  //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/Charmonium/crab_TnP_50nsFirst47ipb_vertexingTriggersFlags/151103_171444/" ;
+  TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/crab_TnP_fullMC_vertexingTriggersFlags_withMCMatch/151104_183446/" ;
+
   TString rootPrefix = "root://eoscms.cern.ch/"+prefix ;
 
-  for (Int_t i=0; i<=3; i++) {
+  for (Int_t i=0; i<=9; i++) {
     TString path = TString::Format("000%d",i);
     //TFile *fp = new TFile(TString::Format("./%s_%s.root",inputFile.Data(),path.Data()), "recreate");
     //fp->mkdir("tpTree")->cd(); // gives error

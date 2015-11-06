@@ -5,31 +5,32 @@
 % The last version of these macros found before the maketitle will be the one on the front page,
 % so only the main file is tracked.
 % Do not edit by hand!
-\RCS$Revision: 95458 $
-\RCS$HeadURL: file:///afs/cern.ch/project/svn/reps/tdr2/notes/AN-11-417/trunk/AN-11-417.tex $
-\RCS$Id: AN-11-417.tex 95458 2012-01-16 15:38:04Z hwoehri $
+%\RCS$Revision: 95458 $
+%\RCS$HeadURL: file:///afs/cern.ch/project/svn/reps/tdr2/notes/AN-11-417/trunk/AN-11-417.tex $
+%\RCS$Id: AN-11-417.tex 95458 2012-01-16 15:38:04Z hwoehri $
 %%%%%%%%%%%%% ptdr definitions %%%%%%%%%%%%%%%%%%%%%
-%\input{ptdr-definitions} %These have been replaced by the equivalent
-%style file
+%\input{ptdr-definitions} %These have been replaced by the equivalent style file
 \newcommand{\jpsi}{J/$\psi$}
 \newcommand{\psip}{$\psi^\prime$}
 \newcommand{\tnp}{T\&P}
 %\newcommand{\subDirName}{TrackerMuonCuts50}
-\newcommand{\subDirName}{TrackerMuonCuts50_FineBins}
+\newcommand{\subDirName}{TrackerMuonCuts50\_FineBins}
+
+%\usepackage{comment} %not working
 
 %%%%%%%%%%%%%%%  Title page %%%%%%%%%%%%%%%%%%%%%%%%
-\cmsNoteHeader{AN-11-417} % This is over-written in the CMS environment: useful as preprint no. for export versions
+\cmsNoteHeader{AN-15-TnP} % This is over-written in the CMS environment: useful as preprint no. for export versions
 % >> Title: please make sure that the non-TeX equivalent is in PDFTitle below
-\title{T\&P single muon efficiencies for low $p_\rm T$ dimuon triggers in 2011}
+\title{T\&P single muon efficiencies for low $p_\rm T$ dimuon triggers in 2015}
 
 % >> Authors
 %Author is always "The CMS Collaboration" for PAS and papers, so author, etc, below will be ignored in those cases
 %For multiple affiliations, create an address entry for the combination
+\address[bari]{University of Bari \& INFN, Bari, Italy}
 \address[cern]{CERN, Geneva, Switzerland}
-\address[bari]{University of Bari & INFN, Bari, Italy}
 \address[purdue]{Purdue University, US}
 
-\author[cern]{Leonardo Cristella}
+\author[bari]{Leonardo Cristella}
 \author[purdue]{Monika Sharma}
 
 % >> Date
@@ -44,15 +45,21 @@
 % 1. **DO NOT use \include or \input** to include the abstract: our abstract extractor will not search through other files than this one.
 % 2. **DO NOT use %**                  to comment out sections of the abstract: the extractor will still grab those lines (and they won't be comments any longer!).
 % 3. **DO NOT use tex macros**         in the abstract: External TeX parsers used on the abstract don't understand them.
-\abstract{Single muon trigger and reconstruction efficiencies for low $p_{\rm T}$ dimuon triggers are studied within the tag and probe (T\&P) framework, applied to dimuons in the J$/\psi$ mass window. We show that dimuons are affected by significant trigger inefficiencies when they are either collinear or cross each other in the first muon stations (``cowboy dimuons''). Well separated dimuons (``seagull dimuons'') do not show such strong inefficiencies. Only the seagull dimuons are used to extract the single muon L1$\cdot$L2 and L3 trigger efficiencies, as a function of their kinematics ($p_{\rm T}$ and $|\eta|$). The muon (offline) reconstruction efficiency as well as the efficiency of the track quality cuts typically used in B-physics analyses, are also described in detail. Finally, the product of the individual efficiencies is calculated as a function of $p_{\rm T}$, in several pseudo-rapidity bins. The studies also show no significant differences in trigger efficiencies for positive and negative muons. Given that all quarkonium triggers in 2011 ran a (dimuon) vertexing module at the end of the HLT path, we also discuss its efficiency as a function of the pair $p_{\rm T}$ and $|y|$. All efficiencies are compared to detailed MC simulations, properly reflecting the L1 and HLT menus used during the 2011 data taking.}
+\abstract{Single muon trigger and reconstruction efficiencies for low $p_{\rm T}$ dimuon triggers are studied within the tag and probe (T\&P) framework, applied to dimuons in the \jpsi mass window.
+%We show that dimuons are affected by significant trigger inefficiencies when they are either collinear or cross each other in the first muon stations (``cowboy dimuons''). Well separated dimuons (``seagull dimuons'') do not show such strong inefficiencies. Only the seagull dimuons are used to extract the single muon L1$\cdot$L2 and L3 trigger efficiencies, as a function of their kinematics ($p_{\rm T}$ and $|\eta|$).
+The muon (offline) reconstruction efficiency as well as the efficiency of the track quality cuts typically used in B-physics analyses, are described in detail, along with the muon tracking efficiency.
+%Finally, the product of the individual efficiencies is calculated as a function of $p_{\rm T}$, in several pseudo-rapidity bins.
+%The studies also show no significant differences in trigger efficiencies for positive and negative muons.
+%Given that all quarkonium triggers in 2011 ran a (dimuon) vertexing module at the end of the HLT path, we also discuss its efficiency as a function of the pair $p_{\rm T}$ and $|y|$.
+All efficiencies (measured as a function of $p_{\rm T}$ in several pseudo-rapidity bins) are compared to detailed MC simulations, properly reflecting the L1 and HLT menus used during the 2015 data taking in the 50ns scenario.}
 
 % >> PDF Metadata
 % Do not comment out the following hypersetup lines (metadata). They will disappear in NODRAFT mode and are needed by CDS.
 % Also: make sure that the values of the metadata items are sensible and are in plain text (no TeX! -- for \sqrt{s} use sqrt(s) -- this will show with extra quote marks in the draft version but is okay).
 
 \hypersetup{%
-pdfauthor={Hermine K.~Woehri},%
-pdftitle={TnP single muon efficiencies for low pT dimuon triggers in 2011},%
+pdfauthor={Leonardo Cristella},%
+pdftitle={TnP single muon efficiencies for low pT dimuon triggers in 2015},%
 pdfsubject={CMS},%
 pdfkeywords={CMS, physics, J/psi, TnP efficiencies}}
 
@@ -70,623 +77,311 @@ pdfkeywords={CMS, physics, J/psi, TnP efficiencies}}
 
 \section{Introduction}\label{sec:intro}
 
-The Tag and Probe (\tnp) method is a well established framework within CMS to study the single muon detection efficiencies. Despite of its wide usage across all analyses containing muons, every study needs to be set up in a different way. Setting up the ``fitter scripts'' needs
-quite some attention in order not to introduce biases in the method,
-as well as designing the individual scripts such that the
-corresponding efficiencies are fully factorizable. This has been
-achieved by setting up the initial fitter scripts in close collaboration
-with the MUON POG~\cite{cBotta}. Moreover, it should be emphasized
-that correlations among the two muons induced by the detector or
-trigger system cannot be reproduced by the \tnp\ \emph{single} muon
-efficiencies. The single muon efficiencies need to be studied such
-that they are not affected by possible inefficiencies or biases due to
-the presence of the second muon. Possible correlations, whose net
-result is often referred to under the term ``$\rho$ factor'', need to
-be studied through other methods. This factor enters the expression to
-build the dimuon detection efficiencies from the product of the single
-muon efficiencies, as a generic ``correction factor''.
+The Tag and Probe (\tnp) method is a well established framework within CMS to study the single muon detection efficiencies. Despite of its wide usage across all analyses containing muons, every study needs to be set up in a different way. Setting up the ``fitter scripts'' needs quite some attention in order not to introduce biases in the method, as well as designing the individual scripts such that the corresponding efficiencies are fully factorizable. This has been achieved by setting up the initial fitter scripts in close collaboration with the MUON POG~\cite{cBotta}. Moreover, it should be emphasized that correlations among the two muons induced by the detector or trigger system cannot be reproduced by the \tnp\ \emph{single} muon efficiencies. The single muon efficiencies need to be studied such that they are not affected by possible inefficiencies or biases due to the presence of the second muon. Possible correlations, whose net result is often referred to under the term ``$\rho$ factor'', need to be studied through other methods. This factor enters the expression to build the dimuon detection efficiencies from the product of the single muon efficiencies, as a generic ``correction factor''.
 
-Low \pt\ single muon triggers were highly prescaled in 2011, and only
-exist during partial data taking periods. Moreover, the fraction of
-events containing a \jpsi\ dimuon is very small, such that the
-collected data samples are not large enough for the assessment of data
-driven efficiencies. For this reason, special efficiency triggers were
-developed to study the single muon detection efficiencies in an
-unbiased way. These are ``dimuon'' triggers with a mass cut in the
-\jpsi\ region of two complementary topologies: MuX\_TrackY (being
-effectively a ``single'' muon trigger path) and MuX\_L2MuY. The former
-allows an unbiased assessment of the muon related efficiencies
-(offline reconstruction in the muon chambers, as well as L1 and L2
-trigger efficiencies), while the latter allows the study of the muon
-offline silicon tracking and track quality selection efficiencies,
-as well as the L3 trigger efficiency.
+Low \pt\ single muon triggers were highly prescaled in 2015, and only exist during partial data taking periods. Moreover, the fraction of events containing a \jpsi\ dimuon is very small, such that the collected data samples are not large enough for the assessment of data driven efficiencies. For this reason, special efficiency triggers were developed to study the single muon detection efficiencies in an unbiased way. These are ``dimuon'' triggers with a mass cut in the \jpsi\ region of two complementary topologies: MuX\_TrackY (being effectively a ``single'' muon trigger path) and MuX\_L2MuY. The former allows an unbiased assessment of the muon related efficiencies (offline reconstruction in the muon chambers, as well as L1 and L2 trigger efficiencies), while the latter allows the study of the muon offline silicon tracking and track quality selection efficiencies, as well as the L3 trigger efficiency.
 
-In the current document we follow the approach suggested by the MUON
-POG to first study the muon offline reconstruction efficiencies, and
-then the trigger efficiencies with respect to offline muons. The full
-procedure is split into the following 5 steps:
+In the current document we follow the approach suggested by the MUON POG to first study the muon offline reconstruction efficiencies, and then the trigger efficiencies with respect to offline muons. The full
+procedure is split into the following 2 steps:
 \begin{enumerate}
-\item $\epsilon_{\rm Track}$: offline muon tracking efficiency in the
-  Silicon tracker
-\item $\epsilon_{\rm MuonID} | {\epsilon_{\rm Track}}$: offline
-  reconstruction efficiency in the muon chambers with respect to a
-  Silicon track
-\item $\epsilon_{\rm MuonQual} | (\epsilon_{\rm MuonID} |
-  {\epsilon_{\rm Track}})$: efficiency of the muon quality cuts, with
-  respect to an offline reconstructed muon with no quality cuts
-\item $\epsilon_{\rm L1\cdot L2} | (\epsilon_{\rm MuonQual} | (\epsilon_{\rm MuonID} |
-  {\epsilon_{\rm Track}}))$: combined L1$\cdot$L2 trigger efficiency
-  with respect to an offline reconstructed muon with given quality criteria
-\item $\epsilon_{\rm L3} | (\epsilon_{\rm L1\cdot L2} | (\epsilon_{\rm
-    MuonQual} | (\epsilon_{\rm
-    MuonID} | {\epsilon_{\rm Track}})))$: L3 trigger efficiency with
-  respect to the previous condition
+\item $\epsilon_{\rm Track}$: offline muon tracking efficiency in the Silicon tracker
+%\item $\epsilon_{\rm MuonID} | {\epsilon_{\rm Track}}$: offline reconstruction efficiency in the muon chambers with respect to a Silicon track
+%\item $\epsilon_{\rm MuonQual} | (\epsilon_{\rm MuonID} | {\epsilon_{\rm Track}})$: efficiency of the muon quality cuts, with respect to an offline reconstructed muon with no quality cuts
+\item $\epsilon_{\rm MuonID} | {\epsilon_{\rm Track}}$: offline muon reconstruction and quality cuts efficiency in the muon chambers with respect to a Silicon track
+%\item $\epsilon_{\rm L1\cdot L2} | (\epsilon_{\rm MuonQual} | (\epsilon_{\rm MuonID} | {\epsilon_{\rm Track}}))$: combined L1$\cdot$L2 trigger efficiency with respect to an offline reconstructed muon with given quality criteria
+%\item $\epsilon_{\rm L3} | (\epsilon_{\rm L1\cdot L2} | (\epsilon_{\rm MuonQual} | (\epsilon_{\rm MuonID} | {\epsilon_{\rm Track}})))$: L3 trigger efficiency with respect to the previous condition
 \end{enumerate}
-The tracking efficiency was studied extensively in the past and has
-turned out to be ($99\pm1$)\%, independently of the muon's \pt\ or
-$\eta$. We have not repeated this study here and use this value, as
-recommended by the MUON POG.
+The tracking efficiency was studied extensively in the past and has turned out to be ($99\pm1$)\%, independently of the muon's \pt\ or $\eta$. We have not repeated this study here and use this value, as recommended by the MUON POG.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Data sets and run dependences}\label{sec:dataSets}
 
-The data collected with the physics and efficiency triggers of the
-B-physics group are stored in the \texttt{MuOnia} primary data set
-(PD). A graphical representation of the events triggered by the
-physics triggers relevant for low mass dimuon physics can be seen in
-Fig.~\ref{fig:MuOnia-trig}; details of the time evolution of the B-PAG
-trigger menu can be found in Ref.~\cite{trigger-bph}.
+The data collected with the physics and efficiency triggers of the B-physics group are stored in the \texttt{Charmonium} primary data set (PD). A graphical representation of the events triggered by the physics triggers relevant for low mass dimuon physics can be seen in Fig.~\ref{fig:MuOnia-trig}; details of the time evolution of the B-PAG trigger menu can be found in Ref.~\cite{trigger-bph}.
 \begin{figure}[p]
 \centering
-\includegraphics[width=0.8\textwidth]{Figures/dimuMass_2011Run_5E32.pdf}
-\includegraphics[width=0.8\textwidth]{Figures/dimuMass_2011Run_1E33.pdf}
-\includegraphics[width=0.8\textwidth]{Figures/dimuMass_2011Run_1p4E33.pdf}
+\includegraphics[width=0.8\textwidth]{Figures/dimuonMassWithDC_47pb.pdf}
+%\includegraphics[width=0.8\textwidth]{Figures/dimuMass_2011Run_5E32.pdf}
+%\includegraphics[width=0.8\textwidth]{Figures/dimuMass_2011Run_1E33.pdf}
+%\includegraphics[width=0.8\textwidth]{Figures/dimuMass_2011Run_1p4E33.pdf}
 %\includegraphics[width=0.8\textwidth]{Figures/dimuMass_2011Run_1fb.pdf}
-\caption{Dimuon mass distributions, using the offline reconstructed
-  variables, triggered by the trigger paths listed in the legend
-  box. The figures reflect the trigger menu during the 5E32 (top),
-  1E33 (middle) and 1.4E33 (bottom) data taking periods, up to the end
-  of June 2011.}
-% , as well as a time integrated representation, containing the
-% previous 5E32 trigger menu, representing the first 1,1 fb$^{-1}$, as
-% collected up to end of June 2011.}
+\caption{Dimuon mass distributions, using the offline reconstructed variables, triggered by the trigger paths listed in the legend box.
+  %The figures reflect the trigger menu during the 5E32 (top), 1E33 (middle) and 1.4E33 (bottom) data taking periods, up to the end of June 2011.
+  }
+% , as well as a time integrated representation, containing the previous 5E32 trigger menu, representing the first 1,1 fb$^{-1}$, as collected up to end of June 2011.}
 \label{fig:MuOnia-trig}
 \end{figure}
 
-The two types of efficiency triggers exist in the following instances:
-Mu5\_L2Mu2\_Jpsi, Mu5\_Track2\_Jpsi and Mu7\_Track7\_Jpsi. The latter
-two are both aimed to study the same kind of efficiency, but with a
-different \pt\ coverage of the probe muon, $p_{\rm T} \gtrsim 2$ and
-7~GeV/$c$, respectively. The high \pt\ instance covers the region
-where the efficiencies should reach their saturation values. Because
-of the higher trigger rate, the low \pt\ version has a significantly
-larger prescale than its ``high \pt'' counterpart.
+The two types of efficiency triggers exist in the following instances: Mu7p5\_L2Mu2\_Jpsi,\\
+Mu7p5\_Track2\_Jpsi and Mu7p5\_Track7\_Jpsi. The latter two are both aimed to study the same kind of efficiency, but with a different \pt\ coverage of the probe muon, $p_{\rm T} \gtrsim 2$ and $7~GeV/c$, respectively. The high \pt\ instance covers the region where the efficiencies should reach their saturation values. Because of the higher trigger rate, the low \pt\ version has a significantly larger prescale than its ``high \pt'' counterpart, except for the first data taking period (low luminosity conditions) in which both triggers have the same prescale.
 
-The studies presented here were obtained by covering the run periods
- summarized in Table~\ref{tab:PDs}.
+The studies presented here were obtained by covering the run periods summarized in Table~\ref{tab:PDs}.
 \begin{table}[htb]
   \centering \caption{Datasets used for the \tnp\ studies discussed in this note.}
 \begin{tabular}{|c|c|c|}\hline
 data set & trigger menu & run range \\ \hline
-Run2011A-May10ReReco-v1 & 5E32 & $160432 - 163870$ \\
-Run2011A-PromptReco-v4 & 1E33$+$1.4E33 & $165088 - 167675$ \\
-Run2011A-PromptReco-v5 & 2E33 & $170723 - 172619$ \\
-Run2011A-PromptReco-v6 & 2E33$+$3E33 & $172621 - 173693$ \\ \hline
-Run2011B-PromptReco-v1 & 3E33$+$5E33 & $175832 - 180252$ \\ \hline
+Run2015B-PromptReco-v1 & 50ns\_5E33 & $250985 - 253620$ \\ \hline
+%Run2015C-PromptReco-v1 & 5E33 & $160432 - 163870$ \\
+%Run2011A-PromptReco-v6 & 2E33$+$3E33 & $172621 - 173693$ \\ \hline
+%Run2011B-PromptReco-v1 & 3E33$+$5E33 & $175832 - 180252$ \\ \hline
 \end{tabular}
 \label{tab:PDs}
 \end{table}
-The events collected during the 5E32 run period (May10ReReco) are
-exclusively used for the study of the muon reconstruction efficiencies
-and the efficiencies of the quality cuts, because the trigger
-settings changed several times throughout this period. Starting from
-the 1E33 trigger menu, only minor L1 changes were
-performed~\cite{luigiTWiki}, which should have negligible impact on
-the trigger efficiency. The only L1 trigger change worth mentioning is
-the one effective from run 175971, when the global muon trigger (GMT)
-changed the assignment of the confirmed candidates' \pt\ value.  In
-case the RPC as well as the DT or CSC detector systems measured the
-candidate muon at the same time, instead of returning the smaller \pt\
-value to the global trigger, it was changed to return a \pt\ value
-given through a preprogramed rank instead (\texttt{byMinPt} became
-\texttt{byRank}). Furthermore, during the run period $165088 - 172868$
-all dimuon triggers in the \texttt{MuOnia} PD used the "L1\_DoubleMu0"
-seed, while afterwards the "L1\_DoubleMu0\_HighQ" was used. That
-defines the following three distinct run periods concerning L1 trigger
-efficiency studies:
-\begin{itemize}
-\item $165088 - 172868$: L1\_DoubleMu0 seed
-\item $173236 - 175970$: L1\_DoubleMu0\_HighQ seed
-\item $> 175971$: GMT changed \pt\ assignment
-\end{itemize}
 
-The L2 settings were not changed throughout the 1E33$-$5E33 data
-taking period. The L3 reconstruction settings were only changed during
-the 5E33 trigger menu (starting from run 178380), when the transverse
-momentum was taken from the measurement in the tracker only, while it
-used to be from the global fit.
+\iffalse
+  The events collected during the 5E32 run period (May10ReReco) are exclusively used for the study of the muon reconstruction efficiencies and the efficiencies of the quality cuts, because the trigger settings changed several times throughout this period. Starting from the 1E33 trigger menu, only minor L1 changes were performed~\cite{luigiTWiki}, which should have negligible impact on the trigger efficiency. The only L1 trigger change worth mentioning is the one effective from run 175971, when the global muon trigger (GMT) changed the assignment of the confirmed candidates' \pt\ value. In case the RPC as well as the DT or CSC detector systems measured the candidate muon at the same time, instead of returning the smaller \pt\ value to the global trigger, it was changed to return a \pt\ value given through a preprogramed rank instead (\texttt{byMinPt} became \texttt{byRank}). Furthermore, during the run period $165088 - 172868$ all dimuon triggers in the \texttt{MuOnia} PD used the "L1\_DoubleMu0" seed, while afterwards the "L1\_DoubleMu0\_HighQ" was used. That defines the following three distinct run periods concerning L1 trigger efficiency studies:
+  \begin{itemize}
+        \item $165088 - 172868$: L1\_DoubleMu0 seed
+        \item $173236 - 175970$: L1\_DoubleMu0\_HighQ seed
+        \item $> 175971$: GMT changed \pt\ assignment
+  \end{itemize}
 
-The \tnp\ skims were produced using the following two data
-certification files for the May10ReReco and PromptReco data,
-respectively:
+The L2 settings were not changed throughout the 1E33$-$5E33 data taking period. The L3 reconstruction settings were only changed during the 5E33 trigger menu (starting from run 178380), when the transverse momentum was taken from the measurement in the tracker only, while it used to be from the global fit.
+\fi
+
+The \tnp\ skims were produced using the following certification files for the PromptReco data, respectively:
 \begin{itemize}
-\item
-  Cert\_160404-163869\_7TeV\_May10ReReco\_Collisions11\_JSON\_MuonPhys\_v3.txt
-\item
-  Cert\_160404-180252\_7TeV\_PromptReco\_Collisions11\_JSON\_MuonPhys.txt  
+  \item Cert\_246908-251883\_13TeV\_PromptReco\_Collisions15\_JSON\_MuonPhys\_v2.txt  
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Selection of tag and probe muons}\label{sec:selection}
+\iffalse
+  \section{Selection of tag and probe muons}\label{sec:selection}
 
-It is important that the matching criteria between the reconstructed
-(RECO) and trigger (HLT) muons be identical for the physics data
-analysis and for the corresponding \tnp\ studies. In the present study
-this is ensured given that our PAT Tuplizer (Onia2MuMuPAT.cc)
-simultaneously produces the muon pairs for the data analysis as well
-as for the study of the \tnp\ efficiencies, commonly using the PAT
-muon matching settings as defined in \\
-\texttt{MuonAnalysis/MuonAssociators/python/patMuonsWithTrigger\_cff.py}. In
-particular, the matching cones in $\Delta R$ between the RECO and
-trigger muons are 0.3 (L1), 0.3 (L2) and 0.1 (L3), respectively for
-the trigger muons at different levels of HLT. The larger cone size for
-L1 and L2 muons allows for the larger measurement uncertainties, given their
-limited resolution. The corresponding matching cone size for the CtfTrack
-in the MuX\_TrackY\_Jpsi trigger paths is 0.1, in tune with the one of
-L3 muons. No matching requirement is performed concerning the RECO and
-HLT muon's transverse momenta.
+  It is important that the matching criteria between the reconstructed (RECO) and trigger (HLT) muons be identical for the physics data analysis and for the corresponding \tnp\ studies. In the present study this is ensured given that our PAT Tuplizer (Onia2MuMuPAT.cc) simultaneously produces the muon pairs for the data analysis as well as for the study of the \tnp\ efficiencies, commonly using the PAT muon matching settings as defined in \\
+  \texttt{MuonAnalysis/MuonAssociators/python/patMuonsWithTrigger\_cff.py}. In particular, the matching cones in $\Delta R$ between the RECO and trigger muons are 0.3 (L1), 0.3 (L2) and 0.1 (L3), respectively for the trigger muons at different levels of HLT. The larger cone size for L1 and L2 muons allows for the larger measurement uncertainties, given their limited resolution. The corresponding matching cone size for the CtfTrack in the MuX\_TrackY\_Jpsi trigger paths is 0.1, in tune with the one of L3 muons. No matching requirement is performed concerning the RECO and HLT muon's transverse momenta.
 
-In order to use the single muon efficiencies for physics data
-analyses, we apply fiducial cuts to the tags, as well as probes, in
-order to define an event sample faithfully representing the
-distribution of the corresponding physics data analysis sample. These
-single muon kinematical cuts have been obtained on the basis of MC
-simulations, requesting that the single muon reconstruction efficiency
-be higher than 50\%, see Fig. ~\ref{fig:glbMu-envelope}. In the
-present document we consider two sets of fiducial cuts: Set a)
-dedicated to all studies using (inclusive) tracker muons; and Set b)
-setting a tighter cut on the muon's \pt. In the following, we will
+  In order to use the single muon efficiencies for physics data analyses, we apply fiducial cuts to the tags, as well as probes, in order to define an event sample faithfully representing the distribution of the corresponding physics data analysis sample. These single muon kinematical cuts have been obtained on the basis of MC simulations, requesting that the single muon reconstruction efficiency be higher than 50\%, see Fig. ~\ref{fig:glbMu-envelope}. In the present document we consider two sets of fiducial cuts: Set a) dedicated to all studies using (inclusive) tracker muons; and Set b) setting a tighter cut on the muon's \pt. In the following, we will
 refer to the two sets as ``tracker50'' and ``global50'' cuts, respectively.
-\begin{figure}[htb]
-\centering
-\includegraphics[width=0.49\textwidth]{Figures/recoEff_pT_vs_eta_Tkmu.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/recoEff_pT_vs_eta_Glbmu.pdf}
-\caption{MC based reconstruction efficiencies as a function of \pt\
-  and $|\eta|$, for tracker muons without (left) and with (right)
-  requesting that they are also reconstructed as global muons. The red
-  line indicates the kinematic fiducial cut applied to the tag and
-  probe muons, in the loose case (left) and tight case (right).}
-\label{fig:glbMu-envelope}
-\end{figure}
+  \begin{figure}[htb]
+    \centering     
+    \includegraphics[width=0.49\textwidth]{Figures/recoEff_pT_vs_eta_Tkmu.pdf}
+    \includegraphics[width=0.49\textwidth]{Figures/recoEff_pT_vs_eta_Glbmu.pdf}
+    \caption{MC based reconstruction efficiencies as a function of \pt\ and $|\eta|$, for tracker muons without (left) and with (right) requesting that they are also reconstructed as global muons. The red line indicates the kinematic fiducial cut applied to the tag and probe muons, in the loose case (left) and tight case (right).}
+    \label{fig:glbMu-envelope}
+  \end{figure}
 
-For global muons the red line indicates the 50\% border line, which can
-be described by linear cuts (the ``global50'' cuts) in the following way:
-\begin{eqnarray}\nonumber
-|\eta| < 1.1:& & \,\, p_{\rm T, min} = 4.6 \to 4.0~{\rm GeV/}c \\ \nonumber
-1.1 < |\eta| < 1.4:& &\,\, p_{\rm T, min} = 4.0 \to 2.75~{\rm GeV/}c \\ \nonumber
-1.4 < |\eta| < 2.4:& &\,\, p_{\rm T, min} = 2.75 \to 2~{\rm GeV/}c
-\end{eqnarray}
-The corresponding efficiencies were studied in 2D using the following
-bins, which reflect the above \pt\ and $|\eta|$ borders:
-\begin{itemize}
-\item $p_{\rm T}$ = {2, 2.75, 4, 4.6, 6, 8, 10, 15, 50}~GeV/$c$
-\item $|\eta|$ = {0, 0.2, 0.3, 0.8, 1.2, 1.4, 2.1}
-\end{itemize}
+  For global muons the red line indicates the 50\% border line, which can be described by linear cuts (the ``global50'' cuts) in the following way:
+  \begin{eqnarray}\nonumber
+    |\eta| < 1.1:& & \,\, p_{\rm T, min} = 4.6 \to 4.0~{\rm GeV/}c \\ \nonumber
+    1.1 < |\eta| < 1.4:& &\,\, p_{\rm T, min} = 4.0 \to 2.75~{\rm GeV/}c \\ \nonumber
+    1.4 < |\eta| < 2.4:& &\,\, p_{\rm T, min} = 2.75 \to 2~{\rm GeV/}c
+  \end{eqnarray}
+  The corresponding efficiencies were studied in 2D using the following bins, which reflect the above \pt\ and $|\eta|$ borders:
+  \begin{itemize}
+    \item $p_{\rm T}$ = {2, 2.75, 4, 4.6, 6, 8, 10, 15, 50}~GeV/$c$
+    \item $|\eta|$ = {0, 0.2, 0.3, 0.8, 1.2, 1.4, 2.1}
+  \end{itemize}
 
-The corresponding cuts for tracker muons (the ``tracker50'' cuts) are also
-based on the 50\% reconstruction efficiency line, but need to be
-modified for $|\eta| > 1.6$ due to the fact that the \tnp\ studies are
-limited to the range $p_{\rm T} > 2$~GeV/$c$. The corresponding cuts
-can be summarized as:
-\begin{eqnarray}\nonumber
-|\eta| < 1.2:& & \,\, p_{\rm T, min} = 3.5~{\rm GeV/}c \\ \nonumber
-1.2 < |\eta| < 1.6:& &\,\, p_{\rm T, min} = 3.5 \to 2.0~{\rm GeV/}c \\ \nonumber
-1.6 < |\eta| < 2.4:& &\,\, p_{\rm T, min} = 2~{\rm GeV/}c
-\end{eqnarray}
-Similarly, the corresponding 2D efficiency calculations use bins that
-reflect the given \pt\ and $|\eta|$ borders:
-\begin{itemize}
-%\item $p_{\rm T}$ = {2.0, 2.75, 3.5, 4.5, 5.5, 7.0, 10, 15,
-%50}~GeV/$c$
-\item $p_{\rm T}$ = {2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6, 7, 8, 10, 15, 20, 100}~GeV/$c$
-\item $|\eta|$ = {0, 0.2, 0.3, 0.6, 0.8, 1.2, 1.6, 2.1, 2.4}
-\end{itemize}
+  The corresponding cuts for tracker muons (the ``tracker50'' cuts) are also based on the 50\% reconstruction efficiency line, but need to be modified for $|\eta| > 1.6$ due to the fact that the \tnp\ studies are limited to the range $p_{\rm T} > 2$~GeV/$c$. The corresponding cuts can be summarized as:
+  \begin{eqnarray}\nonumber
+    |\eta| < 1.2:& & \,\, p_{\rm T, min} = 3.5~{\rm GeV/}c \\ \nonumber
+    1.2 < |\eta| < 1.6:& &\,\, p_{\rm T, min} = 3.5 \to 2.0~{\rm GeV/}c \\ \nonumber    
+    1.6 < |\eta| < 2.4:& &\,\, p_{\rm T, min} = 2~{\rm GeV/}c
+  \end{eqnarray}
+  Similarly, the corresponding 2D efficiency calculations use bins that reflect the given \pt\ and $|\eta|$ borders:
+  \begin{itemize}
+    %\item $p_{\rm T}$ = {2.0, 2.75, 3.5, 4.5, 5.5, 7.0, 10, 15,
+    %50}~GeV/$c$
+    \item $p_{\rm T}$ = {2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6, 7, 8, 10, 15, 20, 100}~GeV/$c$
+    \item $|\eta|$ = {0, 0.2, 0.3, 0.6, 0.8, 1.2, 1.6, 2.1, 2.4}
+  \end{itemize}
 
-Throughout the whole document we will show figures prepared with the
-``tracker50'' cuts; the corresponding efficiencies for ``global50'' cuts are
-summarized in Table~\ref{tab:eff-glb}. The graphical representation can be
-found in Ref.~\cite{tnp-bph}.
+  Throughout the whole document we will show figures prepared with the ``tracker50'' cuts; the corresponding efficiencies for ``global50'' cuts are summarized in Table~\ref{tab:eff-glb}. The graphical representation can be found in Ref.~\cite{tnp-bph}.
+\fi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Setup of the \tnp\ fitter scripts}\label{sec:setup}
 
-The \tnp\ producer script is defined not only to prepare all the
-needed variables for the corresponding fitter scripts, but also to
-filter on events triggered by either the HLT\_MuX\_TrackY\_Jpsi or
-the HLT\_MuX\_L2MuY\_Jpsi efficiency trigger paths.
+The \tnp\ producer script is defined not only to prepare all the needed variables for the corresponding fitter scripts, but also to filter on events triggered by either the HLT\_MuX\_TrackY\_Jpsi or the HLT\_MuX\_L2MuY\_Jpsi efficiency trigger paths.
 
-The way the fitter scripts are set up is done in a similar fashion for
-all the 4 single muon efficiencies: the tag muon is matched to the L3
-leg (``HLT\_MuX") of the efficiency trigger paths. The probe is then
-matched to the second leg in the efficiency path, i.e. the ``TrackY"
-in the case of the muon related efficiency studies, or the ``L2MuY" object
-in the case of the tracker related efficiencies. The passing probes
-are the fraction of all probes that pass a given, well defined
-criterion, to be discussed in the individual sections below.
+The way the fitter scripts are set up is done in a similar fashion for all the 4 single muon efficiencies: the tag muon is matched to the L3 leg (``HLT\_MuX") of the efficiency trigger paths. The probe is then matched to the second leg in the efficiency path, i.e. the ``TrackY" in the case of the muon related efficiency studies, or the ``L2MuY" object in the case of the tracker related efficiencies. The passing probes are the fraction of all probes that pass a given, well defined criterion, to be discussed in the individual sections below.
 
-In the case of the efficiency of the trigger dimuon vertexing module,
-which is used in all the quarkonium physics triggers of the
-\texttt{MuOnia} PD, a slightly different procedure needs to be
-adopted, given that it is not a single muon but rather a dimuon whose
-efficiency is probed: the \tnp\ skim needs to be prepared with the
-option
-\begin{verbatim}
-arbitration   = cms.string("OnePair")
-\end{verbatim}
-In this way the pair becomes the probe. The efficiency of any of the
-vertexing modules (last L3 filter in any of the quarkonia trigger
-paths) can be studied with respect to the specially designed trigger
-path HLT\_Dimuon0\_Jpsi\_NoVertexing, which is available from the 2E33
-trigger menu onwards (run 170249) and does not contain the vertexing
-module in its trigger path. In the current study, we use the vertexing
-module of the HLT\_Dimuon0\_Jpsi trigger path, given that its
-configuration is identical to the ones of the inclusive \jpsi, \psip\
-and $\Upsilon$ trigger paths: it simply requests that the dimuon
-secondary vertex has a fit $\chi^2$ probability larger than
-0.5\,\%. Given that the HLT\_Dimuon0\_Jpsi trigger path had a prescale
-factor different from the one of the HLT\_Dimuon0\_Jpsi\_NoVertexing,
-its prescale factor needs to be accounted for in the efficiency
-measurement.
+\iffalse
+  In the case of the efficiency of the trigger dimuon vertexing module, which is used in all the quarkonium physics triggers of the \texttt{Charmonium} PD, a slightly different procedure needs to be adopted, given that it is not a single muon but rather a dimuon whose efficiency is probed: the \tnp\ skim needs to be prepared with the option
+  \begin{verbatim}
+    arbitration   = cms.string("OnePair")
+  \end{verbatim}
+  In this way the pair becomes the probe. The efficiency of any of the vertexing modules (last L3 filter in any of the quarkonia trigger paths) can be studied with respect to the specially designed trigger path HLT\_Dimuon0\_Jpsi\_NoVertexing, which is available from the 2E33 trigger menu onwards (run 170249) and does not contain the vertexing module in its trigger path. In the current study, we use the vertexing module of the HLT\_Dimuon0\_Jpsi trigger path, given that its configuration is identical to the ones of the inclusive \jpsi, \psip\ and $\Upsilon$ trigger paths: it simply requests that the dimuon secondary vertex has a fit $\chi^2$ probability larger than 0.5\,\%. Given that the HLT\_Dimuon0\_Jpsi trigger path had a prescale factor different from the one of the HLT\_Dimuon0\_Jpsi\_NoVertexing, its prescale factor needs to be accounted for in the efficiency measurement.
+\fi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\iffalse
 \section{Number of events}
 
-Efficiency triggers usually have prescale factors adapted to the
-increase in instanteous luminosity such that their rate stays overall
-constant. In the following we discuss the number of events collected
-in the efficiency triggers throughout the individual trigger menus in
-2011, as well as how they are distributed across the single muon \pt\
-and $\eta$ plane. We discuss the number of events surviving the
-fiducial cuts, using the ``tracker50'' set of cuts, that enter the
-efficiency calculation. The quoted numbers refer to the number of
-fitted \jpsi's considered in the given efficiency evaluation.
-\begin{figure}[htb]
-\centering
-\includegraphics[width=0.52\textwidth]{Figures/nbEvents_L1L2-Mu7Track7-run1-globalCuts50-17Oct2011.pdf}
-\includegraphics[width=0.47\textwidth]{Figures/nbEvents_L1L2-Mu5Track2-run1-TrkCuts50-20Oct2011.pdf}
-\caption{Number of events as a function of the probe muon's \pt\ and
-  $|\eta|$, collected with the HLT\_Mu7\_Track7\_Jpsi (left) and
-  HLT\_Mu5\_Track2\_Jpsi (right) trigger paths during the period
-  $165088 - 172868$, after the ``BMuQual'' cuts, as used in the
-  studies of the L1$\cdot$L2 trigger efficiencies.}
-\label{fig:singleMuStat}
-\end{figure}
+  Efficiency triggers usually have prescale factors adapted to the increase in instanteous luminosity such that their rate stays overall constant. In the following we discuss the number of events collected in the efficiency triggers throughout the individual trigger menus in 2015, as well as how they are distributed across the single muon \pt\ and $\eta$ plane. We discuss the number of events surviving the fiducial cuts, using the ``tracker50'' set of cuts, that enter the efficiency calculation. The quoted numbers refer to the number of fitted \jpsi's considered in the given efficiency evaluation.
+  \begin{figure}[htb]
+    \centering
+    \includegraphics[width=0.52\textwidth]{Figures/nbEvents_L1L2-Mu7Track7-run1-globalCuts50-17Oct2011.pdf}
+    \includegraphics[width=0.47\textwidth]{Figures/nbEvents_L1L2-Mu5Track2-run1-TrkCuts50-20Oct2011.pdf}
+    \caption{Number of events as a function of the probe muon's \pt\ and $|\eta|$, collected with the HLT\_Mu7\_Track7\_Jpsi (left) and HLT\_Mu5\_Track2\_Jpsi (right) trigger paths during the period $165088 - 172868$, after the ``BMuQual'' cuts, as used in the studies of the L1$\cdot$L2 trigger efficiencies.}
+    \label{fig:singleMuStat}
+  \end{figure}
 
-Figure~\ref{fig:singleMuStat} shows how the collected statistics is
-distributed across the single muon's \pt\ and $|\eta|$ after applying
-the ``BMuQual'' cuts, as is used for the studies of the L1$\cdot$L2
-trigger efficiencies. All the events collected with the
-"L1\_DoubleMu0" trigger seed ($165088 - 172868$) have been integrated.
+  Figure~\ref{fig:singleMuStat} shows how the collected statistics is distributed across the single muon's \pt\ and $|\eta|$ after applying the ``BMuQual'' cuts, as is used for the studies of the L1$\cdot$L2 trigger efficiencies. All the events collected with the "L1\_DoubleMu0" trigger seed ($165088 - 172868$) have been integrated.
 
-%Integrating over \pt\ and $|\eta|$, the collected yield used for the
-%efficiency studies is distributed over the run period as summarized in
-%Table~\ref{tab:timeEv-statistics}.
-%\begin{table}[htb]
-%  \centering \caption{Statistics used in the fits for the individual
-%    trigger efficiencies, separating the 5 different run
-%    periods. Numbers are in units of 1000.}
-%\begin{tabular}{|c||c|c|c|c|}\hline
-%HLT menu & $\epsilon_{\rm muonID}$ & $\epsilon_{\rm muQual}$ & $\epsilon_{\rm
-%  L1\cdot L2}$ & $\epsilon_{\rm L3}$ \\ \hline
-%1E33 & 234 & 423 & 41 & \\ \hline
-%1.4E33 & 28 & 23 & 4.9 & \\ \hline
-%2E33 & 103 & 84 & 18 & \\ \hline
-%3E33 & 135 & 102 & 18 & \\ \hline
-%5E33 & 83 & 75 & 14 & \\ \hline
-%\end{tabular}
-%\label{tab:timeEv-statistics}
-%\end{table}
+  %Integrating over \pt\ and $|\eta|$, the collected yield used for the
+  %efficiency studies is distributed over the run period as summarized in
+  %Table~\ref{tab:timeEv-statistics}.
+  %\begin{table}[htb]
+  %  \centering \caption{Statistics used in the fits for the individual
+  %    trigger efficiencies, separating the 5 different run
+  %    periods. Numbers are in units of 1000.}
+  %\begin{tabular}{|c||c|c|c|c|}\hline
+  %HLT menu & $\epsilon_{\rm muonID}$ & $\epsilon_{\rm muQual}$ & $\epsilon_{\rm
+  %  L1\cdot L2}$ & $\epsilon_{\rm L3}$ \\ \hline
+  %1E33 & 234 & 423 & 41 & \\ \hline
+  %1.4E33 & 28 & 23 & 4.9 & \\ \hline
+  %2E33 & 103 & 84 & 18 & \\ \hline
+  %3E33 & 135 & 102 & 18 & \\ \hline
+  %5E33 & 83 & 75 & 14 & \\ \hline
+  %\end{tabular}
+  %\label{tab:timeEv-statistics}
+  %\end{table}
 
-Integrating over \pt\ and $|\eta|$, the collected yield used for the
-efficiency studies is distributed over the individual run periods in
-the following way:
-\begin{description}
-\item[MuonID:] $160404 - 173692$ (RunA): 80k; $175832 - 180252$ (RunB): 30k
-\item[MuonQual:] $160404 - 173692$ (RunA): 500k; $175832 - 180252$
-  (RunB): 120k
-\item[L1$\cdot$L2:] $165088 - 172868$: 26k; $173236 - 175970$: 2.2k;
-  $175971 - 180252$ (RunB): 13k
-\item[L3:] $165088 - 173692$: 240k; $178380 - 180252$: 28k
-\end{description}
+  Integrating over \pt\ and $|\eta|$, the collected yield used for the efficiency studies is distributed over the individual run periods in the following way:
+    \begin{description}
+      \item[MuonID:] $160404 - 173692$ (RunA): 80k; $175832 - 180252$ (RunB): 30k
+      \item[MuonQual:] $160404 - 173692$ (RunA): 500k; $175832 - 180252$ (RunB): 120k
+      \item[L1$\cdot$L2:] $165088 - 172868$: 26k; $173236 - 175970$: 2.2k; $175971 - 180252$ (RunB): 13k
+      \item[L3:] $165088 - 173692$: 240k; $178380 - 180252$: 28k
+    \end{description}
 
-The events triggered with the HLT\_MuX\_TrackY\_Jpsi trigger paths are
-very impure, usually not containing a real \jpsi\ in the event. The
-requirement on the second ``leg'' to be a track reconstructed in the
-Silicon tracker only is not a guarantee to become the second muon of a
-possible \jpsi. However, only in this way one assures that the
-measurement of the reconstruction efficiencies are not biased. The
-fraction of events containing a true \jpsi\ in the
-HLT\_Mu5\_Track2\_Jpsi and HLT\_Mu7\_Track7\_Jpsi trigger paths is
-only 20 (30)\,\% (the above quoted numbers refer to the available
-number of \jpsi's, not counting the background). As will be shown in
-Section~\ref{sec:muonID}, the ``Failing Probes'', hence, are affected
-by a large continuum background.
+  The events triggered with the HLT\_MuX\_TrackY\_Jpsi trigger paths are very impure, usually not containing a real \jpsi\ in the event. The requirement on the second ``leg'' to be a track reconstructed in the Silicon tracker only is not a guarantee to become the second muon of a possible \jpsi. However, only in this way one assures that the measurement of the reconstruction efficiencies are not biased. The fraction of events containing a true \jpsi\ in the HLT\_Mu5\_Track2\_Jpsi and HLT\_Mu7\_Track7\_Jpsi trigger paths is only 20 (30)\,\% (the above quoted numbers refer to the available number of \jpsi's, not counting the background). As will be shown in Section~\ref{sec:muonID}, the ``Failing Probes'', hence, are affected by a large continuum background.
 
-On the other hand, the events collected with the HLT\_MuX\_L2Mu2\_Jpsi
-are rather pure and most events contain a real \jpsi, i.e. the
-corresponding background is very small.
+  On the other hand, the events collected with the HLT\_MuX\_L2Mu2\_Jpsi are rather pure and most events contain a real \jpsi, i.e. the corresponding background is very small.
+\fi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{MC sample}
 
-The \tnp\ studies are performed in an analogous way on a \jpsi\ MC
-sample. For this purpose, a private MC simulation was set up that
-contains realistic L1 and HLT trigger menu settings, as were used
-during the 1E33, 1.4E33, 2E33 and 3E33 ``RunA" data taking period in
-2011. The simulation, using a flat \jpsi\ gun with flat \pt\ (in the
-range $3 < p_{\rm T} < 50$~GeV/$c$) and rapidity ($|y| < 1.3$)
-distributions, was set up in CMSSW\_4\_2\_9\_HLT1\_hltpatch1 and
-global tag START42\_V14A::All. The following packages were
-additionally checked out:
-\begin{itemize}
-\item V00-00-00-00   Configuration/AlCa                              
-\item V04-01-12      Configuration/EventContent                      
-\item V01-02-00      Configuration/HLT                               
-\item V02-24-02      FastSimulation/Configuration                    
-\item V00-04-01      FastSimulation/Muons                            
-\item V12-02-00      HLTrigger/Configuration                         
-\item V00-10-01      HLTrigger/Egamma                                
-\item V03-08-07      HLTrigger/HLTanalyzers                          
-\item V00-04-01      HLTrigger/JetMET                                
-\item V02-11-11      HLTrigger/Muon 
-\end{itemize}
-In order to use the L1 trigger settings of the above data taking
-period, summarized in Ref.~\cite{luigiTWiki}, an additional piece of
-code was added to the simulation config file, summarized in Appendix
-A. An HLT menu was prepared that contained all the \jpsi\ trigger
-paths that were run during the four different running periods,
-including the different L1 trigger seeds mentioned in
-Section~\ref{sec:dataSets}.
+The \tnp\ studies are performed in an analogous way on a \jpsi\ MC sample. For this purpose, a 30M events official MC production has been requested~\cite{officialMC}:
 
-The simulation was limited to the \jpsi\ rapidity range $|y| <
-1.3$. Since the single muons are highly correlated with the dimuon's
-kinematics, this simulation does not contain muons beyond $|\eta| >
-1.4$, especially for high \pt.
+\href{https://cms-pdmv.cern.ch/mcm/requests?prepid=BPH-RunIISpring15DR74-00003&page=0&shown=1055}
+
+\iffalse
+  a private MC simulation was set up that contains realistic L1 and HLT trigger menu settings, as were used during the 1E33, 1.4E33, 2E33 and 3E33 ``RunA" data taking period in 2011. The simulation, using a flat \jpsi\ gun with flat \pt\ (in the range $3 < p_{\rm T} < 50$~GeV/$c$) and rapidity ($|y| < 1.3$) distributions, was set up in CMSSW\_4\_2\_9\_HLT1\_hltpatch1 and global tag START42\_V14A::All. The following packages were additionally checked out:
+  \begin{itemize}
+    \item V00-00-00-00   Configuration/AlCa                              
+    \item V04-01-12      Configuration/EventContent                      
+    \item V01-02-00      Configuration/HLT                               
+    \item V02-24-02      FastSimulation/Configuration                    
+    \item V00-04-01      FastSimulation/Muons                            
+    \item V12-02-00      HLTrigger/Configuration                         
+    \item V00-10-01      HLTrigger/Egamma                                
+    \item V03-08-07      HLTrigger/HLTanalyzers                          
+    \item V00-04-01      HLTrigger/JetMET                                
+    \item V02-11-11      HLTrigger/Muon 
+  \end{itemize}
+  In order to use the L1 trigger settings of the above data taking period, summarized in Ref.~\cite{luigiTWiki}, an additional piece of code was added to the simulation config file, summarized in Appendix A. An HLT menu was prepared that contained all the \jpsi\ trigger paths that were run during the four different running periods, including the different L1 trigger seeds mentioned in Section~\ref{sec:dataSets}.
+
+  The simulation was limited to the \jpsi\ rapidity range $|y| < 1.3$. Since the single muons are highly correlated with the dimuon's kinematics, this simulation does not contain muons beyond $|\eta| > 1.4$, especially for high \pt.
+\fi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Offline muon reconstruction efficiency}\label{sec:muonID}
+\section{Offline muon reconstruction and quality cuts efficiency}\label{sec:muonID}
 
-The probes for the muon reconstruction efficiencies are offline tracks
-of the collection \texttt{generalTracks} with two additional requests:
-\pt\ above a certain threshold, lower than what can be reasonably
-reconstructed as a muon; matched to the \texttt{TrackY} leg of the
-efficiency trigger path. As passing probes we consider
+The probes for the muon reconstruction and quality cuts efficiencies are offline tracks of the collection \texttt{generalTracks} with two additional requests:
+\pt\ above a certain threshold, lower than what can be reasonably reconstructed as a muon; matched to the \texttt{TrackY} leg of the efficiency trigger path.
+Passing probes are those that satisfy the series of tracking related quality cuts (``BMuQual"):
 \begin{itemize}
-\item arbitrated tracker muons or
-\item global muons which are also arbitrated tracker muons, have a
-  reduced global fit-$\chi^2$ smaller than 20 and have
-  \texttt{numberOfValidMuonHits} $>0$,
+  \item \texttt{highPurity}
+  \item \texttt{TMOneStationTight}
+  \item \texttt{trackerLayersWithMeasurement} $>5$
+  \item \texttt{pixelLayersWithMeasurement} $>0$
+  \item $|dxy| < 0.3$~cm and $|dz| < 20$~cm.
 \end{itemize}
-shortly referred to as ``BMuons".
+
+These are cuts widely used in the quarkonium related analyses. According to the efficiency studies shown in Fig.~\ref{fig:muQualEff-pt}, Fig.~\ref{fig:muQualEff-eta-1} and \ref{fig:muQualEff-eta-2} the efficiencies of these cuts are slightly $|\eta|$ dependent, with only a mild \pt\ turn-on behaviour, being between 96\,\% and 98\,\% for $p_{\rm T} > 10$~GeV/$c$.
+%The background under the \jpsi\ peak in the three probe samples (``Passing'', ``Failing'' and ``All'' probes) is rather small and the analysed sample is also large enough such that the data driven efficiencies are obtained with a good statistical accuracy, showing a clear trend, faithfully reproduced by the MC \tnp\ efficiencies.
+%, except for the most forward bin, $1.4 < |\eta| < 2.1$. The data seem to show an efficiency higher by $\sim 1-2$\,\%.
 
 \begin{figure}[htb]
-\centering
-\includegraphics[width=\textwidth]{Figures/MuonID_abseta4_pt1.pdf}
-\caption{Example of the fitted mass distributions of ``Passing",
-  ``Failing" and ``All Probes" in case of the muon reconstruction
-  efficiencies for one particular bin ($1.2 < |\eta| < 1.4$ and $2.75
-  < p_{\rm T} < 4$~GeV/$c$).}
-\label{fig:muonID-abseta4_pt1}
+  \centering
+  \includegraphics[width=\textwidth]{Figures/MuonID_abseta4_pt1.pdf}
+  \caption{Example of the fitted mass distributions of ``Passing", ``Failing" and ``All Probes" in case of the muon reconstruction and quality cuts efficiency for one particular bin ($1.2 < |\eta| < 1.4$ and $2.75 < p_{\rm T} < 4$~GeV/$c$).}
+  \label{fig:muonID-abseta4_pt1}
 \end{figure}
 
 \begin{figure}[p]
-\centering
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_pT_DataVsMC_etaBin0.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_pT_DataVsMC_etaBin1.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_pT_DataVsMC_etaBin2.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_pT_DataVsMC_etaBin3.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_pT_DataVsMC_etaBin4.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_pT_DataVsMC_etaBin5.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_pT_DataVsMC_etaBin6.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_pT_DataVsMC_etaBin7.pdf}
-\caption{Muon reconstruction efficiency versus \pt\ for small slices
-  in $|\eta|$, using the ``tracker50'' muon cuts.}
-\label{fig:muonIDEff-pt}
+  \centering
+  \includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_pT_DataVsMC_etaBin0.pdf}
+  \includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_pT_DataVsMC_etaBin1.pdf}
+  \includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_pT_DataVsMC_etaBin2.pdf}
+  \includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_pT_DataVsMC_etaBin3.pdf}
+  \includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_pT_DataVsMC_etaBin4.pdf}
+  \includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_pT_DataVsMC_etaBin5.pdf}
+  \includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_pT_DataVsMC_etaBin6.pdf}
+  \includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_pT_DataVsMC_etaBin7.pdf}
+  \caption{Muon reconstruction and quality cuts efficiency versus \pt\ for small slices in $|\eta|$.}
+  \label{fig:muonIDEff-pt}
 \end{figure}
 \begin{figure}[p]
-\centering
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_eta_DataVsMC_pTBin0.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_eta_DataVsMC_pTBin1.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_eta_DataVsMC_pTBin2.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_eta_DataVsMC_pTBin3.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_eta_DataVsMC_pTBin4.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_eta_DataVsMC_pTBin5.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_eta_DataVsMC_pTBin6.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_eta_DataVsMC_pTBin7.pdf}
-\caption{Muon reconstruction efficiency versus $|\eta|$ for small
-  slices in \pt, using the ``tracker50'' muon cuts.}
-\label{fig:muonIDEff-eta-1}
+  \centering
+  \includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_eta_DataVsMC_pTBin0.pdf}
+  \includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_eta_DataVsMC_pTBin1.pdf}
+  \includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_eta_DataVsMC_pTBin2.pdf}
+  \includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_eta_DataVsMC_pTBin3.pdf}
+  \includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_eta_DataVsMC_pTBin4.pdf}
+  \includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_eta_DataVsMC_pTBin5.pdf}
+  \includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_eta_DataVsMC_pTBin6.pdf}
+  \includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_eta_DataVsMC_pTBin7.pdf}
+  \caption{Muon reconstruction and quality cuts efficiency efficiency versus $|\eta|$ for small slices in \pt.}
+  \label{fig:muonIDEff-eta-1}
 \end{figure}
 \begin{figure}[p]
-\centering
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_eta_DataVsMC_pTBin8.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_eta_DataVsMC_pTBin9.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_eta_DataVsMC_pTBin10.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_eta_DataVsMC_pTBin11.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_eta_DataVsMC_pTBin12.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_eta_DataVsMC_pTBin13.pdf}
-\caption{Continuation of Fig~\ref{fig:muonIDEff-eta-1}.}
-\label{fig:muonIDEff-eta-2}
+  \centering
+  \includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_eta_DataVsMC_pTBin8.pdf}
+  \includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_eta_DataVsMC_pTBin9.pdf}
+  \includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_eta_DataVsMC_pTBin10.pdf}
+  \includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_eta_DataVsMC_pTBin11.pdf}
+  \includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_eta_DataVsMC_pTBin12.pdf}
+  \includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuIDEff_eta_DataVsMC_pTBin13.pdf}
+  \caption{Continuation of Fig~\ref{fig:muonIDEff-eta-1}.}
+  \label{fig:muonIDEff-eta-2}
 \end{figure}
 
-Given that the probes are all tracks, with no quality requirements
-applied, the background in the ``All Probe" and ``Failing Probe"
-samples is not negligible, as can be seen in
-Fig.~\ref{fig:muonID-abseta4_pt1}. The muon reconstruction
-efficiencies are close to 100\,\%. Given the large background and
-small signal in the ``Failing probes'' it is difficult to reliably
-estimate the efficiency, obtained by the \tnp\ algorithm as a combined
-fit to the mass distributions of ``Passing'', ``Failing'' and ``All
-Probes''.  The corresponding efficiencies, studied in 2D, are depicted
-\pt\ differentially in small slices of $|\eta|$ in
-Fig.~\ref{fig:muonIDEff-pt} and $|\eta|$ differentially in small
-slices of \pt\ in Fig.~\ref{fig:muonIDEff-eta-1} and \ref{fig:muonIDEff-eta-2}.
+Given that the probes are all tracks, with no quality requirements applied, the background in the ``All Probe" and ``Failing Probe" samples is not negligible, as can be seen in Fig.~\ref{fig:muonID-abseta4_pt1}. The muon reconstruction efficiencies are close to 100\,\%. Given the large background and small signal in the ``Failing probes'' it is difficult to reliably estimate the efficiency, obtained by the \tnp\ algorithm as a combined fit to the mass distributions of ``Passing'', ``Failing'' and ``All Probes''.  The corresponding efficiencies, studied in 2D, are depicted \pt\ differentially in small slices of $|\eta|$ in Fig.~\ref{fig:muonIDEff-pt} and $|\eta|$ differentially in small slices of \pt\ in Fig.~\ref{fig:muonIDEff-eta-1} and \ref{fig:muonIDEff-eta-2}.
 
-Given the difficulties during the fit process, it is understandable
-that the trends of the \pt\ differential efficiency curves are not
-well established from the \tnp\ studies on real data. The MC consists
-of the signal only, and is not affected by this limitation and shows a
-rather clear trend, indicating efficiencies larger than 95\,\%,
-flattening out at around 8~GeV/$c$. It should be noted that the MC can
-describe the data rather accurately, given the large uncertainties. It
-could, hence, be favourable in the data analyses to use the MC based
-\tnp\ efficiencies instead of the data driven ones. 
+Given the difficulties during the fit process, it is understandable that the trends of the \pt\ differential efficiency curves are not well established from the \tnp\ studies on real data. The MC consists of the signal only, and is not affected by this limitation and shows a rather clear trend, indicating efficiencies larger than 95\,\%, flattening out at around 8~GeV/$c$. It should be noted that the MC can describe the data rather accurately, given the large uncertainties. It could, hence, be favourable in the data analyses to use the MC based \tnp\ efficiencies instead of the data driven ones. 
 
-The MC based results show somewhat lower efficiencies for the bin $0.2
-< |\eta| < 0.3$. This is likely due to the fact that this
-pseudo-rapidity interval matches the partly non-instrumented region
-between the central and the $\pm 1$ wheels of the muon barrel
-detectors, which makes the muon reconstruction exceptionally
-inefficient. This is especially true for the low \pt\ bins, where the
-``tracker muons'' typically only reach one muon station and are more
-easily lost in the gap between the central and $\pm 1$ wheels.
+%The MC based results show somewhat lower efficiencies for the bin $0.2 < |\eta| < 0.3$. This is likely due to the fact that this pseudo-rapidity interval matches the partly non-instrumented region between the central and the $\pm 1$ wheels of the muon barrel detectors, which makes the muon reconstruction exceptionally inefficient. This is especially true for the low \pt\ bins, where the ``tracker muons'' typically only reach one muon station and are more easily lost in the gap between the central and $\pm 1$ wheels.
 
+Anticipating the discussion in Section~\ref{sec:cowboy}, we want to underline that we studied the muon reconstruction efficiency separately for ``cowboy'' and ``seagull'' dimuons, boh in data as well as MC, and do not find any differences.
+%This is due to the fact that we only consider tracker muons (or global muons which also qualify as arbitrated tracker muons) which are subject to different reconstruction algorithms, not being affected by the inefficiencies seen for L1, L2 and standalone muons in CMS.
+For this reason, the muon reconstruction efficiency, as well as the efficiency of the muon quality cuts were studied on the basis of ``seagull'' dimuons only.
 
-Anticipating the discussion in Section~\ref{sec:cowboy}, we want to
-underline that we studied the muon reconstruction efficiency
-separately for ``cowboy'' and ``seagull'' dimuons, boh in data as well
-as MC, and do not find any differences. This is due to the fact that
-we only consider tracker muons (or global muons which also qualify as
-arbitrated tracker muons) which are subject to different
-reconstruction algorithms, not being affected by the inefficiencies
-seen for L1, L2 and standalone muons in CMS. For this reason, the muon
-reconstruction efficiency, as well as the efficiency of the muon
-quality cuts were studied on the basis of all pairs.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Efficiencies of the muon tracking quality cuts}\label{sec:muQual}
-
-The probes for the efficiency study of the muon tracking quality cuts
-are the passing probes of the previous step, the ``BMuons", and are
-matched to the \texttt{L2Mu2} leg of the efficiency trigger
-path. Passing probes are those that satisfy the series of
-tracking related quality cuts (``BMuQual"):
-\begin{itemize}
-\item \texttt{numberOfValidHits} $>10$
-\item $\chi^2$ / ndf $<1.8$
-\item \texttt{TMOneStationTight}
-\item \texttt{pixelLayersWithMeasurement} $>1$
-\item $|dB| < 3.0$~cm and $|dz|  < 30$~cm.
-\end{itemize}
-
-These are cuts widely used in the quarkonium related
-analyses. According to the efficiency studies shown in
-Fig.~\ref{fig:muQualEff-pt}, Fig.~\ref{fig:muQualEff-eta-1} and
-\ref{fig:muQualEff-eta-2} the efficiencies of these cuts are slightly
-$|\eta|$ dependent, with only a mild \pt\ turn-on behaviour, being
-between 96\,\% and 98\,\% for $p_{\rm T} > 10$~GeV/$c$. The background
-under the \jpsi\ peak in the three probe samples (``Passing'',
-``Failing'' and ``All'' probes) is rather small and the analysed
-sample is also large enough such that the data driven efficiencies are
-obtained with a good statistical accuracy, showing a clear trend,
-faithfully reproduced by the MC \tnp\ efficiencies.
-%, except for the
-%most forward bin, $1.4 < |\eta| < 2.1$. The data seem to show an
-%efficiency higher by $\sim 1-2$\,\%.
-
-\begin{figure}[p]
-\centering
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuQualEff_pT_DataVsMC_etaBin0.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuQualEff_pT_DataVsMC_etaBin1.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuQualEff_pT_DataVsMC_etaBin2.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuQualEff_pT_DataVsMC_etaBin3.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuQualEff_pT_DataVsMC_etaBin4.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuQualEff_pT_DataVsMC_etaBin5.pdf}
-%only for Tracker muon cuts
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuQualEff_pT_DataVsMC_etaBin6.pdf}
-%only for Tracker muon cuts
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuQualEff_pT_DataVsMC_etaBin7.pdf}
-\caption{Efficiency of the muon quality cuts versus \pt\ for small
-  slices in $|\eta|$, using the ``tracker50'' muon cuts.}
-\label{fig:muQualEff-pt}
-\end{figure}
-\begin{figure}[p]
-\centering
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuQualEff_eta_DataVsMC_pTBin0.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuQualEff_eta_DataVsMC_pTBin1.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuQualEff_eta_DataVsMC_pTBin2.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuQualEff_eta_DataVsMC_pTBin3.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuQualEff_eta_DataVsMC_pTBin4.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuQualEff_eta_DataVsMC_pTBin5.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuQualEff_eta_DataVsMC_pTBin6.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuQualEff_eta_DataVsMC_pTBin7.pdf}
-\caption{Efficiency of the muon quality cuts, versus $|\eta|$ for
-  small slices in \pt, using the ``tracker50'' muon cuts.}
-\label{fig:muQualEff-eta-1}
-\end{figure}
-\begin{figure}[p]
-\centering
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuQualEff_eta_DataVsMC_pTBin8.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuQualEff_eta_DataVsMC_pTBin9.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuQualEff_eta_DataVsMC_pTBin10.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuQualEff_eta_DataVsMC_pTBin11.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuQualEff_eta_DataVsMC_pTBin12.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/\subDirName/MuQualEff_eta_DataVsMC_pTBin13.pdf}
-\caption{Continuation of Fig.~\ref{fig:muQualEff-eta-1}.}
-\label{fig:muQualEff-eta-2}
-\end{figure}
+\iffalse
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Dimuon trigger inefficiencies for ``close-by'' muons}\label{sec:cowboy}
 
-Given that, at L1, the dimuon triggered samples originally included a
-large fraction of ``fake" triggers, caused by coincidental response to
-single muons, the CSC L1 trigger group had to implement a ``ghost
-busting veto" algorithm which discards dimuon signals, if the two
-muons are too close in space. Unfortunately, this cut also rejects
-high \pt\ \jpsi's, which can give rise to almost collinear
-muons. Furthermore, ``cowboy" dimuons from a \jpsi\ have a high
-probability to cross each other at a radius from the interaction point
-($R = M / (0.3\cdot B)$) where the muon trigger logic is situated and
-are prone to become victims of the ``ghost busting veto" algorithm. The
-term ``cowboy" dimuons refers to those pairs that are emitted such
-that the magnetic field bends them towards each other, such that their
-trajectory can cross (within the muon
-detectors), contrary to the so-called ``seagull" dimuons, which are
-bent away from each other. The L2 trigger algorithms apply similar
-rejection criteria, arbitrating two potential trigger muons that
-eventually have survived the L1 trigger veto cut if they share one (or
-more) \emph{hits} in common; this currently includes even
-\emph{invalid} hits.
+Given that, at L1, the dimuon triggered samples originally included a large fraction of ``fake" triggers, caused by coincidental response to
+single muons, the CSC L1 trigger group had to implement a ``ghost busting veto" algorithm which discards dimuon signals, if the two
+muons are too close in space. Unfortunately, this cut also rejects high \pt\ \jpsi's, which can give rise to almost collinear
+muons. Furthermore, ``cowboy" dimuons from a \jpsi\ have a high probability to cross each other at a radius from the interaction point
+($R = M / (0.3\cdot B)$) where the muon trigger logic is situated and are prone to become victims of the ``ghost busting veto" algorithm. The
+term ``cowboy" dimuons refers to those pairs that are emitted such that the magnetic field bends them towards each other, such that their
+trajectory can cross (within the muon detectors), contrary to the so-called ``seagull" dimuons, which are bent away from each other. The L2 trigger algorithms apply similar
+rejection criteria, arbitrating two potential trigger muons that eventually have survived the L1 trigger veto cut if they share one (or more) \emph{hits} in common; this currently includes even \emph{invalid} hits.
 
-In the following we study the inefficiencies induced at L1 and L2
-separately, when the two muons are close in space. The L1
-trigger efficiency is studied with respect to reconstructed muons,
-satisfying the ``BMuQual" criteria and matched to the
-\texttt{TrackY} part of the efficiency trigger. Passing probes are
-those that have a match to the L1 filter used by all the quarkonium
-triggers, ``hltDimuonL1Filtered0". Those reconstructed muons (i.e.\
-matched to the L1 filter) become the probes for the ``exclusive" L2
-trigger efficiency study, i.e.\ the L2 trigger efficiency with respect
-to L1, (L2 $|$ L1). Passing probes for that second step are all those
-passing also the L2 filter of the quarkonium triggers,
-"hltDimuonL2PreFiltered0".
+In the following we study the inefficiencies induced at L1 and L2 separately, when the two muons are close in space. The L1
+trigger efficiency is studied with respect to reconstructed muons, satisfying the ``BMuQual" criteria and matched to the
+\texttt{TrackY} part of the efficiency trigger. Passing probes are those that have a match to the L1 filter used by all the quarkonium
+triggers, ``hltDimuonL1Filtered0". Those reconstructed muons (i.e. matched to the L1 filter) become the probes for the ``exclusive" L2
+trigger efficiency study, i.e.\ the L2 trigger efficiency with respect to L1, (L2 $|$ L1). Passing probes for that second step are all those
+passing also the L2 filter of the quarkonium triggers, "hltDimuonL2PreFiltered0".
 
-In Fig.~\ref{fig:CS-comparisonI} we present the L1 and
-exclusive L2 trigger efficiencies, separately for cowboy and seagull dimuons.
+In Fig.~\ref{fig:CS-comparisonI} we present the L1 and exclusive L2 trigger efficiencies, separately for cowboy and seagull dimuons.
 \begin{figure}[p]
-\centering
-\includegraphics[width=0.49\textwidth]{Figures/GlobalMuonCuts50/L1L2Eff_SeagullCowboy/L1Eff_abseta_PLOT_pt3_CScomp.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/GlobalMuonCuts50/L1L2Eff_SeagullCowboy/L1Eff_pt_PLOT_abseta5_CScomp.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/GlobalMuonCuts50/L1L2Eff_SeagullCowboy/L2Eff_abseta_PLOT_pt3_CScomp.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/GlobalMuonCuts50/L1L2Eff_SeagullCowboy/L2Eff_pt_PLOT_abseta5_CScomp.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/GlobalMuonCuts50/L1L2Eff_SeagullCowboy/L1L2Eff_abseta_PLOT_pt3_CScomp.pdf}
-\includegraphics[width=0.49\textwidth]{Figures/GlobalMuonCuts50/L1L2Eff_SeagullCowboy/L1L2Eff_pt_PLOT_abseta5_CScomp.pdf}
-\caption{L1 (top) and (L2 $|$ L1) (middle) and L1$\cdot$L2 (bottom)
-  trigger efficiencies for ``seagull" and ``cowboy" dimuons, as a
-  function of the probe muon's $|\eta|$ (left) and \pt\ (right), for
-  the ``global50'' kinematical cuts. }
-\label{fig:CS-comparisonI}
+  \centering
+  \includegraphics[width=0.49\textwidth]{Figures/GlobalMuonCuts50/L1L2Eff_SeagullCowboy/L1Eff_abseta_PLOT_pt3_CScomp.pdf}
+  \includegraphics[width=0.49\textwidth]{Figures/GlobalMuonCuts50/L1L2Eff_SeagullCowboy/L1Eff_pt_PLOT_abseta5_CScomp.pdf}
+  \includegraphics[width=0.49\textwidth]{Figures/GlobalMuonCuts50/L1L2Eff_SeagullCowboy/L2Eff_abseta_PLOT_pt3_CScomp.pdf}
+  \includegraphics[width=0.49\textwidth]{Figures/GlobalMuonCuts50/L1L2Eff_SeagullCowboy/L2Eff_pt_PLOT_abseta5_CScomp.pdf}
+  \includegraphics[width=0.49\textwidth]{Figures/GlobalMuonCuts50/L1L2Eff_SeagullCowboy/L1L2Eff_abseta_PLOT_pt3_CScomp.pdf}
+  \includegraphics[width=0.49\textwidth]{Figures/GlobalMuonCuts50/L1L2Eff_SeagullCowboy/L1L2Eff_pt_PLOT_abseta5_CScomp.pdf}
+  \caption{L1 (top) and (L2 $|$ L1) (middle) and L1$\cdot$L2 (bottom) trigger efficiencies for ``seagull" and ``cowboy" dimuons, as a function of the probe muon's $|\eta|$ (left) and \pt\ (right), for the ``global50'' kinematical cuts. }
+  \label{fig:CS-comparisonI}
 \end{figure}
 
 While at mid-rapidity the efficiencies are very similar for
@@ -1086,8 +781,7 @@ the corresponding L2 filter \\
 criteria.  Passing probes are then identified as those that are
 contained in the collection \texttt{hltL3MuonCandidates}. The \pt\
 ($|\eta|$) differential efficiencies, studied for seagull dimuons
-only\footnote{for completeness the trigger efficiencies for cowboy
-  dimuons are given in Appendix C.}, can be found in
+only\footnote{for completeness the trigger efficiencies for cowboy dimuons are given in Appendix C.}, can be found in
 Fig.~\ref{fig:L3Eff-pt} (\ref{fig:L3Eff-eta-1} and \ref{fig:L3Eff-eta-2}).
 
 \begin{figure}[p]
@@ -1329,20 +1023,15 @@ used in the calculations are:
 The efficiencies are around 97\,\%, being relatively flat as a
 function of \pt, with no strong $|y|$ dependence.
 
+\fi
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Summary}
 
-This note presents a coherent study of the single muon efficiencies
-extracted with the \tnp\ framework, performed on the basis of
-specially designed efficiency triggers in the \jpsi\ mass window: the
-path HLT\_MuX\_TrackY\_Jpsi allows to study in an unbiased way the
-muon related efficiencies, while HLT\_MuX\_L2MuY\_Jpsi accesses the
-tracking related efficiencies. The single muon efficiency was broken
-into 5~individual parts, ``tracking'', ``MuonID'', ``MuonQual'', ``L1$\cdot$L2''
-and ``L3'', and studied such that the
-corresponding efficiencies fully factorize. For completeness, the
-overall efficiency resulting from the product of the individal
-efficiencies is also given,
+This note presents a coherent study of the single muon efficiencies extracted with the \tnp\ framework, performed on the basis of specially designed efficiency triggers in the \jpsi\ mass window: the path HLT\_MuX\_TrackY\_Jpsi allows to study in an unbiased way the muon related efficiencies, while HLT\_MuX\_L2MuY\_Jpsi accesses the tracking related efficiencies.
+
+\iffalse
+The single muon efficiency was broken into 4~individual parts, ``tracking'', ``MuonID'', ``L1$\cdot$L2'' and ``L3'', and studied such that the corresponding efficiencies fully factorize. For completeness, the overall efficiency resulting from the product of the individal efficiencies is also given,
 \begin{equation}
 \epsilon_\mu = \epsilon_{\rm tracking} \cdot \epsilon_{\rm ID} \cdot
 \epsilon_{\rm qual} \cdot \epsilon_{\rm L1\cdot L2} \cdot
@@ -1351,54 +1040,23 @@ efficiencies is also given,
 where each term stands short for the conditional efficiency outlined in
 Section~\ref{sec:intro}. 
 
-Additionally, the \tnp\ framework was used in the special ``OnePair''
-mode, which allows us to study the efficiency of the online dimuon
-vertexing module (and corresponding filter) which ran after the
-standard L3 dimuon filter in all 2011 quarkonium triggers, applying
-cuts on the muon \emph{pair}. The efficiencies are extracted for two
-sets of single muon kinematical cuts ("tracker50" and "global50"),
-relevant for studies using tracker or (exclusive) global muons.
+Additionally, the \tnp\ framework was used in the special ``OnePair'' mode, which allows us to study the efficiency of the online dimuon vertexing module (and corresponding filter) which ran after the standard L3 dimuon filter in all 2011 quarkonium triggers, applying cuts on the muon \emph{pair}. The efficiencies are extracted for two sets of single muon kinematical cuts ("tracker50" and "global50"), relevant for studies using tracker or (exclusive) global muons.
 
-The trigger efficiencies presented here are for ``seagull'' dimuons
-only, given that the trigger logic presents inefficiencies for
-close-by ``cowboy'' dimuons.
+The trigger efficiencies presented here are for ``seagull'' dimuons only, given that the trigger logic presents inefficiencies for close-by ``cowboy'' dimuons.
 
-The $L1\cdot$L2 and L3 trigger efficiencies were also separately
-studied for positively and negatively charged muons, hardly showing
-any difference, within the $\sim 1$\,\% statistical accuracy of the
-2011 data.
+The $L1\cdot$L2 and L3 trigger efficiencies were also separately studied for positively and negatively charged muons, hardly showing any difference, within the $\sim 1$\,\% statistical accuracy of the 2011 data.
+\fi
 
-Given that the efficiency triggers were operated throughout the full
-data taking period, sufficient statistics could be collected for a
-full 2D efficiency study, versus the single muon's \pt\ and
-$|\eta|$. Moreover, time dependencies in the L1 and L3 trigger
-efficiencies were also addressed.
+Given that the efficiency triggers were operated throughout the full data taking period, sufficient statistics could be collected for a full 2D efficiency study, versus the single muon's \pt\ and $|\eta|$.
+%Moreover, time dependencies in the L1 and L3 trigger efficiencies were also addressed.
 
-All efficiencies are compared to MC based \tnp\ studies, conducted in
-an analogous way as for the real data. In view of this a special MC
-simulation was made, containing realistic L1 and HLT
-reconstruction settings, as well as a trigger menu containing all
-\jpsi\ trigger paths used throughout the run periods of the 1E33,
-1.4E33, 2E33 and 3E33
-trigger menus. The overall comparison to the MC based efficiencies is
-rather good, validating the MC simulation.
+All efficiencies are compared to MC based \tnp\ studies, conducted in an analogous way as for the real data. The overall comparison to the MC based efficiencies is rather good.
 
 \section*{Acknowledgements}
-We would like to thank C.~Botta and G.~Petrucciani for several useful
-discussions and help in setting up the initial \tnp\ fitter
-scripts. We acknowledge very helpful discussions with A.~Bocci,
-V.M.~Ghete, S.~Goy-Lopez, L.~Guiducci, I.~Mikulec, E.~Perez and
-S.~Valuev in view of identifying the ``ingredients'' for the realistic
-Monte Carlo simulation used in this note and for their regular
-feedback concerning changes of trigger settings throughout the data
-taking period.  W.~Adam, and C.~Louren\c{c}o contributed in detailed
-discussions concerning various aspects of this study.  We are also
-indebted to E.~Aguil\'o, H.~Rohringer and X.~Wang, who helped with
-some computing tasks, especially related to the MC simulation. 
+We would like to thank C.~Battilana and D.~Trocino for several useful discussions and help in setting up the initial \tnp\ fitter scripts.
+%We acknowledge very helpful discussions with A.~Bocci, V.M.~Ghete, S.~Goy-Lopez, L.~Guiducci, I.~Mikulec, E.~Perez and S.~Valuev in view of identifying the ``ingredients'' for the realistic Monte Carlo simulation used in this note and for their regular feedback concerning changes of trigger settings throughout the data taking period.  W.~Adam, and C.~Louren\c{c}o contributed in detailed discussions concerning various aspects of this study.  We are also indebted to E.~Aguil\'o, H.~Rohringer and X.~Wang, who helped with some computing tasks, especially related to the MC simulation. 
 
-The team measuring quarkonium polarization is the first ``costumer''
-of these \tnp\ muon efficiencies and we received early feedback from
-P.~Faccioli, L.~Gray and V.~Kn\"unz.
+%The team measuring quarkonium polarization is the first ``costumer'' of these \tnp\ muon efficiencies and we received early feedback from P.~Faccioli, L.~Gray and V.~Kn\"unz.
 
 
 %% **DO NOT REMOVE BIBLIOGRAPHY**
@@ -1406,11 +1064,12 @@ P.~Faccioli, L.~Gray and V.~Kn\"unz.
 
 %% examples of appendices. **DO NOT PUT \end{document} at the end
 \clearpage
+
+\iffalse
+
 \appendix
 \section{L1 settings for a private MC simulation}
-In the following, we report a code snipped needed to overwrite the L1
-trigger settings of the L1 trigger menu loaded through the global tag
-START42\_V14::All, used in the MC simulation.  
+In the following, we report a code snipped needed to overwrite the L1 trigger settings of the L1 trigger menu loaded through the global tag START42\_V14::All, used in the MC simulation.  
 
 {\footnotesize
 \begin{verbatim}
@@ -2238,6 +1897,8 @@ $83.9^{+6.2}_{-9.0}$ \\  \hline
 \label{tab:eff-trk-CB-mc}
 \end{table}
 }
+
+\fi
 
 
 %%% DO NOT ADD \end{document}!

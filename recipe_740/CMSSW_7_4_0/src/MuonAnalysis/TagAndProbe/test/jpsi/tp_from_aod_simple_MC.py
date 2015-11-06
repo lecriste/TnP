@@ -8,10 +8,12 @@ process.options   = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
 process.MessageLogger.cerr.FwkReport.reportEvery = 100
 
 process.source = cms.Source("PoolSource", 
-    fileNames = cms.untracked.vstring(),
-)
+                            fileNames = cms.untracked.vstring(),
+                            skipEvents = cms.untracked.uint32( 0 ),
+                            )
+
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(
-                                                                     5000 ) # 280Kb in 15' on 10K events for the official BPH MC
+                                                                     50000 ) # 660Kb in 70' on 50K events, 405Kb in 15' on 10K events for the official BPH MC
                                         # 4.8Mb in 1h on 84597 (=-1) events for the MC from Muon POG 
                                         )  
 
@@ -54,6 +56,7 @@ elif "CMSSW_7_4_" in os.environ['CMSSW_VERSION']:
         #'/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/70000/F87F150E-710C-E511-9F33-0025905A60BC.root'
         #
         # BPH MC
+        '/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/80000/EE4E7950-D726-E511-8751-001E67A404B0.root',
         '/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/20000/0072AAD1-7028-E511-8448-0025905A612E.root',
         '/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/20000/00C6C123-0428-E511-92F2-D4AE526A091F.root',
         '/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/20000/026710B4-5F27-E511-B9D3-B8CA3A70A520.root',
@@ -91,6 +94,7 @@ process.HLTMu   = process.triggerResultsFilter.clone(triggerConditions = ['HLT_M
 process.HLTBoth = process.triggerResultsFilter.clone(triggerConditions = ['HLT_Mu*_L2Mu*', 'HLT_Mu*_Track*_Jpsi*'])
 #process.HLTMu   = process.triggerResultsFilter.clone(triggerConditions = ['HLT_Mu*_L2Mu*', 'HLT_Mu*']) # for Mu8 test
 #process.HLTBoth = process.triggerResultsFilter.clone(triggerConditions = ['HLT_Mu*_L2Mu*', 'HLT_Mu*_Track*_Jpsi*', 'HLT_Mu*']) # for Mu8 test
+process.HLTBoth_withDimuon = process.triggerResultsFilter.clone(triggerConditions = [ 'HLT_Mu*_L2Mu*', 'HLT_Mu*_Track*_Jpsi*', 'HLT_Mu*', 'HLT_Dimuon*' ])
 
 ##    __  __                       
 ##   |  \/  |_   _  ___  _ __  ___ 
@@ -258,6 +262,47 @@ process.tagAndProbe = cms.Path(
     process.patMuonsWithTriggerSequence *
     process.tnpSimpleSequence
 )
+
+# OnePair tree for vertexing filter efficiency
+process.tpTreeOnePair = process.tpTree.clone(
+   arbitration   = "OnePair",
+   # a few L1,L2,L3 variables in Ilse's file
+   pairVariables = cms.PSet(
+        process.tpTree.pairVariables,
+        rapidity      = cms.string("rapidity"),
+        absrapidity   = cms.string("abs(rapidity)"),
+        prescaled     = cms.InputTag("tagProbeSeparation", "prescaled"),
+        VtxProb       = cms.InputTag("tagProbeSeparation", "VtxProb"),
+        VtxCosPA      = cms.InputTag("tagProbeSeparation", "VtxCosPA"),
+        VtxLxySig     = cms.InputTag("tagProbeSeparation", "VtxLxySig"),
+        VtxLxy        = cms.InputTag("tagProbeSeparation", "VtxLxy"),
+        VtxL3d        = cms.InputTag("tagProbeSeparation", "VtxL3d"),
+        DCA           = cms.InputTag("tagProbeSeparation", "DCA"),
+        ),
+)
+
+process.tnpSimpleSequenceOnePair = cms.Sequence(
+    process.goodGenMuonsFromJpsi +
+    process.tagMuons * process.tagMuonsMCMatch +
+    process.probeMuons * process.probeMuonsMCMatch +
+    process.tpPairs    +
+    process.muonDxyPVdzmin +
+    process.nverticesModule    +
+    process.tagProbeSeparation +
+    process.computeCorrectedIso +
+    process.splitTrackTagger + 
+    process.l1rate +
+    process.tpTreeOnePair
+)
+
+process.tagAndProbeOnePair = cms.Path( 
+    process.fastFilter +
+    process.HLTBoth_withDimuon    +
+    process.mergedMuons                 *
+    process.patMuonsWithTriggerSequence *
+    process.tnpSimpleSequenceOnePair
+)
+
 
 ##    _____               _    _             
 ##   |_   _| __ __ _  ___| | _(_)_ __   __ _ 
@@ -616,7 +661,8 @@ if True: # turn on for tracking efficiency using L1 seeds
 
 process.schedule = cms.Schedule(
     process.tagAndProbe, 
-    process.tagAndProbeSta, 
+    process.tagAndProbeSta,
+    process.tagAndProbeOnePair,
     process.tagAndProbeTkGen, 
     #process.tagAndProbeTkL1, 
     #process.fakeRateJetPlusProbe,

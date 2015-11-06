@@ -101,6 +101,14 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         #
         Mu_L3 = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
         #
+        # vertexing efficiency
+        Dimuon6_Jpsi_NoVertexing = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        tag_Dimuon6_Jpsi_NoVertexing = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        Dimuon0er16_Jpsi_NoVertexing = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        tag_Dimuon0er16_Jpsi_NoVertexing = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        Dimuon16_Jpsi = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        Dimuon10_Jpsi_Barrel = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        #
         mcTrue = cms.vstring("MC true", "dummy[true=1,false=0]"),
         # test
         DoubleMu17TkMu8_TkMu8leg = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
@@ -268,7 +276,8 @@ process.TnP_MuonID = Template.clone(
      #InputFileNames = cms.vstring('/afs/cern.ch/user/m/msharma/public/tnpJPsi_DataJuly232015.root'), # 800k events, no JSON
      #InputFileNames = cms.vstring('/afs/cern.ch/user/m/msharma/public/tnpJPsi_Data_246908-251883_JSON_MuonPhys_v2.root'),
      #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Charmonium_PromptReco_50ns_first47pb.root'),
-     InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Charmonium_PromptReco_50ns_first47ipb_OniaTriggersFlags.root'),
+     #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Charmonium_PromptReco_50ns_first47ipb_OniaTriggersFlags.root'),
+     InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Charmonium_PromptReco_50ns_first47ipb_vertexingTriggersFlags.root'),
      #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Charmonium_PromptReco_50ns.root'),
      InputTreeName = cms.string("fitter_tree"),
      InputDirectoryName = cms.string("tpTree"),
@@ -292,7 +301,8 @@ TRIGS = [ (2,'Mu7p5_Track2_Jpsi') ]
 #TRIGS = [ (0,'DoubleMu17TkMu8_TkMu8leg') ]
 
 if "mc" in scenario:
-     process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC.root']
+     process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC_OniaTriggersFlags.root']
+     #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC.root']
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC_30M.root']
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC_Mu8.root'] # Mu8 test
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_total.root']
@@ -390,7 +400,7 @@ for ID in IDS:
                                    EfficiencyCategoryAndState = cms.vstring("Mu_L3","pass"),
                                    UnbinnedVariables = cms.vstring("mass"),
                                    BinnedVariables = DEN_L3,
-                                   BinToPDFmap = cms.vstring("signalPlusBkg")
+                                   BinToPDFmap = cms.vstring("signalPlusBkg"),
                                    ))
                #if "plateau" in X: module.SaveWorkspace = True
                ## mc efficiency, if scenario is mc
@@ -401,13 +411,12 @@ for ID in IDS:
                #         BinnedVariables = DEN.clone(mcTrue = cms.vstring("true"))
                #     ))
           setattr(process, "TnP_MuonID__"+ID+"_"+X, module)
-          setattr(process, "run_"+ID+"_"+X, cms.Path(module))
+          #setattr(process, "run_"+ID+"_"+X, cms.Path(module))
 
 
 
 ########## Tracking efficiency ########## 
 #ALLBINS =  [("pt_abseta_notSeparated_allPairs",PT_ABSETA_BINS_notSeparated_allPairs)]
-ALLBINS =  [("pt_abseta",PT_ABSETA_BINS)]
 TRIGS = [ (2,'Mu7p5_L2Mu2_Jpsi') ]
 matches = [(1.0,0.4), (0.7,0.3), (0.5,0.2), (0.3,0.15), (0.1,0.1)]
 #effs    = ["", "_NoJPsi", "_NoBestJPsi"]
@@ -423,9 +432,7 @@ process.TnP_Tracking = Template.clone(
      #Cuts = cms.PSet(),
 )
 if "mc" in scenario:
-     process.TnP_Tracking.InputFileNames = ['../tnpJPsi_officialBPHMC.root']
-     #process.TnP_Tracking.InputFileNames = ['../tnpJPsi_officialBPHMC_28M.root']
-     #process.TnP_Tracking.InputFileNames = ['../tnpJPsi_officialBPHMC_Mu8.root'] # Mu8 test
+     process.TnP_Tracking.InputFileNames = process.TnP_MuonID.InputFileNames
 
 #sampleToPdfMap = { "":"gaussPlusCubic", "NoJPsi":"gaussPlusFloatCubic", "NoBestJPsi":"gaussPlusFloatCubic"}
 sampleToPdfMap = { "":"signalPlusBkg", "NoJPsi":"gaussPlusFloatCubic", "NoBestJPsi":"gaussPlusFloatCubic"}
@@ -464,9 +471,47 @@ for X,B in ALLBINS:
                               EfficiencyCategoryAndState = cms.vstring("#DeltaR_cut","below", "#Delta#eta_cut","below"),
                               UnbinnedVariables = cms.vstring("mass"),
                               BinToPDFmap = cms.vstring(sampleToPdfMap[eff.replace("_","")]),
-                              BinnedVariables = DEN
+                              BinnedVariables = DEN,
                               ))
      setattr(process, "TnP_Tracking__"+X, module)
-     setattr(process, "p_TnP_Tracking_"+X, cms.Path(module))
+     #setattr(process, "p_TnP_Tracking_"+X, cms.Path(module))
 
 
+########## Vertexing efficiency ########## 
+ALLBINS =  [("pt_abseta",PT_ABSETA_BINS_notSeparated)]
+TRIGS = [ (2,'Dimuon6_Jpsi_NoVertexing','Dimuon16_Jpsi'), (2,'Dimuon0er16_Jpsi_NoVertexing','Dimuon10_Jpsi_Barrel') ]
+
+process.TnP_Vertexing = Template.clone(
+     #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Charmonium_PromptReco_50ns_first47ipb_correctL2.root'),
+     InputFileNames = process.TnP_MuonID.InputFileNames,
+     InputDirectoryName = cms.string("tpTreeOnePair"),
+     InputTreeName = cms.string("fitter_tree"),
+     OutputFileName = cms.string("TnP_Vertexing_%s.root" % scenario),
+     Efficiencies = cms.PSet(),
+)
+if "mc" in scenario:
+     process.TnP_Vertexing.InputFileNames = process.TnP_MuonID.InputFileNames
+
+for X,B in ALLBINS:
+     if len(args) > 2 and X not in args[2:]: continue
+     module = process.TnP_Vertexing.clone(OutputFileName = cms.string("TnP_Vertexing__%s__%s.root" % (scenario, X)))
+     #
+     for PTMIN, TRIG_noVtx, TRIG in TRIGS:
+          TRIGLABEL="_"+TRIG
+          #
+          DEN = B.clone()
+          if hasattr(DEN, "pt"):
+               DEN.pt = cms.vdouble(*[i for i in B.pt if i >= PTMIN])
+               if len(DEN.pt) == 0: raise RuntimeError, "Make sure PTMIN is less than at least one B.pt element!"
+               if len(DEN.pt) == 1: DEN.pt = cms.vdouble(PTMIN, DEN.pt[0])
+          setattr(DEN, "tag_%s" %TRIG_noVtx, cms.vstring("pass"))
+          setattr(DEN,     "%s" %TRIG_noVtx, cms.vstring("pass"))
+          #
+          setattr(module.Efficiencies, TRIG+"_wrt_"+TRIG_noVtx, cms.PSet(
+                    EfficiencyCategoryAndState = cms.vstring(TRIG,"pass"),
+                    UnbinnedVariables = cms.vstring("mass"),
+                    BinToPDFmap = cms.vstring("signalPlusBkg"),
+                    BinnedVariables = DEN,
+                    ))
+     setattr(process, "TnP_Vertexing__"+X, module)
+     setattr(process, "p_TnP_vertexing_"+X, cms.Path(module))
