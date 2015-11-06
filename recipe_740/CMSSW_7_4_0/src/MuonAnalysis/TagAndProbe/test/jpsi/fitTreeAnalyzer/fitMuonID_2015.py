@@ -37,6 +37,9 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         tag_pt = cms.vstring("Tag p_{T}", "0", "1000", "GeV/c"),
         tag_nVertices = cms.vstring("Number of vertices", "0", "999", ""),
         tag_nVerticesDA = cms.vstring("Number of vertices", "0", "999", ""),
+        #
+        pair_pt = cms.vstring("dimuon p_{T}", "0", "1000", "GeV/c"),
+        pair_absrapidity = cms.vstring("dimuon |y|", "0", "2.5", ""),
         pair_dphiVtxTimesQ = cms.vstring("q1 * (#phi1-#phi2)", "-6", "6", ""),
         pair_drM1   = cms.vstring("#Delta R(Station 1)", "-99999", "999999", "rad"),
         pair_distM1 = cms.vstring("dist(Station 1)", "-99999", "999999", "cm"),
@@ -223,6 +226,14 @@ PT_ABSETA_BINS_notSeparated = cms.PSet(   NOTSEPARATED,
                           abseta = cms.vdouble(0.0,0.9,1.2,2.1,2.4)
                        )
 
+PT_ABSETA_BINS_notSeparated_pair = cms.PSet(   NOTSEPARATED,
+                                               #pt = pT_binning_2012,
+                                               #pt = pT_binning_2015,
+                                               pair_pt = cms.vdouble(10.0, 16.0, 20.0, 40.0),
+                                               #abseta = cms.vdouble(0.0,0.9,1.2,2.1) # 2012
+                                               pair_absrapidity = cms.vdouble(0.0,0.9,1.2,2.1,2.4)
+                                               )
+
 PT_ABSETA_BINS_notSeparated_allPairs = cms.PSet(   NOTSEPARATED_allPairs,
                                                    #pt = pT_binning_2012,
                                                    #pt = pT_binning_2015,
@@ -301,7 +312,8 @@ TRIGS = [ (2,'Mu7p5_Track2_Jpsi') ]
 #TRIGS = [ (0,'DoubleMu17TkMu8_TkMu8leg') ]
 
 if "mc" in scenario:
-     process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC_OniaTriggersFlags.root']
+     process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC_vertexingTriggersFlags.root']
+     #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC_OniaTriggersFlags.root']
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC.root']
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC_30M.root']
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC_Mu8.root'] # Mu8 test
@@ -410,7 +422,7 @@ for ID in IDS:
                #         UnbinnedVariables = cms.vstring("mass"),
                #         BinnedVariables = DEN.clone(mcTrue = cms.vstring("true"))
                #     ))
-          setattr(process, "TnP_MuonID__"+ID+"_"+X, module)
+          #setattr(process, "TnP_MuonID__"+ID+"_"+X, module)
           #setattr(process, "run_"+ID+"_"+X, cms.Path(module))
 
 
@@ -473,13 +485,13 @@ for X,B in ALLBINS:
                               BinToPDFmap = cms.vstring(sampleToPdfMap[eff.replace("_","")]),
                               BinnedVariables = DEN,
                               ))
-     setattr(process, "TnP_Tracking__"+X, module)
+     #setattr(process, "TnP_Tracking__"+X, module)
      #setattr(process, "p_TnP_Tracking_"+X, cms.Path(module))
 
 
 ########## Vertexing efficiency ########## 
-ALLBINS =  [("pt_abseta",PT_ABSETA_BINS_notSeparated)]
-TRIGS = [ (2,'Dimuon6_Jpsi_NoVertexing','Dimuon16_Jpsi'), (2,'Dimuon0er16_Jpsi_NoVertexing','Dimuon10_Jpsi_Barrel') ]
+ALLBINS =  [("pt_abseta",PT_ABSETA_BINS_notSeparated_pair)]
+TRIGS = [ (16,'Dimuon6_Jpsi_NoVertexing','Dimuon16_Jpsi'), (10,'Dimuon0er16_Jpsi_NoVertexing','Dimuon10_Jpsi_Barrel') ]
 
 process.TnP_Vertexing = Template.clone(
      #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Charmonium_PromptReco_50ns_first47ipb_correctL2.root'),
