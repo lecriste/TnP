@@ -473,6 +473,11 @@ if True: # turn on for tracking efficiency using gen particles as probe
     process.genToTkMatchNoJPsi0 = process.staToTkMatchNoJPsi0.clone(src = "probeGen", srcTrack="none")
     process.genToTkMatchNoBestJPsi0 = process.staToTkMatchNoBestJPsi0.clone(src = "probeGen", srcTrack="none")
     process.probeMuonsMCMatchGen = process.tagMuonsMCMatch.clone(src = "probeGen")
+    #
+    #BMuQual = cms.string("muonID('TMOneStationTight') &&" + "(track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.pixelLayersWithMeasurement > 1  && " + "track.chi2 / track.ndof < 1.8 && abs(dB) < 3.0 && abs(track.dz) < 30.0)"),
+    #process.genTosoftIDMatch = process.softIDToGenMatch.clone(objCut = "muonID('TMOneStationTight') &&" + "(track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.pixelLayersWithMeasurement > 0  && " + "&& abs(dB) < 0.3 && abs(track.dz) < 20.0)")
+    process.genTosoftIDMatch = process.softIDToGenMatch.clone(objCut = "(track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.pixelLayersWithMeasurement > 0  && " + "&& abs(dB) < 0.3 && abs(track.dz) < 20.0)")
+    #
     process.tpTreeGen = process.tpTreeSta.clone(
         tagProbePairs = "tpPairsTkGen",
         arbitration   = "OneProbe",
@@ -492,6 +497,9 @@ if True: # turn on for tracking efficiency using gen particles as probe
             tk0_deltaEta_NoJPsi = cms.InputTag("genToTkMatchNoJPsi0","deltaEta"),
             tk0_deltaR_NoBestJPsi   = cms.InputTag("genToTkMatchNoBestJPsi0","deltaR"),
             tk0_deltaEta_NoBestJPsi = cms.InputTag("genToTkMatchNoBestJPsi0","deltaEta"),
+            ## softID matching variables
+            tk_deltaR     = cms.InputTag("genTosoftIDMatch","deltaR"),
+            tk_deltaEta   = cms.InputTag("genTosoftIDMatch","deltaEta"),
             ),
         flags = cms.PSet(
             ),
