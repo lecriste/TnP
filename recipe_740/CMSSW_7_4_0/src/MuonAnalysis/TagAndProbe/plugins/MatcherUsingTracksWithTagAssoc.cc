@@ -142,7 +142,7 @@ pat::MatcherUsingTracksWithTagAssoc::produce(edm::Event & iEvent, const edm::Eve
                 }
                 if (!isAssoc) continue;
                 if (algo_.match(*itsrc, *matched, deltaRs[isrc], deltaEtas[isrc], deltaPhis[isrc], deltaLocalPos[isrc], deltaPtRel[isrc], chi2[isrc])) {
-                    match[isrc] =  imatched;
+                    match[isrc] = imatched;
                 }
             }
         }
