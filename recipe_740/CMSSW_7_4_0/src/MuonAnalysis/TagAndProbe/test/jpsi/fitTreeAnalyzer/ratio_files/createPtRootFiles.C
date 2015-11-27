@@ -106,7 +106,7 @@ void createPtRootFiles() {
 
 
   // 2015
-  int iEff = 1; //iEff = 4; iEff = 5; iEff = 6; iEff = 7, iEff = 8/*, iEff = 9*/;
+  int iEff = 1; iEff = 4; iEff = 5; iEff = 6; iEff = 7; iEff = 8; iEff = 9; /**/
   // 2012
   //int iEff = 2;
 
@@ -117,18 +117,33 @@ void createPtRootFiles() {
   //const std::string effSampleName[] = {"MC", "MC_Mu8"};
   //const std::string effSampleName[] = {"DATA"};
   const int nEffSample = sizeof(effSampleName)/sizeof(effSampleName[0]);
-  // Name of trigger: Mu5_Track2, Mu7_Track7
-  //const std::string trackName[nEffSample][] = {{"Mu5_Track2", "Mu7_Track7"},{"Mu5_Track2", "Mu7_Track7"}};
-  //const std::string trackName[nEffSample][] = {{"Mu7p5_Track2", "Mu7p5_Track7"},{"Mu7p5_Track2", "Mu7p5_Track7"}};
-  //const std::string trackName[nEffSample][] = {{"Mu8"}};
-  //const std::string trackName[nEffSample][] = }{"Mu7p5_Track7"}};
-  //const std::string trackName[nEffSample][1] = {{"Mu7p5_Track2"},{"Mu8"}};
-  const std::string trackName[nEffSample][1] = {{"Mu7p5_Track2"},{"Mu7p5_Track2"}};
-  //const std::string trackName[nEffSample][1] = { {"Dimuon6_Jpsi_NoVertexing"},{"Dimuon6_Jpsi_NoVertexing"} };
-  // if (effName[iEff].Contains("Barrel"))
-  //const std::string trackName[nEffSample][1] = { {"Dimuon0er16_Jpsi_NoVertexing"},{"Dimuon0er16_Jpsi_NoVertexing"} };
 
-  const int nTrack = sizeof(trackName[0])/sizeof(trackName[0][0]);
+  // Name of trigger: Mu5_Track2, Mu7_Track7
+  vector< vector<std::string> > trackName(nEffSample) ;
+  if (effName[iEff].Contains("Dimuon6_Jpsi_NoVertexing")) {
+    //const std::string trackName[nEffSample][1] = { {"Dimuon6_Jpsi_NoVertexing"},{"Dimuon6_Jpsi_NoVertexing"} };
+    for (Int_t iEffSample = 0; iEffSample < nEffSample; iEffSample++)
+      trackName[iEffSample].push_back("Dimuon6_Jpsi_NoVertexing");
+  } else if (effName[iEff].Contains("Dimuon0er16_Jpsi_NoVertexing")) {
+    //const std::string trackName[nEffSample][1] = { {"Dimuon0er16_Jpsi_NoVertexing"},{"Dimuon0er16_Jpsi_NoVertexing"} };
+    for (Int_t iEffSample = 0; iEffSample < nEffSample; iEffSample++)
+      trackName[iEffSample].push_back("Dimuon0er16_Jpsi_NoVertexing");
+  } else
+    for (Int_t iEffSample = 0; iEffSample < nEffSample; iEffSample++) {
+      //trackName[iEffSample].push_back("");
+      //if (effName[iEff].Contains("Soft2012")) {
+      //const std::string trackName[nEffSample][] = {{"Mu5_Track2", "Mu7_Track7"},{"Mu5_Track2", "Mu7_Track7"}};
+      //const std::string trackName[nEffSample][] = {{"Mu7p5_Track2", "Mu7p5_Track7"},{"Mu7p5_Track2", "Mu7p5_Track7"}};
+      //const std::string trackName[nEffSample][] = {{"Mu8"}};
+      //const std::string trackName[nEffSample][] = }{"Mu7p5_Track7"}};
+      //const std::string trackName[nEffSample][1] = {{"Mu7p5_Track2"},{"Mu8"}};
+      //const std::string trackName[nEffSample][1] = {{"Mu7p5_Track2"},{"Mu7p5_Track2"}};
+      trackName[iEffSample].push_back("Mu7p5_Track2");
+    }
+
+  //const int nTrack = sizeof(trackName[0])/sizeof(trackName[0][0]);
+  const int nTrack = trackName[0].size();
+  cout <<"\nnTrack = " <<nTrack <<endl;
 
   // fill with Mu7p5_Track7 for pt > 9 GeV - former 7 GeV
   Float_t triggerTreshold = 999. ;
@@ -177,14 +192,16 @@ void createPtRootFiles() {
       //inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__data_246908-251883_JSON_MuonPhys_v2__%s%s.root", path.c_str(), eff_triggers[iEff].first.c_str(), binnedVars.Data()) ;
       //inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__data_246908-251883_JSON_MuonPhys_v2__%s%s.root", path.c_str(), eff_triggers[iEff].first.c_str(), binnedVars.Data()) ;
       inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__data_246908-251883_JSON_MuonPhys_v2__%s%s.root", path.c_str(), effName[1].Data(), binnedVars.Data()) ;
-      //inputfile[iEffSample] = TString::Format("%s/TnP_Vertexing__data_246908-251883_JSON_MuonPhys_v2_%s.root", path.c_str(), binnedVars.Data()) ;
+      if (effName[iEff].Contains("Vertexing"))
+	inputfile[iEffSample] = TString::Format("%s/TnP_Vertexing__data_246908-251883_JSON_MuonPhys_v2_%s.root", path.c_str(), binnedVars.Data()) ;
       //inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__data_246908-255031_JSON_MuonPhys_v2__%s%s.root", path.c_str(), eff_triggers[iEff].first.c_str(), binnedVars.Data()) ;
     }
     else if ( effSampleName[iEffSample] == "MC" ) { 
       //inputfile[iEffSample] = TString::Format("%s/TnP_MuonID_signal_mc_%s%s_fullMC_allBins.root", path,eff_triggers[iEff].first,binnedVars) ;
       //inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__signal_mc__%s%s_30M.root", path.c_str(), eff_triggers[iEff].first.c_str(), binnedVars.Data()) ;
       inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__signal_mc__%s%s.root", path.c_str(), effName[1].Data(), binnedVars.Data()) ;
-      //inputfile[iEffSample] = TString::Format("%s/TnP_Vertexing__signal_mc_%s.root", path.c_str(), binnedVars.Data()) ;
+      if (effName[iEff].Contains("Vertexing"))
+	inputfile[iEffSample] = TString::Format("%s/TnP_Vertexing__signal_mc_%s.root", path.c_str(), binnedVars.Data()) ;
       //inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__signal_mc__%s%s_Mu8.root", path.c_str(), eff_triggers[iEff].first.c_str(), binnedVars.Data()) ;
     }
     else if ( effSampleName[iEffSample] == "MC_Mu8" ) { 
@@ -227,8 +244,8 @@ void createPtRootFiles() {
       file = open( mcfile.str().c_str() );
     */
     file = open( inputfile[iEffSample].Data() );
-    cout <<"\nSuccessfully opened "<<effSampleName[iEffSample] <<" file:\n" <<inputfile[iEffSample].Data() <<endl;
-    if(!file) return;
+    cout <<"\nSuccessfully opened "<<effSampleName[iEffSample] <<" file:\n" <<inputfile[iEffSample].Data() <<"\n" <<endl;
+    if (!file) return;
       
     // Jump to tpTree
     TDirectory* dir_tpTree = 0;
@@ -238,7 +255,11 @@ void createPtRootFiles() {
       dir_tpTree = cd(file,"tpTreeOnePair");
     if (!dir_tpTree) continue;
 
-    TCanvas *c2D = 0;
+    TString x_y[] = {"pt_abseta","abseta_pt"};
+    if ( effName[iEff].Contains("NoVertexing") ) {
+      x_y[0] = "pair_pt_pair_absrapidity"; x_y[1] = "pair_absrapidity_pair_pt"; }
+    TH2F *myTH2[] = {0,0};
+
     std::string plot[nBins2] ;
     TString titleX[nBins2], titleY[nBins2] ;
 
@@ -277,13 +298,30 @@ void createPtRootFiles() {
       //inter <<"pt_PLOT";
 	  
       // 2D
-      TString name2D = "pt_abseta_PLOT__pair_drM1_0p5to10_and_pair_probeMultiplicity_0p5to1p5_and_"+ trackName[iEffSample][iTrack] +"_Jpsi_TK_pass_and_tag_"+ trackName[iEffSample][iTrack] +"_Jpsi_MU_pass";
-      c2D = dynamic_cast<TCanvas*> (dir_fit_eff->Get( name2D ));
-      if (!c2D) cout <<"No " <<name2D <<" in " <<effSampleName[iEffSample] <<" file!" <<endl;
-      else {
-	c2D->SetTitle( c2D->GetName() );
-	c2D->SetName( TString(effSampleName[iEffSample]+"__pt_abseta") );
-	c2D->SetLogx() ;
+      for (Int_t i=0; i<2; ++i) {
+	TString name2D = x_y[i];
+	if (effName[iEff].Contains("Soft2012"))
+	  name2D.Append("_PLOT__pair_drM1_0p5to10_and_pair_probeMultiplicity_0p5to1p5_and_"+ trackName[iEffSample][iTrack] +"_Jpsi_TK_pass_and_tag_"+ trackName[iEffSample][iTrack] +"_Jpsi_MU_pass");
+	else if ( effName[iEff].EqualTo("Dimuon10_L1L2") )
+	  name2D.Append("_PLOT__dB_-0p3to0p3_and_dzPV_-20to20_and_pair_drM1_0p5to10_and_pair_probeMultiplicity_0p5to1p5_and_"+ trackName[iEffSample][iTrack] +"_Jpsi_TK_pass_and_TMOST_pass_and_Track_HP_pass_and_tag_"+ trackName[iEffSample][iTrack] +"_Jpsi_MU_pass");
+	else if ( effName[iEff].EqualTo("Dimuon16_L1L2") )
+	  name2D.Append("_PLOT__dB_-0p3to0p3_and_dzPV_-20to20_and_pair_drM1_0p5to10_and_pair_probeMultiplicity_0p5to1p5_and_tag_pt_10to1000_and_"+ trackName[iEffSample][iTrack] +"_Jpsi_TK_pass_and_TMOST_pass_and_Track_HP_pass_and_tag_"+ trackName[iEffSample][iTrack] +"_Jpsi_MU_pass");
+	else if ( effName[iEff].EqualTo("L3_wrt_Dimuon10_L1L2") )
+	  name2D.Append("_PLOT__dB_-0p3to0p3_and_dzPV_-20to20_and_pair_drM1_0p5to10_and_pair_probeMultiplicity_0p5to1p5_and_Dimuon10_L1L2_pass_and_TMOST_pass_and_Track_HP_pass_and_tag_Mu7p5_L2Mu2_Jpsi_MU_pass");
+	else if ( effName[iEff].EqualTo("L3_wrt_Dimuon16_L1L2") )
+	  name2D.Append("_PLOT__dB_-0p3to0p3_and_dzPV_-20to20_and_pair_drM1_0p5to10_and_pair_probeMultiplicity_0p5to1p5_and_tag_pt_10to1000_and_Dimuon16_L1L2_pass_and_TMOST_pass_and_Track_HP_pass_and_tag_Mu7p5_L2Mu2_Jpsi_MU_pass");
+	else if ( effName[iEff].Contains("NoVertexing") ) 
+	  name2D.Append("_PLOT__pair_probeMultiplicity_0p5to1p5_and_"+ trackName[iEffSample][iTrack] +"_pass_and_tag_"+ trackName[iEffSample][iTrack] +"_pass");
+	
+	TCanvas* c2D = dynamic_cast<TCanvas*> (dir_fit_eff->Get( name2D ));
+	if (!c2D) cout <<"No " <<name2D <<" in \"" <<dir_fit_eff->GetName() <<"\" dir in " <<effSampleName[iEffSample] <<" file!" <<endl;
+	else {
+	  myTH2[i] = dynamic_cast<TH2F*> (c2D->FindObject( c2D->GetName() ));
+	  if (!myTH2[i]) cout <<"No " <<c2D->GetName() <<" in TCanvas " <<name2D <<endl;
+	  else {
+	    //myTH2[i]->SetTitle( c2D->GetName() );
+	    myTH2[i]->SetName( TString(effSampleName[iEffSample]+"__"+x_y[i]) ); }
+	}
       }
 
       for(int iBins2 = 0; iBins2 < nBins2; iBins2++) {
@@ -420,7 +458,9 @@ void createPtRootFiles() {
       graph->Write();
 
     } // iBins2
-    c2D->Write();
+    for (Int_t i=0; i<2; ++i)
+      if (myTH2[i])
+	myTH2[i]->Write();
   } // iEffSample
   //output->Close() ;
 
