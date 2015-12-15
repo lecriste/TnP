@@ -12,8 +12,9 @@ process.source = cms.Source("PoolSource",
                             skipEvents = cms.untracked.uint32( 0 ),
                             )
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(
-                                                                     50000 ) # 660Kb in 70' on 50K events, 405Kb in 15' on 10K events for the official BPH MC
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32( 1000 ) 
+                                        # 355KB in 6' on 1k events, ?KB in 100' on 20k events for the official 25ns BPH MC
+                                        # 1.3Mb in 2h30' on 9 files, 660Kb in 70' on 50K events, 405Kb in 15' on 10K events for the official 50ns BPH MC
                                         # 4.8Mb in 1h on 84597 (=-1) events for the MC from Muon POG 
                                         )  
 
@@ -56,16 +57,29 @@ elif "CMSSW_7_4_" in os.environ['CMSSW_VERSION']:
         #'/store/mc/RunIISpring15DR74/JpsiToMuMu_JPsiPt7_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v1/70000/F87F150E-710C-E511-9F33-0025905A60BC.root'
         #
         # BPH MC
+        # 50 ns
+        #'file:./BECF20C9-CE27-E511-AD2B-02163E013B74.root',
         '/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/80000/EE4E7950-D726-E511-8751-001E67A404B0.root',
-        '/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/20000/0072AAD1-7028-E511-8448-0025905A612E.root',
-        '/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/20000/00C6C123-0428-E511-92F2-D4AE526A091F.root',
-        '/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/20000/026710B4-5F27-E511-B9D3-B8CA3A70A520.root',
-        '/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/20000/02D22B1C-D626-E511-8850-002590D60026.root',
-        '/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/20000/04C3F72A-D126-E511-B12F-00238BBD7594.root',
-        '/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/20000/08FCBA7F-D126-E511-99C8-0025905964A6.root',
-        '/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/20000/0A4AB9B0-3827-E511-8277-0025905B857C.root',
-        '/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/20000/0C175E3E-E627-E511-ADEB-6C3BE5B58000.root',
-    ]
+        #'/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/20000/0072AAD1-7028-E511-8448-0025905A612E.root',
+        #'/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/20000/00C6C123-0428-E511-92F2-D4AE526A091F.root',
+        #'/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/20000/026710B4-5F27-E511-B9D3-B8CA3A70A520.root',
+        #'/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/20000/02D22B1C-D626-E511-8850-002590D60026.root',
+        #'/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/20000/04C3F72A-D126-E511-B12F-00238BBD7594.root',
+        #'/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/20000/08FCBA7F-D126-E511-99C8-0025905964A6.root',
+        #'/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/20000/0A4AB9B0-3827-E511-8277-0025905B857C.root',
+        #'/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/20000/0C175E3E-E627-E511-ADEB-6C3BE5B58000.root',
+        # 25 ns
+        #'/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v2/20000/004604F1-3827-E511-AC59-0CC47A13D110.root',
+        #'/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v2/20000/00AF527B-3827-E511-A8CB-002618FDA216.root',
+        #'/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v2/20000/062F705F-9727-E511-84ED-0025905A60BE.root',
+        #'/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v2/20000/06BB1C40-4727-E511-8677-003048344A94.root',
+        #'/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v2/20000/087B11AE-5427-E511-AD8A-00259048A462.root',
+        #'/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v2/20000/08A91A07-7927-E511-B91C-0025905A48FC.root',
+        #'/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v2/20000/0C691B12-532D-E511-9F91-0025905B8590.root',
+        #'/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v2/20000/0E1A8498-6627-E511-8BDF-00238BBD75D8.root',
+        #'/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v2/20000/0E95776B-6627-E511-BEAC-001E67A42BA2.root',
+        #'/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v2/20000/0EC5741B-9C28-E511-81CD-B499BAABF064.root',
+        ]
 else: raise RuntimeError, "Unknown CMSSW version %s" % os.environ['CMSSW_VERSION']
 
 
@@ -193,9 +207,10 @@ process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
        Acc_JPsi = cms.string("(abs(eta) <= 1.3 && pt > 3.3) || (1.3 < abs(eta) <= 2.2 && p > 2.9) || (2.2 < abs(eta) <= 2.4  && pt > 0.8)"),
     ),
     tagVariables = cms.PSet(
-        pt  = cms.string('pt'),
-        eta = cms.string('eta'),
-        phi = cms.string('phi'),
+        #pt  = cms.string('pt'),
+        #eta = cms.string('eta'),
+        #phi = cms.string('phi'),
+        KinematicVariables, 
         nVertices = cms.InputTag("nverticesModule"),
         l1rate = cms.InputTag("l1rate"),
         bx     = cms.InputTag("l1rate","bx"),
@@ -273,10 +288,10 @@ process.tpTreeOnePair = process.tpTree.clone(
         absrapidity   = cms.string("abs(rapidity)"),
         prescaled     = cms.InputTag("tagProbeSeparation", "prescaled"),
         VtxProb       = cms.InputTag("tagProbeSeparation", "VtxProb"),
-        VtxCosPA      = cms.InputTag("tagProbeSeparation", "VtxCosPA"),
+        #VtxCosPA      = cms.InputTag("tagProbeSeparation", "VtxCosPA"), # throw Exception Message: Principal::getByToken: Found zero products matching all criteria\n Looking for type: edm::ValueMap<float>\n Looking for module label: tagProbeSeparation\n Looking for productInstanceName: VtxCosPA
         VtxLxySig     = cms.InputTag("tagProbeSeparation", "VtxLxySig"),
         VtxLxy        = cms.InputTag("tagProbeSeparation", "VtxLxy"),
-        VtxL3d        = cms.InputTag("tagProbeSeparation", "VtxL3d"),
+        #VtxL3d        = cms.InputTag("tagProbeSeparation", "VtxL3d"), # throw Exception Message: Principal::getByToken: Found zero products matching all criteria\n Looking for type: edm::ValueMap<float>\n Looking for module label: tagProbeSeparation\n Looking for productInstanceName: VtxL3d
         DCA           = cms.InputTag("tagProbeSeparation", "DCA"),
         ),
 )
@@ -364,9 +379,10 @@ process.tpTreeSta = process.tpTree.clone(
         #StaTkSameCharge = cms.string("outerTrack.isNonnull && innerTrack.isNonnull && (outerTrack.charge == innerTrack.charge)"), # present in Zmumu
     ),
     tagVariables = cms.PSet(
-        pt = cms.string("pt"),
-        eta = cms.string("eta"),
-        phi = cms.string("phi"),
+        #pt = cms.string("pt"),
+        #eta = cms.string("eta"),
+        #phi = cms.string("phi"),
+        KinematicVariables, 
         nVertices = cms.InputTag("nverticesModule"),
         #combRelIso = cms.string("(isolationR03.emEt + isolationR03.hadEt + isolationR03.sumPt)/pt"),
         #chargedHadIso04 = cms.string("pfIsolationR04().sumChargedHadronPt"),
@@ -462,8 +478,10 @@ process.tagAndProbeSta = cms.Path(
 
 if True: # turn on for tracking efficiency using gen particles as probe
     process.probeGen = cms.EDFilter("GenParticleSelector",
-                                    src = cms.InputTag("genParticles"),
-                                    cut = cms.string("abs(pdgId) == 13 && pt > 2 && abs(eta) < 2.4 && numberOfMothers == 1 && motherRef.pdgId == 443"),
+                                    #src = cms.InputTag("genParticles"),
+                                    #cut = cms.string("abs(pdgId) == 13 && pt > 2 && abs(eta) < 2.4 && numberOfMothers == 1 && motherRef.pdgId == 443"),
+                                    src = cms.InputTag("goodGenMuonsFromJpsi"),
+                                    cut = cms.string(""),
                                     )
     process.tpPairsTkGen = process.tpPairs.clone(decay = "tagMuons@+ probeGen@-", cut = '2 < mass < 5')
     process.genToTkMatch    = process.staToTkMatch.clone(src = "probeGen", srcTrack="none")
@@ -473,9 +491,11 @@ if True: # turn on for tracking efficiency using gen particles as probe
     process.genToTkMatchNoJPsi0 = process.staToTkMatchNoJPsi0.clone(src = "probeGen", srcTrack="none")
     process.genToTkMatchNoBestJPsi0 = process.staToTkMatchNoBestJPsi0.clone(src = "probeGen", srcTrack="none")
     #
-    #BMuQual = cms.string("muonID('TMOneStationTight') &&" + "(track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.pixelLayersWithMeasurement > 1  && " + "track.chi2 / track.ndof < 1.8 && abs(dB) < 3.0 && abs(track.dz) < 30.0)"),
-    #process.genToSoftIDMatch = process.softIDToGenMatch.clone(objCut = "muonID('TMOneStationTight') &&" + "(track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.pixelLayersWithMeasurement > 0  && " + "&& abs(dB) < 0.3 && abs(track.dz) < 20.0)")
-    process.genToSoftIDMatch = process.softIDToGenMatch.clone(objCut = "(track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.pixelLayersWithMeasurement > 0  && " + "&& abs(dB) < 0.3 && abs(track.dz) < 20.0)")
+    process.genToProbeMuonsMatch = process.softIDToGenMatch.clone(objectSelection = cms.string(""))
+    BMuQual_noTMOST = "track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.pixelLayersWithMeasurement > 0 " + " &&  abs(dB) < 0.3 && abs(track.dz) < 20.0 " + " &&  track.quality('highPurity') " 
+    process.genToSoftIDNoTMOSTMatch = process.softIDToGenMatch.clone(objectSelection = cms.string(BMuQual_noTMOST))
+    BMuQual = BMuQual_noTMOST + " && muonID('TMOneStationTight')"
+    process.genToSoftIDMatch = process.softIDToGenMatch.clone(objectSelection = cms.string(BMuQual))
     # 
     process.probeMuonsMCMatchGen = process.tagMuonsMCMatch.clone(src = "probeGen")
     #
@@ -499,8 +519,12 @@ if True: # turn on for tracking efficiency using gen particles as probe
             tk0_deltaR_NoBestJPsi   = cms.InputTag("genToTkMatchNoBestJPsi0","deltaR"),
             tk0_deltaEta_NoBestJPsi = cms.InputTag("genToTkMatchNoBestJPsi0","deltaEta"),
             ## softID matching variables
-            tkSoftID_deltaR     = cms.InputTag("genToSoftIDMatch","deltaR"),
-            tkSoftID_deltaEta   = cms.InputTag("genToSoftIDMatch","deltaEta"),
+            mu_deltaR     = cms.InputTag("genToProbeMuonsMatch","deltaR"),
+            mu_deltaEta   = cms.InputTag("genToProbeMuonsMatch","deltaEta"),
+            muSoftIDNoTMOST_deltaR     = cms.InputTag("genToSoftIDNoTMOSTMatch","deltaR"),
+            muSoftIDNoTMOST_deltaEta   = cms.InputTag("genToSoftIDNoTMOSTMatch","deltaEta"),
+            muSoftID_deltaR     = cms.InputTag("genToSoftIDMatch","deltaR"),
+            muSoftID_deltaEta   = cms.InputTag("genToSoftIDMatch","deltaEta"),
             ),
         flags = cms.PSet(
             ),
@@ -533,7 +557,7 @@ if True: # turn on for tracking efficiency using gen particles as probe
         process.preTkMatchSequenceJPsi + 
         process.genToTkMatch + process.genToTkMatchNoJPsi + process.genToTkMatchNoBestJPsi + 
         process.genToTkMatch0 + process.genToTkMatchNoJPsi0 + process.genToTkMatchNoBestJPsi0 +
-        process.genToSoftIDMatch +
+        process.genToProbeMuonsMatch + process.genToSoftIDNoTMOSTMatch + process.genToSoftIDMatch +
         process.probeMuonsMCMatchGen +
         process.tpTreeGen
         )

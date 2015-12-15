@@ -45,11 +45,16 @@ int main() {
   //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/Charmonium/crab_TnP_50nsFirst47ipb_OniaTriggersFlags/151024_112308/" ;
   //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/crab_TnP_fullMC_OniaTriggersFlags/151023_225039/" ;
   //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/Charmonium/crab_TnP_50nsFirst47ipb_vertexingTriggersFlags/151103_171444/" ;
-  TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/crab_TnP_fullMC_vertexingTriggersFlags_withMCMatch/151104_183446/" ;
+  //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/crab_TnP_fullMC_vertexingTriggersFlags_withMCMatch/151104_183446/" ;
+  //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/crab_TnP_fullMC25ns/151126_113230/" ;
+  //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/Charmonium/crab_TnP_RunDv3_25ns/151126_165735/" ; TString dir = "crab_TnP_RunDv3_25ns";
+  //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/Charmonium/crab_TnP_RunDv4_25ns/151126_170321/" ; TString dir = "crab_TnP_RunDv4_25ns";
+  //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/Charmonium/crab_TnP_RunC_25ns/151126_160437/" ; TString dir = "crab_TnP_RunC_25ns";
+  TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/crab_TnP_fullMC_withAllTagVars/151211_174215/" ; TString dir = "crab_TnP_fullMC_withAllTagVars";
 
   TString rootPrefix = "root://eoscms.cern.ch/"+prefix ;
 
-  for (Int_t i=0; i<=9; i++) {
+  for (Int_t i=3; i<=3; i++) {
     TString path = TString::Format("000%d",i);
     //TFile *fp = new TFile(TString::Format("./%s_%s.root",inputFile.Data(),path.Data()), "recreate");
     //fp->mkdir("tpTree")->cd(); // gives error
@@ -79,7 +84,8 @@ int main() {
     TString intermediateLog = "hadd_" + path + "_log.txt" ;
     //gSystem->Exec(TString::Format("hadd -f -k -v 1 %s %s%s/%s*.root > %s", intermediateFile.Data(), prefix.Data(), path.Data(), inputFile.Data(), intermediateLog.Data())) ;
     // for eos
-    gSystem->Exec(TString::Format("%s ls %s%s/ | grep .root | awk '{ printf \"%s%s/\"; print }' | xargs hadd -f -k -v 1 %s > %s", eos.Data(), rootPrefix.Data(), path.Data(), rootPrefix.Data(), path.Data(), intermediateFile.Data(), intermediateLog.Data() )) ;
+    //gSystem->Exec(TString::Format("%s ls %s%s/ | grep .root | awk '{ printf \"%s%s/\"; print }' | xargs hadd -f -k -v 1 %s > %s", eos.Data(), rootPrefix.Data(), path.Data(), rootPrefix.Data(), path.Data(), intermediateFile.Data(), intermediateLog.Data() )) ;
+    gSystem->Exec(TString::Format("%s ls %s%s/ | grep .root | awk '{ printf \"%s%s/\"; print }' | xargs hadd -f -k -v 1 %s/%s > %s/%s", eos.Data(), rootPrefix.Data(), path.Data(), rootPrefix.Data(), path.Data(), dir.Data(), intermediateFile.Data(), dir.Data(), intermediateLog.Data() )) ;
 
   }
 
@@ -92,7 +98,8 @@ int main() {
 
 
   // with hadd command
-  gSystem->Exec(TString::Format("hadd -f -k -v 1 %s.root %s_000*.root > hadd_log.txt", outputFile.Data(), outputFile.Data())) ;
+  //gSystem->Exec(TString::Format("hadd -f -k -v 1 %s.root %s_000*.root > hadd_log.txt", outputFile.Data(), outputFile.Data())) ;
+  //gSystem->Exec(TString::Format("hadd -f -k -v 1 %s/%s.root %s/%s_000*.root > %s/hadd_log.txt", dir.Data(), outputFile.Data(), dir.Data(), outputFile.Data(), dir.Data())) ;
 
   return 0 ;
 }

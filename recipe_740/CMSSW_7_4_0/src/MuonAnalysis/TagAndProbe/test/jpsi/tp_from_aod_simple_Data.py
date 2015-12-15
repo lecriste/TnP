@@ -10,7 +10,7 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 100
 process.source = cms.Source("PoolSource", 
     fileNames = cms.untracked.vstring(),
 )
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10000) )    
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000000) ) # 3' for 1k vents on Run2015C, 2.5MB in 20' for 10k events, 90MB in 26h for 1M events on Run2015C   
 
 
 process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
@@ -45,18 +45,150 @@ elif "CMSSW_5_2_" in os.environ['CMSSW_VERSION']:
 elif "CMSSW_7_4_" in os.environ['CMSSW_VERSION']:
     process.GlobalTag.globaltag = cms.string('GR_P_V56::All')
     process.source.fileNames = [
-        '/store/data/Run2015B/Charmonium/AOD/PromptReco-v1/000/251/164/00000/56BA3AC3-A226-E511-98BB-02163E0133B5.root',
-	'/store/data/Run2015B/Charmonium/AOD/PromptReco-v1/000/251/167/00000/FED37D13-A826-E511-8641-02163E01386E.root',
-	'/store/data/Run2015B/Charmonium/AOD/PromptReco-v1/000/251/168/00000/1602316B-CF26-E511-BCBA-02163E011BF3.root',
-	'/store/data/Run2015B/Charmonium/AOD/PromptReco-v1/000/251/168/00000/86456DCF-D026-E511-A8E2-02163E011D37.root',
-        '/store/data/Run2015B/Charmonium/AOD/PromptReco-v1/000/251/162/00000/E855BF93-4227-E511-8207-02163E011976.root',
-        '/store/data/Run2015B/Charmonium/AOD/PromptReco-v1/000/251/244/00000/4ADDEB99-6727-E511-BEF2-02163E011955.root',
-        '/store/data/Run2015B/Charmonium/AOD/PromptReco-v1/000/251/244/00000/C6DB3E01-8327-E511-B696-02163E0139CF.root',
-        '/store/data/Run2015B/Charmonium/AOD/PromptReco-v1/000/251/244/00000/FC4B5FE2-8A27-E511-A0DD-02163E014729.root',
-        '/store/data/Run2015B/Charmonium/AOD/PromptReco-v1/000/251/251/00000/7097B2BC-8E27-E511-80E1-02163E0138B3.root',
-        '/store/data/Run2015B/Charmonium/AOD/PromptReco-v1/000/251/252/00000/0067F5A4-9A27-E511-B904-02163E01267F.root',
-        '/store/data/Run2015B/Charmonium/AOD/PromptReco-v1/000/251/252/00000/642ACBD2-A127-E511-A59E-02163E0123F1.root',
-        '/store/data/Run2015B/Charmonium/AOD/PromptReco-v1/000/251/252/00000/F24C3492-9627-E511-AEC5-02163E011C7F.root'
+        # 50 ns
+        #'/store/data/Run2015B/Charmonium/AOD/PromptReco-v1/000/251/164/00000/56BA3AC3-A226-E511-98BB-02163E0133B5.root',
+	#'/store/data/Run2015B/Charmonium/AOD/PromptReco-v1/000/251/167/00000/FED37D13-A826-E511-8641-02163E01386E.root',
+	#'/store/data/Run2015B/Charmonium/AOD/PromptReco-v1/000/251/168/00000/1602316B-CF26-E511-BCBA-02163E011BF3.root',
+	#'/store/data/Run2015B/Charmonium/AOD/PromptReco-v1/000/251/168/00000/86456DCF-D026-E511-A8E2-02163E011D37.root',
+        #'/store/data/Run2015B/Charmonium/AOD/PromptReco-v1/000/251/162/00000/E855BF93-4227-E511-8207-02163E011976.root',
+        #'/store/data/Run2015B/Charmonium/AOD/PromptReco-v1/000/251/244/00000/4ADDEB99-6727-E511-BEF2-02163E011955.root',
+        #'/store/data/Run2015B/Charmonium/AOD/PromptReco-v1/000/251/244/00000/C6DB3E01-8327-E511-B696-02163E0139CF.root',
+        #'/store/data/Run2015B/Charmonium/AOD/PromptReco-v1/000/251/244/00000/FC4B5FE2-8A27-E511-A0DD-02163E014729.root',
+        #'/store/data/Run2015B/Charmonium/AOD/PromptReco-v1/000/251/251/00000/7097B2BC-8E27-E511-80E1-02163E0138B3.root',
+        #'/store/data/Run2015B/Charmonium/AOD/PromptReco-v1/000/251/252/00000/0067F5A4-9A27-E511-B904-02163E01267F.root',
+        #'/store/data/Run2015B/Charmonium/AOD/PromptReco-v1/000/251/252/00000/642ACBD2-A127-E511-A59E-02163E0123F1.root',
+        #'/store/data/Run2015B/Charmonium/AOD/PromptReco-v1/000/251/252/00000/F24C3492-9627-E511-AEC5-02163E011C7F.root'
+        # 25 ns
+        # redirector: root://eoscms.cern.ch/ ;   global redirector: root://cms-xrd-global.cern.ch/ ;   european redirector: root://xrootd-cms.infn.it// ;   US redirector: root://cmsxrootd.fnal.gov/ 
+	#'/store/data/Run2015D/Charmonium/AOD/PromptReco-v3/000/257/822/00000/00B0174E-0869-E511-82B8-02163E01469D.root',
+        #'/store/data/Run2015D/Charmonium/AOD/PromptReco-v3/000/256/629/00000/3475D421-065F-E511-9389-02163E011D45.root',
+        # dataset C
+        #'/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/253/888/00000/5668060A-0941-E511-A433-02163E014523.root', # 0 events
+        #'/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/253/890/00000/D0DD2762-0941-E511-8D68-02163E014481.root', # 0 events
+        #'/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/253/944/00000/CC59B3BC-3C41-E511-850A-02163E014405.root', # 0 events
+        #'/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/253/952/00000/AAB10CDC-4241-E511-B200-02163E0140E9.root', # 0 events
+        #'/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/253/954/00000/08A34D9A-4441-E511-B733-02163E014331.root', # 0 events
+        #'/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/094/00000/00D975CA-2C46-E511-8D41-02163E014229.root', # 0 events
+        #'/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/096/00000/60E94939-5C45-E511-A45F-02163E014555.root', # 0 events
+        #'/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/212/00000/C4B4E9F1-BA45-E511-A0C9-02163E0140F8.root', # 0 events
+        #'/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/219/00000/8229ACBC-C345-E511-8D7D-02163E0140F8.root', # 0 events
+        #'/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/226/00000/42D98650-4545-E511-A6B3-02163E014128.root', # 0 events
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/227/00000/2AAF5B25-9C45-E511-88E0-02163E014636.root', 
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/229/00000/9CD00F16-EB45-E511-9414-02163E013565.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/231/00000/462E71A3-6345-E511-AC60-02163E0133C0.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/232/00000/C6507137-8245-E511-85AB-02163E014510.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/251/00000/9238F0DC-3546-E511-8F87-02163E012460.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/279/00000/FEB2DE57-A545-E511-A5E4-02163E01298B.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/280/00000/3ADD7E2F-A445-E511-B561-02163E01478E.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/282/00000/B04DCE4A-A845-E511-BC98-02163E011DF7.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/283/00000/8A0E2867-DD45-E511-99C6-02163E0141E8.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/284/00000/822D271E-3E45-E511-BFFF-02163E0138DE.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/285/00000/723CC112-1946-E511-8A21-02163E013860.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/289/00000/E095B7BE-FA45-E511-8EC0-02163E014258.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/290/00000/68741B2F-F745-E511-9F6A-02163E0137FC.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/292/00000/FECD67F6-CB45-E511-B661-02163E01391B.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/293/00000/B270069F-2346-E511-B7AF-02163E011A21.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/294/00000/868D358C-5D45-E511-8458-02163E01457C.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/306/00000/9687B35B-EC45-E511-B603-02163E0135DD.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/307/00000/82442455-3E45-E511-A5F4-02163E014683.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/308/00000/C2DF0ABD-3C45-E511-BDE9-02163E01374E.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/309/00000/641EAFAF-BF45-E511-A1E1-02163E011A21.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/313/00000/64FCC821-CE45-E511-8DF4-02163E0144A6.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/314/00000/A61220F6-0846-E511-AFE9-02163E01299C.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/315/00000/12663589-2346-E511-AD2A-02163E01250A.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/317/00000/BC1B83AC-E945-E511-8B9D-02163E0129E7.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/318/00000/E83C84D9-BE45-E511-A660-02163E011D96.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/319/00000/5C66B233-3E46-E511-8E9B-02163E013831.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/332/00000/5C445947-0F46-E511-A775-02163E0145AD.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/340/00000/20DA6081-AB45-E511-AA37-02163E013932.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/341/00000/5402E77D-9A45-E511-B04D-02163E011DB6.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/342/00000/F0943C6E-9445-E511-9D11-02163E014588.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/349/00000/369C82FE-1046-E511-9DBE-02163E01338E.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/362/00000/681F3297-4046-E511-B82B-02163E0121D5.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/367/00000/7C532C87-4046-E511-9E59-02163E0138DE.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/368/00000/C2C12F5C-4546-E511-99F1-02163E014300.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/380/00000/BED1BE0F-5B46-E511-9E51-02163E012460.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/416/00000/96F61819-8746-E511-8C62-02163E01455F.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/437/00000/B6D554FD-8A46-E511-91A2-02163E013591.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/450/00000/C47E9931-9246-E511-A9C5-02163E0144AE.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/451/00000/0018573A-9246-E511-9AF3-02163E0133EC.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/453/00000/4CC7FB60-9446-E511-9EF8-02163E012155.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/454/00000/32237FFA-9446-E511-9A1B-02163E013816.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/456/00000/C8FB008B-9646-E511-89E4-02163E01469B.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/457/00000/A4308B49-9746-E511-B008-02163E01340A.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/458/00000/4E0B3629-9C46-E511-B994-02163E013723.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/459/00000/76B13945-D646-E511-8B7E-02163E0138DE.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/500/00000/6405BBD0-D246-E511-BF19-02163E014541.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/511/00000/32B3994D-D846-E511-864D-02163E013497.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/512/00000/6A0C6AD0-2547-E511-8B9B-02163E0136DB.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/513/00000/385AE0BE-D746-E511-A62D-02163E01479A.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/530/00000/6E12F204-0F47-E511-8082-02163E011851.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/532/00000/2C26AB3A-1C47-E511-8E62-02163E01470C.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/602/00000/CA93D054-A347-E511-9102-02163E0143CC.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/607/00000/FE6A5737-BB47-E511-B71D-02163E013958.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/608/00000/707AABC2-BD48-E511-86F4-02163E01267F.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/712/00000/92855E71-CF48-E511-8EB0-02163E012BA2.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/768/00000/3EA12D26-1049-E511-81E5-02163E014642.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/769/00000/8CBD7CF5-1849-E511-8D66-02163E0133CA.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/780/00000/E61D74A1-2949-E511-B5A9-02163E0121D5.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/785/00000/70BA055C-3E49-E511-9F83-02163E014717.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/790/00000/1E96E0E6-DA49-E511-A085-02163E011DBA.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/790/00000/20E9A637-B549-E511-AA58-02163E011A50.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/790/00000/309EBFAE-D349-E511-B366-02163E014125.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/790/00000/602E9016-C249-E511-84EB-02163E01559C.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/790/00000/64476921-CB49-E511-A948-02163E0129EE.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/790/00000/6C0A4392-D849-E511-B13B-02163E01266D.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/790/00000/94E81D99-D249-E511-94C1-02163E012647.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/790/00000/A497C6D2-B849-E511-8077-02163E01339E.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/790/00000/A6B9BCFF-D049-E511-A1CC-02163E013765.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/790/00000/A8401D68-D449-E511-89D8-02163E014360.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/790/00000/B0CF8495-D549-E511-8D10-02163E0143C8.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/790/00000/BE46CBA7-CF49-E511-9D19-02163E014200.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/790/00000/D83D6F9F-E149-E511-AE1C-02163E011E88.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/824/00000/1ED25134-354A-E511-AEB7-02163E013441.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/833/00000/128F6535-324B-E511-AACD-02163E011D21.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/833/00000/16D16F3F-324B-E511-B5CE-02163E011DFD.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/833/00000/1A095A2D-324B-E511-B23D-02163E013558.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/833/00000/3897AC4B-334B-E511-BF13-02163E01456D.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/833/00000/3A524439-324B-E511-A28C-02163E011F5D.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/833/00000/408EB52B-324B-E511-A245-02163E011B6A.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/833/00000/540E9233-324B-E511-BBA5-02163E01248D.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/833/00000/5463DD38-324B-E511-B45B-02163E011AC9.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/833/00000/5EA0C43C-324B-E511-AD87-02163E0143D3.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/833/00000/60B9232C-324B-E511-B49F-02163E0121C9.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/833/00000/6AAF522F-324B-E511-AC33-02163E01357D.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/833/00000/70611F32-324B-E511-9B94-02163E0120FF.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/833/00000/72A10CF3-324B-E511-903C-02163E0140DC.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/833/00000/760AA435-324B-E511-A9CE-02163E01186D.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/833/00000/7691622C-324B-E511-9B31-02163E011DCA.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/833/00000/76B1EB78-324B-E511-9E37-02163E012303.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/833/00000/9E0A042B-324B-E511-9199-02163E01380A.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/833/00000/AA5B162F-324B-E511-B0DC-02163E0135B0.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/833/00000/B07F5732-324B-E511-8AC4-02163E0154D3.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/833/00000/B677EC3F-324B-E511-B82B-02163E01282E.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/833/00000/B803CF2D-384B-E511-BC3D-02163E01389C.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/833/00000/BA8D8F32-324B-E511-B9FB-02163E0135D4.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/833/00000/BC01484A-324B-E511-9BC0-02163E011F24.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/833/00000/C0E4A730-324B-E511-90E3-02163E01343E.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/833/00000/C8B37FB9-404B-E511-93C9-02163E014761.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/833/00000/CC6CB539-324B-E511-9697-02163E011A41.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/833/00000/D49FC93A-324B-E511-BD5A-02163E01364B.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/833/00000/E0AC833A-324B-E511-9EEC-02163E014761.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/833/00000/E6FB6332-324B-E511-AAC6-02163E0145BB.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/833/00000/E8FDA438-324B-E511-ABFA-02163E01466E.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/833/00000/EAF0A12D-324B-E511-8361-02163E0137E3.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/833/00000/F21A5D2C-324B-E511-8E32-02163E014796.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/852/00000/E46424F0-974B-E511-B5E2-02163E01213D.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/879/00000/20B268F2-9F4B-E511-A359-02163E0143AA.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/879/00000/F8E352F9-9F4B-E511-88EB-02163E015541.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/905/00000/18F65DA6-BA4B-E511-A2DB-02163E01279E.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/905/00000/1CD21CAD-BA4B-E511-A566-02163E0143A2.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/905/00000/204135A9-BA4B-E511-82FE-02163E011E91.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/905/00000/26E685A3-BA4B-E511-8A82-02163E012ABA.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/906/00000/1CBD178C-CD4B-E511-B61D-02163E014291.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/907/00000/C4A55346-E24B-E511-80E3-02163E013463.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/913/00000/00716CF9-EB4B-E511-BEA7-02163E0136EE.root',
+        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/914/00000/FCED70C1-EC4B-E511-9676-02163E0142B5.root'
         ]
 else: raise RuntimeError, "Unknown CMSSW version %s" % os.environ['CMSSW_VERSION']
 
@@ -234,10 +366,10 @@ process.tpTreeOnePair = process.tpTree.clone(
         absrapidity   = cms.string("abs(rapidity)"),
         prescaled     = cms.InputTag("tagProbeSeparation", "prescaled"),
         VtxProb       = cms.InputTag("tagProbeSeparation", "VtxProb"),
-        VtxCosPA      = cms.InputTag("tagProbeSeparation", "VtxCosPA"),
+        #VtxCosPA      = cms.InputTag("tagProbeSeparation", "VtxCosPA"),
         VtxLxySig     = cms.InputTag("tagProbeSeparation", "VtxLxySig"),
         VtxLxy        = cms.InputTag("tagProbeSeparation", "VtxLxy"),
-        VtxL3d        = cms.InputTag("tagProbeSeparation", "VtxL3d"),
+        #VtxL3d        = cms.InputTag("tagProbeSeparation", "VtxL3d"),
         DCA           = cms.InputTag("tagProbeSeparation", "DCA"),
         ),
 )
@@ -331,7 +463,7 @@ process.tpTreeSta = process.tpTree.clone(
         #neutralHadIso04 = cms.string("pfIsolationR04().sumNeutralHadronEt"),
         #photonIso04 = cms.string("pfIsolationR04().sumPhotonEt"),
         #combRelIsoPF04dBeta = IsolationVariables.combRelIsoPF04dBeta,
-        #l1rate = cms.InputTag("l1rate"),
+        #l1rate = cms.InputTag("l1rate"), # uncommented in "add bx information to data tree #18"
         #bx     = cms.InputTag("l1rate","bx"),
     ),
     tagFlags = cms.PSet(
@@ -484,6 +616,7 @@ if False: # turn on for tracking efficiency using L1 seeds
         process.preTkMatchSequenceJPsi +
         process.l1ToTkMatch + process.l1ToTkMatchNoJPsi + process.l1ToTkMatchNoBestJPsi +
         process.l1ToTkMatch0 + process.l1ToTkMatchNoJPsi0 + process.l1ToTkMatchNoBestJPsi0 +
+	#process.nverticesModule + process.l1rate + # added in "add bx information to data tree #18"
         process.tpTreeL1
     )
 
