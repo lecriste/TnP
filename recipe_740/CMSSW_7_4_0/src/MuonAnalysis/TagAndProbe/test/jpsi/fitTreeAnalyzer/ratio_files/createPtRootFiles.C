@@ -204,8 +204,8 @@ void createPtRootFiles() {
     TString binnedVars = "_pt_abseta" ;
     //binnedVars = "_plateau" ;
     //binnedVars = "_ptTurnOn" ;
-    binnedVars = "_pt_abseta_notSeparated" ;
-    //binnedVars = "_pt_abseta_seagull" ; //binnedVars = "_pt_abseta_cowboy" ;
+    //binnedVars = "_pt_abseta_notSeparated" ;
+    binnedVars = "_pt_abseta_seagull" ; binnedVars = "_pt_abseta_cowboy" ;
     if (effName[iEff].Contains("Vertexing"))
       binnedVars.ReplaceAll("abseta","absrapidity");
     // give number of abseta bin
@@ -509,6 +509,13 @@ void createPtRootFiles() {
     } // iEffSample
     //output->Close() ;
 
+    TPaveText *lumi = new TPaveText(.6, .901, .9, .95, "NDC");
+    lumi->SetTextSize(0.04); lumi->SetFillColor(0); lumi->SetLineColor(0); lumi->SetBorderSize(1);
+    if (!mode.Contains("25ns"))
+      lumi->AddText("BX = 50 ns, L = 47 pb^{-1}");
+    else
+      lumi->AddText("BX = 25 ns, L = 2.59 fb^{-1}");
+
     // overlay
     TString prefix = "../" ;
     prefix = "/afs/cern.ch/work/l/lecriste/www/TnP/" ;
@@ -574,12 +581,16 @@ void createPtRootFiles() {
  
 	overlayC->SetLogx();
 	overlayC->SetGrid() ; 
-	gPad->BuildLegend(0.5, 0.12, 0.88, 0.32) ;
+	gPad->BuildLegend(.5, .12, .88, .32) ;
+	lumi->Draw();
 	overlayC->SaveAs( dir+bins2name[iBins2]+".png") ;
       }
     }
   
     TFile *data_yield_file = TFile::Open("../TnP_yield_Charmonium_PromptReco_50ns_first47ipb.root") ;
+    if (mode.Contains("25ns"))
+      data_yield_file = 0; // use the 25ns yields file when available
+
     //
     // ratio: DATA/MC
     if ( nEffSample > 1 ) {
@@ -773,11 +784,13 @@ void createPtRootFiles() {
 	output->cd();
 	ratio->Write(); diff->Write();
 	
-	Int_t nx = 1, ny = 2 ;
+	Int_t nx = 1, ny = 1 ;
+	if (data_yield) ny = 2 ;
 	// RATIO
 	ratioC = new TCanvas(ratioName,ratioName,nx*800,ny*600) ; ratioC->Divide(nx,ny);
 	ratioC->cd(1) ;
 	ratio->Draw("ALP") ;
+	lumi->Draw();
 	if (effSampleName[nEffSample-1] != "MC_Mu8") {
 	  ratio->SetMinimum( 0.5 ) ; //0.6
 	  ratio->SetMaximum( 1.5 ) ; //1.1
@@ -791,8 +804,8 @@ void createPtRootFiles() {
 	//
 	if (!effName[iEff].Contains("Vertexing")) {
 	  gPad->SetLogx() ;
-	  ratioC->cd(2) ;
 	  if (data_yield) {
+	    ratioC->cd(2) ;
 	    data_yield->Draw("ALP") ;
 	    data_yield->GetXaxis()->SetRangeUser(bins1[0],bins1[nBins1]);
 	    gPad->SetLogx() ;
@@ -805,6 +818,7 @@ void createPtRootFiles() {
 	diffC = new TCanvas(diffName,diffName,nx*800,ny*600) ; diffC->Divide(nx,ny);
 	diffC->cd(1) ;
 	diff->Draw("ALP") ;
+	lumi->Draw();
 	diff->SetMinimum( ratio->GetMinimum() - 1 ) ;
 	diff->SetMaximum( ratio->GetMaximum() - 1 ) ;
 	diff->GetXaxis()->SetMoreLogLabels();
@@ -812,8 +826,8 @@ void createPtRootFiles() {
 	gPad->SetGrid() ;
 	if (!effName[iEff].Contains("Vertexing")) {
 	  gPad->SetLogx() ;
-	  diffC->cd(2) ;
 	  if (data_yield) {
+	    diffC->cd(2) ;
 	    data_yield->Draw("ALP") ;
 	    data_yield->GetXaxis()->SetRangeUser(bins1[0],bins1[nBins1]);
 	    gPad->SetLogx() ;
@@ -829,6 +843,7 @@ void createPtRootFiles() {
 	// fit
 	ratioFitC = new TCanvas(ratioName.Append("_fit"),ratioName,800,600) ;
 	ratio->Draw("ALP") ;
+	lumi->Draw();
 	ratio->Fit("pol0");
 	if (ratio->GetFunction("pol0")) ratio->GetFunction("pol0")->SetLineColor(kRed);
 	gStyle->SetOptFit(111);
