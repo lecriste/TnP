@@ -117,12 +117,13 @@ void createPtRootFiles() {
   // 2012
   //int iEff = 2;
 
-  TString mode = ""; //mode = "25ns_";
+  TString mode = ""; mode = "25ns_";
 
   vector< double > bins1, bins2;
   vector< TString > bins2name;
   //for (int iEff=1; iEff<=1; ++iEff) {
-  for (int iEff=4; iEff<=7; ++iEff) {
+  //for (int iEff=4; iEff<=7; ++iEff) {
+  for (int iEff=8; iEff<=9; ++iEff) {
 
     // Name of trigger: Mu5_Track2, Mu7_Track7
     vector< vector<std::string> > trackName(nEffSample) ;
@@ -204,8 +205,8 @@ void createPtRootFiles() {
     TString binnedVars = "_pt_abseta" ;
     //binnedVars = "_plateau" ;
     //binnedVars = "_ptTurnOn" ;
-    //binnedVars = "_pt_abseta_notSeparated" ;
-    binnedVars = "_pt_abseta_seagull" ; binnedVars = "_pt_abseta_cowboy" ;
+    binnedVars = "_pt_abseta_notSeparated" ;
+    //binnedVars = "_pt_abseta_seagull" ; //binnedVars = "_pt_abseta_cowboy" ;
     if (effName[iEff].Contains("Vertexing"))
       binnedVars.ReplaceAll("abseta","absrapidity");
     // give number of abseta bin
@@ -228,8 +229,9 @@ void createPtRootFiles() {
 	inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__data_%s_%s%s.root", path.c_str(), mode.Data(), effName[1].Data(), binnedVars.Data()) ;
 	//inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__data_all_%s_%s%s.root", path.c_str(), mode.Data(), effName[1].Data(), binnedVars.Data()) ;
 	if (effName[iEff].Contains("Vertexing"))
-	  inputfile[iEffSample] = TString::Format("%s/TnP_Vertexing__data_246908-251883_JSON_MuonPhys_v2_%s.root", path.c_str(), binnedVars.Data()) ;
+	  //inputfile[iEffSample] = TString::Format("%s/TnP_Vertexing__data_246908-251883_JSON_MuonPhys_v2_%s.root", path.c_str(), binnedVars.Data()) ;
 	//inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__data_246908-255031_JSON_MuonPhys_v2__%s%s.root", path.c_str(), eff_triggers[iEff].first.c_str(), binnedVars.Data()) ;
+	inputfile[iEffSample] = TString::Format("%s/TnP_Vertexing__data_%s%s.root", path.c_str(), mode.Data(), binnedVars.Data()) ;
       }
       else if ( effSampleName[iEffSample] == "MC" ) { 
 	//inputfile[iEffSample] = TString::Format("%s/TnP_MuonID_signal_mc_%s%s_fullMC_allBins.root", path,eff_triggers[iEff].first,binnedVars) ;
@@ -238,7 +240,8 @@ void createPtRootFiles() {
 	inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__signal_mc_%s_%s%s.root", path.c_str(), mode.Data(), effName[1].Data(), binnedVars.Data()) ;
 	//inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__signal_mc__%s%s_30M.root", path.c_str(), effName[1].Data(), binnedVars.Data()) ;
 	if (effName[iEff].Contains("Vertexing"))
-	  inputfile[iEffSample] = TString::Format("%s/TnP_Vertexing__signal_mc_%s.root", path.c_str(), binnedVars.Data()) ;
+	  inputfile[iEffSample] = TString::Format("%s/TnP_Vertexing__signal_mc_%s%s.root", path.c_str(), mode.Data(), binnedVars.Data()) ;
+	//inputfile[iEffSample] = TString::Format("%s/TnP_Vertexing__signal_mc_%s.root", path.c_str(), binnedVars.Data()) ;
 	//inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__signal_mc__%s%s_Mu8.root", path.c_str(), eff_triggers[iEff].first.c_str(), binnedVars.Data()) ;
       }
       else if ( effSampleName[iEffSample] == "MC_Mu8" ) { 
@@ -249,9 +252,16 @@ void createPtRootFiles() {
     //outputfile <<"/scratch/ikratsch/TnP2012/MuonPOG/official6March2014/changedMass/multiplicity/MuonID_" <<eff_triggers[iEff].first <<binnedVars <<abseta <<"_2012_multiplicity.root";
     //outputfile <<path <<"/MuonID_" <<eff_triggers[iEff].first <<binnedVars <<".root";
     if (nEffSample < 2)
-      outputfile <<"./MuonID_" <<eff_triggers[iEff].first <<"_" <<mode <<binnedVars <<".root";
+      if (mode.Contains("25ns"))
+	outputfile <<"25ns/" <<"MuonID_" <<eff_triggers[iEff].first <<"_" <<mode <<binnedVars <<".root";
+      else 
+	outputfile <<"50ns/" <<"MuonID_" <<eff_triggers[iEff].first <<"_" <<mode <<binnedVars <<".root";
     else 
-      outputfile <<"./MuonID_" <<eff_triggers[iEff].first <<"_" <<mode <<binnedVars <<"__" <<effSampleName[0] <<"_vs_" <<effSampleName[1] <<".root";
+      if (mode.Contains("25ns"))
+	outputfile <<"25ns/" <<"MuonID_" <<eff_triggers[iEff].first <<"_" <<mode <<binnedVars <<"__" <<effSampleName[0] <<"_vs_" <<effSampleName[1] <<".root";
+      else
+	outputfile <<"50ns/" <<"MuonID_" <<eff_triggers[iEff].first <<"_" <<mode <<binnedVars <<"__" <<effSampleName[0] <<"_vs_" <<effSampleName[1] <<".root";
+
     TFile *output = new TFile(outputfile.str().c_str(),"RECREATE");
 
 
@@ -281,9 +291,9 @@ void createPtRootFiles() {
 	file = open( mcfile.str().c_str() );
       */
       file = open( inputfile[iEffSample].Data() );
-      cout <<"\nSuccessfully opened "<<effSampleName[iEffSample] <<" file:\n" <<inputfile[iEffSample].Data() <<"\n" <<endl;
       if (!file) return;
-      
+      else cout <<"\nSuccessfully opened "<<effSampleName[iEffSample] <<" file:\n" <<inputfile[iEffSample].Data() <<"\n" <<endl;
+     
       // Jump to tpTree
       TDirectory* dir_tpTree = 0;
       if ( !inputfile[iEffSample].Contains("Vertexing") )
@@ -517,6 +527,7 @@ void createPtRootFiles() {
       lumi->AddText("BX = 25 ns, L = 2.59 fb^{-1}");
 
     // overlay
+    cout <<"\nGoing to overlay:" <<endl;
     TString prefix = "../" ;
     prefix = "/afs/cern.ch/work/l/lecriste/www/TnP/" ;
     TString uploadFile = "index.php" ;
@@ -641,10 +652,12 @@ void createPtRootFiles() {
 	gSystem->CopyFile(prefix+uploadFile, dir+"fit/"+uploadFile, true);
       
       for (int iBins2 = 0; iBins2 < nBins2; iBins2++) {
-	TGraph *data_yield = (TGraph*)data_yield_file->Get("pT_yields_Mu7p5_Track2__abseta"+bins2name[iBins2]) ;
-	if (data_yield == 0)
-	  cout <<"No \"" <<"pT_yields_Mu7p5_Track2__abseta"+bins2name[iBins2] <<"\" TGraph found in file \"" <<data_yield_file->GetName() <<"\"" <<endl ;
-
+	TGraph *data_yield = 0 ;
+	if (data_yield_file) {
+	  data_yield = (TGraph*)data_yield_file->Get("pT_yields_Mu7p5_Track2__abseta"+bins2name[iBins2]) ;
+	  if (data_yield == 0)
+	    cout <<"No \"" <<"pT_yields_Mu7p5_Track2__abseta"+bins2name[iBins2] <<"\" TGraph found in file \"" <<data_yield_file->GetName() <<"\"" <<endl ;
+	}
 	cout <<"\nRATIO and DIFF for " <<bins2name[iBins2] <<endl;
       	
 	TGraphAsymmErrors *ratio = new TGraphAsymmErrors();
