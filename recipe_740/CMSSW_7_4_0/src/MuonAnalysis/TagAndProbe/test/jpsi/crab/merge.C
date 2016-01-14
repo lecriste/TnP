@@ -19,8 +19,8 @@ int main() {
   //TString outputFile = "MuOniaParked_Run2012C_22Jan2013v1_MuMuPiKPAT";
   //TString outputFile = "official_BdToPsiKpi_18Mar_MuMuPiKPAT";
   //TString inputFile = "MuOniaRun2012C_25Apr_MuMuPiPiPAT_ntpl";
-  TString inputFile = "tnpJPsi_officialBPHMC";
-  //TString inputFile = "tnpJPsi_Data";
+  //TString inputFile = "tnpJPsi_officialBPHMC";
+  TString inputFile = "tnpJPsi_Data";
 
   //TString outputFile = "full50nsRun" ;
   //TString outputFile = "last50nsRun" ;
@@ -50,11 +50,14 @@ int main() {
   //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/Charmonium/crab_TnP_RunDv3_25ns/151126_165735/" ; TString dir = "crab_TnP_RunDv3_25ns";
   //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/Charmonium/crab_TnP_RunDv4_25ns/151126_170321/" ; TString dir = "crab_TnP_RunDv4_25ns";
   //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/Charmonium/crab_TnP_RunC_25ns/151126_160437/" ; TString dir = "crab_TnP_RunC_25ns";
-  TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/crab_TnP_fullMC_withAllTagVars/151211_174215/" ; TString dir = "crab_TnP_fullMC_withAllTagVars";
+  //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/crab_TnP_fullMC_withAllTagVars/151211_174215/" ; TString dir = "crab_TnP_fullMC_withAllTagVars";
+  //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/Charmonium/crab_TnP_RunC_25ns_noPairVtxInfo/160108_111956/" ; TString dir = "crab_TnP_RunC_25ns_noPairVtxInfo";
+  //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/Charmonium/crab_TnP_RunDv3_25ns_noPairVtxInfo/160108_132823/" ; TString dir = "crab_TnP_RunDv3_25ns_noPairVtxInfo";
+  TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/Charmonium/crab_TnP_RunDv4_25ns_noPairVtxInfo/160109_223454/" ; TString dir = "crab_TnP_RunDv4_25ns_noPairVtxInfo";
 
   TString rootPrefix = "root://eoscms.cern.ch/"+prefix ;
 
-  for (Int_t i=3; i<=3; i++) {
+  for (Int_t i=0; i<=7; i++) {
     TString path = TString::Format("000%d",i);
     //TFile *fp = new TFile(TString::Format("./%s_%s.root",inputFile.Data(),path.Data()), "recreate");
     //fp->mkdir("tpTree")->cd(); // gives error
@@ -99,7 +102,7 @@ int main() {
 
   // with hadd command
   //gSystem->Exec(TString::Format("hadd -f -k -v 1 %s.root %s_000*.root > hadd_log.txt", outputFile.Data(), outputFile.Data())) ;
-  //gSystem->Exec(TString::Format("hadd -f -k -v 1 %s/%s.root %s/%s_000*.root > %s/hadd_log.txt", dir.Data(), outputFile.Data(), dir.Data(), outputFile.Data(), dir.Data())) ;
+  gSystem->Exec(TString::Format("hadd -f -k -v 1 %s/%s.root %s/%s_000*.root > %s/hadd_log.txt", dir.Data(), outputFile.Data(), dir.Data(), outputFile.Data(), dir.Data())) ;
 
   return 0 ;
 }

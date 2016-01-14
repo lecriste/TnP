@@ -27,6 +27,7 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )
 print "About to define TagProbeFitTreeAnalyzer"
 
 Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
+    WeightVariable = cms.string("weight"),
     NumCPU = cms.uint32(1),
     SaveWorkspace = cms.bool(False),
 
@@ -72,6 +73,8 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         tk_deltaEta_NoJPsi = cms.vstring("Unmatch #Delta #eta", "0", "1000", ""),
         tk_deltaR_NoBestJPsi   = cms.vstring("Unmatch #Delta R",    "0", "1000", ""),
         tk_deltaEta_NoBestJPsi = cms.vstring("Unmatch #Delta #eta", "0", "1000", ""),
+        #
+        weight = cms.vstring("weight","0","10","") # There is no problem by defining more variables and categories than are present in the TTree as long as they are not used in the Efficiency calculations.
     ),
 
     Categories = cms.PSet(
@@ -352,7 +355,8 @@ process.TnP_MuonID = Template.clone(
      ##InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Charmonium_PromptReco_50ns_first47ipb_OniaTriggersFlags.root'),
      #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Charmonium_PromptReco_50ns_first47ipb_vertexingTriggersFlags.root'),
      ##InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Charmonium_PromptReco_50ns.root'),
-     InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns.root'),
+     #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns.root'),
+     InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns_golden.root'),
      #
      InputTreeName = cms.string("fitter_tree"),
      InputDirectoryName = cms.string("tpTree"),
@@ -377,8 +381,13 @@ TRIGS = [ (2,'Mu7p5_Track2_Jpsi') ]
 #TRIGS = [ (0,'Mu8'), (0,'Mu17') ] 
 #TRIGS = [ (0,'DoubleMu17TkMu8_TkMu8leg') ]
 
+UnbinnedVars = cms.vstring("mass")
 if "mc" in scenario:
-     process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC25ns.root']
+     UnbinnedVars = cms.vstring("mass","weight")
+     process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC_withAllTagVars_withNVtxWeightsFromGolden.root']
+     #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC25ns_withNVtxWeightsFromMuonPhys.root']
+     #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC25ns.root']
+     #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC25ns.root']
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC_withAllTagVars.root']
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC_vertexingTriggersFlags.root']
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC_OniaTriggersFlags.root']
@@ -402,10 +411,10 @@ else: mode = ""
 
 #ALLBINS =  [("plateau_abseta",PLATEAU_ABSETA)]
 #ALLBINS =  [("pt_eta",PT_ETA_BINS)]
-#ALLBINS =  [("pt_abseta",PT_ABSETA_BINS)]
+ALLBINS =  [("pt_abseta",PT_ABSETA_BINS)]
 #ALLBINS =  [("pt_abseta_seagull",PT_ABSETA_BINS_SEAGULL), ("pt_abseta_cowboy",PT_ABSETA_BINS_COWBOY)]
 #ALLBINS =  [("pt_abseta_allPairs",PT_ABSETA_BINS_allPairs)]
-ALLBINS =  [("pt_abseta_notSeparated",PT_ABSETA_BINS_notSeparated)]
+#ALLBINS =  [("pt_abseta_notSeparated",PT_ABSETA_BINS_notSeparated)]
 #ALLBINS =  [("pt_eta2p4_notSeparated",PT_BINS_notSeparated)]
 #ALLBINS =  [("pt_abseta2p4",PT_BINS_ABSETA2p4)]
 #ALLBINS =  [("pt_abseta_notSeparated",PT_ABSETA_BINS_notSeparated),("pt_eta2p4_notSeparated",PT_BINS_notSeparated)]
@@ -413,12 +422,16 @@ ALLBINS =  [("pt_abseta_notSeparated",PT_ABSETA_BINS_notSeparated)]
 #ALLBINS =  [("ptTurnOn_abseta",TURNON_ABSETA)]
 #ALLBINS =  [("pt_abseta",PT_ABSETA_BINS), ("plateau_abseta",PLATEAU_ABSETA)]
 #ALLBINS =  [("vtx",VTX_BINS)]
-#ALLBINS =  [("vtx",VTX_BINS_noSoft)]
+ALLBINS =  [("vtx",VTX_BINS_noSoft)]
 #ALLBINS =  [("plateau_abseta",PLATEAU_ABSETA), ("vtx",VTX_BINS), ("eta",ETA_BINS)]
 #ALLBINS =  [("pt_abseta",PT_ABSETA_BINS), ("vtx",VTX_BINS), ("eta",ETA_BINS)]
 #ALLBINS =  [("pt_abseta",PT_ABSETA_BINS), ("vtx",VTX_BINS), ("plateau",PLATEAU_ABSETA)]
 #ALLBINS += [("pt_abseta_wide",PT_ABSETA_WIDE)]
 #ALLBINS =  [("ptPlateau_eta",PLATEAU_ETA)]
+
+triggerEff = True
+triggerEff = False
+print "Going to define TagProbeFitTreeAnalyzer for " + ', '.join(IDS) + " efficiency (trigger efficiency is " + str(triggerEff) + ")" 
 
 for ID in IDS:
      #if len(args) > 1 and args[1] in IDS and ID != args[1]: continue
@@ -432,7 +445,7 @@ for ID in IDS:
                DEN = B.clone()
                setattr(module.Efficiencies, ID+"_"+X, cms.PSet(
                          EfficiencyCategoryAndState = cms.vstring(ID,"above"),     # ??
-                         UnbinnedVariables = cms.vstring("mass"),
+                         UnbinnedVariables = UnbinnedVars,
                          BinnedVariables = DEN,
                          BinToPDFmap = cms.vstring("signalPlusBkg")
                          )
@@ -462,12 +475,12 @@ for ID in IDS:
                     #if "calomu" in scenario: DEN_forSoftID.Calo = cms.vstring("pass")
                     setattr(module.Efficiencies, ID+"_"+X+TRIGLABEL, cms.PSet(
                               EfficiencyCategoryAndState = cms.vstring(ID,"above"),     # ??
-                              UnbinnedVariables = cms.vstring("mass"),
+                              UnbinnedVariables = UnbinnedVars,
                               BinnedVariables = DEN_forSoftID,
                               BinToPDFmap = cms.vstring("signalPlusBkg")
                               ))
                     # L1L2 w.r.t. SoftMuon ID
-                    if ID == "Soft2012":
+                    if triggerEff:
                          # for L2
                          DEN_withSoftID = DEN_forSoftID.clone( # check variables bounds if input file changes
                               TMOST = cms.vstring("pass"), tkTrackerLay = cms.vint32(6,18), tkPixelLay = cms.vint32(1,5), dzPV = cms.vdouble(-20,20), dB = cms.vdouble(-0.3,0.3), Track_HP = cms.vstring("pass"),
@@ -489,7 +502,7 @@ for ID in IDS:
                                         DEN_L3.abseta = DEN_L1L2.abseta
                               setattr(module.Efficiencies, L1L2+"_"+X+TRIGLABEL, cms.PSet(
                                         EfficiencyCategoryAndState = cms.vstring(L1L2,"pass"),
-                                        UnbinnedVariables = cms.vstring("mass"),
+                                        UnbinnedVariables = UnbinnedVars,
                                         BinnedVariables = DEN_L1L2,
                                         BinToPDFmap = cms.vstring("signalPlusBkg"),
                                         ))
@@ -497,7 +510,7 @@ for ID in IDS:
                               setattr(DEN_L3, L1L2, cms.vstring("pass"))
                               setattr(module.Efficiencies, "L3_wrt_"+L1L2+"_"+X, cms.PSet(
                                         EfficiencyCategoryAndState = cms.vstring("Mu_L3","pass"),
-                                        UnbinnedVariables = cms.vstring("mass"),
+                                        UnbinnedVariables = UnbinnedVars,
                                         BinnedVariables = DEN_L3,
                                         BinToPDFmap = cms.vstring("signalPlusBkg"),
                                         ))
@@ -506,11 +519,12 @@ for ID in IDS:
                     #if "mc" in scenario:
                     #     setattr(module.Efficiencies, ID+"_"+X+TRIGLABEL+"_mcTrue", cms.PSet(
                     #         EfficiencyCategoryAndState = cms.vstring(ID,"above"),  # ?? "pass"
-                    #         UnbinnedVariables = cms.vstring("mass"),
+                    #         UnbinnedVariables = UnbinnedVars,
                     #         BinnedVariables = DEN.clone(mcTrue = cms.vstring("true"))
                     #     ))
-          #setattr(process, "TnP_MuonID__"+ID+"_"+X, module)
-          #setattr(process, "run_"+ID+"_"+X, cms.Path(module))
+          # comment the following two lines to not run this efficiency
+          setattr(process, "TnP_MuonID__"+ID+"_"+X, module)
+          setattr(process, "run_"+ID+"_"+X, cms.Path(module))
 
 
 
@@ -568,7 +582,7 @@ for X,B in ALLBINS:
                     setattr(module.Cuts, "#Delta#eta_cut", cms.vstring("tk_deltaEta"+eff, "tk_deltaEta"+eff, str(DETA)))
                     setattr(module.Efficiencies, "eff_"+label, cms.PSet(
                               EfficiencyCategoryAndState = cms.vstring("#DeltaR_cut","below", "#Delta#eta_cut","below"),
-                              UnbinnedVariables = cms.vstring("mass"),
+                              UnbinnedVariables = UnbinnedVars,
                               BinToPDFmap = cms.vstring(sampleToPdfMap[eff.replace("_","")]),
                               BinnedVariables = DEN,
                               ))
@@ -608,12 +622,13 @@ for X,B in ALLBINS:
           #
           setattr(module.Efficiencies, TRIG+"_wrt_"+TRIG_noVtx, cms.PSet(
                     EfficiencyCategoryAndState = cms.vstring(TRIG,"pass"),
-                    UnbinnedVariables = cms.vstring("mass"),
+                    UnbinnedVariables = UnbinnedVars,
                     BinToPDFmap = cms.vstring("signalPlusBkg"),
                     BinnedVariables = DEN,
                     ))
-     setattr(process, "TnP_Vertexing__"+X, module)
-     setattr(process, "p_TnP_vertexing_"+X, cms.Path(module))
+     # comment the following two lines to not run this efficiency
+     #setattr(process, "TnP_Vertexing__"+X, module)
+     #setattr(process, "p_TnP_vertexing_"+X, cms.Path(module))
 
 
 print "End of configuration file"

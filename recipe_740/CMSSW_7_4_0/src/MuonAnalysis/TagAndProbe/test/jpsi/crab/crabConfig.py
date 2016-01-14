@@ -1,12 +1,12 @@
 MC = False
-MC = True
+#MC = True
 
 mode_25ns = False # for 50ns
-#mode_25ns = True
+mode_25ns = True
 
-RunC = True
+#RunC = True
 RunC = False
-RunDv3 = True
+#RunDv3 = True
 RunDv3 = False
 RunDv4 = True
 #RunDv4 = False
@@ -44,11 +44,14 @@ else:
 		config.General.requestName = 'TnP_50nsFirst47ipb_vertexingTriggersFlags'
 	else:
 		if (RunC):
-			config.General.requestName = 'TnP_RunC_25ns'
+			#config.General.requestName = 'TnP_RunC_25ns'
+                	config.General.requestName = 'TnP_RunC_25ns_noPairVtxInfo'
 		elif (RunDv3):
-			config.General.requestName = 'TnP_RunDv3_25ns'
+			#config.General.requestName = 'TnP_RunDv3_25ns'
+			config.General.requestName = 'TnP_RunDv3_25ns_noPairVtxInfo'
 		elif (RunDv4):
-			config.General.requestName = 'TnP_RunDv4_25ns'
+			#config.General.requestName = 'TnP_RunDv4_25ns'
+                        config.General.requestName = 'TnP_RunDv4_25ns_noPairVtxInfo'
 
 config.General.transferOutputs = True
 config.General.transferLogs = False
@@ -105,8 +108,9 @@ else:
 			config.Data.unitsPerJob = 2
 		elif (RunDv4):
 			config.Data.unitsPerJob = 3
-	        config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_MuonPhys.txt' # 2.59/fb
-
+	        #config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_MuonPhys.txt' # 2.59/fb
+		#config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_MuonPhys_v2.txt' # 2.76/fb
+                config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_v2.txt' # 2.26/fb Golden
 
 config.Data.publication = False
 #config.Data.outLFNDirBase = '/store/user/lecriste/TnP/'

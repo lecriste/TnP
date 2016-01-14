@@ -195,7 +195,7 @@ string TagProbeFitter::calculateEfficiency(string dirName,const std::vector<stri
   dataVars.addClone(categories, true);
 
   // sanity check
-  cout <<"Checking variables for " <<effCats[0] <<endl ;
+  cout <<"@@@@@@@@@@@@@@@@@@@@ Checking variables for " <<effCats[0] <<" @@@@@@@@@@@@@@@@@@@@" <<endl ;
   RooLinkedListIter varsIt = dataVars.iterator();
   for(RooRealVar* v1 = (RooRealVar*)varsIt.Next(); v1!=0; v1 = (RooRealVar*)varsIt.Next() ) {
     if ( inputTree->GetBranch(v1->GetName()) )
@@ -342,10 +342,15 @@ string TagProbeFitter::calculateEfficiency(string dirName,const std::vector<stri
       if ( dirName.Contains(v->first) )
 	for ( UInt_t i=0; i<v->second.size(); ++i) {
 	  //cout <<"dirName " <<i <<" = " <<dirName <<endl ;
-	  if (v == variable_binLimits.begin())
-	    dirName.ReplaceAll( v->first+"_bin"+TString::Itoa(i,10)+"_", v->first+"_"+v->second[i]+"_" )  ;
-	  else
-	    dirName.ReplaceAll( "__"+v->first+"_bin"+TString::Itoa(i,10)+"_", "__"+v->first+"_"+v->second[i]+"_" )  ;	  //dirName.ReplaceAll( TString::Format(v->first+"_bin%d",i), v->first+"_"+v->second[i] ) ;
+	  if (v == variable_binLimits.begin()) {
+	    dirName.ReplaceAll( v->first+"_bin"+TString::Itoa(i,10)+"_", v->first+"_"+v->second[i]+"_" ) ;
+	    //dirName.ReplaceAll( v->first+"_bin"+TString::Itoa(i,10), v->first+"_"+v->second[i] ) ;
+	  }
+	  else {
+	    //dirName.ReplaceAll( TString::Format(v->first+"_bin%d",i), v->first+"_"+v->second[i] ) ;
+	    dirName.ReplaceAll( "__"+v->first+"_bin"+TString::Itoa(i,10)+"_", "__"+v->first+"_"+v->second[i]+"_" ) ;
+	    //dirName.ReplaceAll( "__"+v->first+"_bin"+TString::Itoa(i,10), "__"+v->first+"_"+v->second[i] ) ;
+	  }
 	  //cout <<"dirName " <<i <<" = " <<dirName <<endl ;
 	}
     //
@@ -812,7 +817,8 @@ void TagProbeFitter::saveEfficiencyPlots(RooDataSet& eff, const TString& effName
 	  for (map<TString, vector<TString> >::iterator v=variable_binLimits.begin(); v!=variable_binLimits.end(); v++)
 	    for ( UInt_t i=0; i<v->second.size(); ++i) {
 	      //cout <<"catName " <<i <<" = " <<catName <<endl ;
-	      catName.ReplaceAll( v->first+"_bin"+TString::Itoa(i,10)+"_", v->first+"_"+v->second[i]+"_" )  ;
+	      //catName.ReplaceAll( v->first+"_bin"+TString::Itoa(i,10)+"_", v->first+"_"+v->second[i]+"_" )  ;
+	      catName.ReplaceAll( v->first+"_bin"+TString::Itoa(i,10), v->first+"_"+v->second[i] )  ;
 	      //cout <<"catName " <<i <<" = " <<catName <<endl ;
 	    }
 	  // 
@@ -842,7 +848,8 @@ void TagProbeFitter::saveEfficiencyPlots(RooDataSet& eff, const TString& effName
 	for (map<TString, vector<TString> >::iterator v=variable_binLimits.begin(); v!=variable_binLimits.end(); v++)
 	  for ( UInt_t i=0; i<v->second.size(); ++i) {
 	    //cout <<"catName " <<i <<" = " <<catName <<endl ;
-	    catName.ReplaceAll( v->first+"_bin"+TString::Itoa(i,10)+"_", v->first+"_"+v->second[i]+"_" )  ;
+	    //catName.ReplaceAll( v->first+"_bin"+TString::Itoa(i,10)+"_", v->first+"_"+v->second[i]+"_" )  ;
+	    catName.ReplaceAll( v->first+"_bin"+TString::Itoa(i,10), v->first+"_"+v->second[i] )  ;
 	    //cout <<"catName " <<i <<" = " <<catName <<endl ;
 	  }
 	// 
@@ -912,6 +919,7 @@ void TagProbeFitter::makeEfficiencyPlot2D(RooDataSet& eff, RooRealVar& v1, RooRe
     //entry->Print() ;
     //cout <<"\nentry->getCatIndex(catName) = " <<entry->getCatIndex(catName) <<endl ;    
     //if (catName != 0  &&  entry->getCatIndex(catName) != catIndex) continue; // Leo: not sure if it's safe the following
+    //cout <<"\nentry->getCatIndex(catName) = " <<entry->getCatIndex(catName) <<"\nentry->getCatIndex(catName,catIndex,kTRUE) = " <<entry->getCatIndex(catName,catIndex,kTRUE) <<"\nentry->getCatIndex(\"allCats2D\") = " <<entry->getCatIndex("allCats2D") <<endl; // no differences...
     if (catName != 0  &&  entry->getCatIndex(catName,catIndex,kTRUE) != catIndex) continue;  
     h->SetBinContent(h->FindBin(v1_->getVal(), v2_->getVal()), e->getVal());
     h->SetBinError(h->FindBin(v1_->getVal(), v2_->getVal()), (e->getErrorHi()-e->getErrorLo())/2.);

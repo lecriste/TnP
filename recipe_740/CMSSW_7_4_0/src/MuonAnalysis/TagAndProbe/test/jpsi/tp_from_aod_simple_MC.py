@@ -59,7 +59,7 @@ elif "CMSSW_7_4_" in os.environ['CMSSW_VERSION']:
         # BPH MC
         # 50 ns
         #'file:./BECF20C9-CE27-E511-AD2B-02163E013B74.root',
-        '/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/80000/EE4E7950-D726-E511-8751-001E67A404B0.root',
+        #'/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/80000/EE4E7950-D726-E511-8751-001E67A404B0.root',
         #'/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/20000/0072AAD1-7028-E511-8448-0025905A612E.root',
         #'/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/20000/00C6C123-0428-E511-92F2-D4AE526A091F.root',
         #'/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/20000/026710B4-5F27-E511-B9D3-B8CA3A70A520.root',
@@ -79,6 +79,8 @@ elif "CMSSW_7_4_" in os.environ['CMSSW_VERSION']:
         #'/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v2/20000/0E1A8498-6627-E511-8BDF-00238BBD75D8.root',
         #'/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v2/20000/0E95776B-6627-E511-BEAC-001E67A42BA2.root',
         #'/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v2/20000/0EC5741B-9C28-E511-81CD-B499BAABF064.root',
+        'dcap://dcache-cms-dcap.desy.de//pnfs/desy.de/cms/tier2/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/80000/96B24D6D-0C27-E511-B9BB-003048FFD720.root',
+        #'/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/80000/96B24D6D-0C27-E511-B9BB-003048FFD720.root',
         ]
 else: raise RuntimeError, "Unknown CMSSW version %s" % os.environ['CMSSW_VERSION']
 
@@ -286,11 +288,11 @@ process.tpTreeOnePair = process.tpTree.clone(
         process.tpTree.pairVariables,
         rapidity      = cms.string("rapidity"),
         absrapidity   = cms.string("abs(rapidity)"),
-        prescaled     = cms.InputTag("tagProbeSeparation", "prescaled"),
-        VtxProb       = cms.InputTag("tagProbeSeparation", "VtxProb"),
+        #prescaled     = cms.InputTag("tagProbeSeparation", "prescaled"), # throw Exception Message: Principal::getByToken: Found zero products matching all criteria\n Looking for type: edm::ValueMap<float>\n Looking for module label: tagProbeSeparation\n Looking for productInstanceName: prescaled
+        #VtxProb       = cms.InputTag("tagProbeSeparation", "VtxProb"),
         #VtxCosPA      = cms.InputTag("tagProbeSeparation", "VtxCosPA"), # throw Exception Message: Principal::getByToken: Found zero products matching all criteria\n Looking for type: edm::ValueMap<float>\n Looking for module label: tagProbeSeparation\n Looking for productInstanceName: VtxCosPA
-        VtxLxySig     = cms.InputTag("tagProbeSeparation", "VtxLxySig"),
-        VtxLxy        = cms.InputTag("tagProbeSeparation", "VtxLxy"),
+        #VtxLxy        = cms.InputTag("tagProbeSeparation", "VtxLxy"), # throw Exception Message: Principal::getByToken: Found zero products matching all criteria\n Looking for type: edm::ValueMap<float>\n Looking for module label: tagProbeSeparation\n Looking for productInstanceName: VtxLxy
+        #VtxLxySig     = cms.InputTag("tagProbeSeparation", "VtxLxySig"),
         #VtxL3d        = cms.InputTag("tagProbeSeparation", "VtxL3d"), # throw Exception Message: Principal::getByToken: Found zero products matching all criteria\n Looking for type: edm::ValueMap<float>\n Looking for module label: tagProbeSeparation\n Looking for productInstanceName: VtxL3d
         DCA           = cms.InputTag("tagProbeSeparation", "DCA"),
         ),

@@ -364,11 +364,11 @@ process.tpTreeOnePair = process.tpTree.clone(
         process.tpTree.pairVariables,
         rapidity      = cms.string("rapidity"),
         absrapidity   = cms.string("abs(rapidity)"),
-        prescaled     = cms.InputTag("tagProbeSeparation", "prescaled"),
-        VtxProb       = cms.InputTag("tagProbeSeparation", "VtxProb"),
+        #prescaled     = cms.InputTag("tagProbeSeparation", "prescaled"),
+        #VtxProb       = cms.InputTag("tagProbeSeparation", "VtxProb"),
         #VtxCosPA      = cms.InputTag("tagProbeSeparation", "VtxCosPA"),
-        VtxLxySig     = cms.InputTag("tagProbeSeparation", "VtxLxySig"),
-        VtxLxy        = cms.InputTag("tagProbeSeparation", "VtxLxy"),
+        #VtxLxy        = cms.InputTag("tagProbeSeparation", "VtxLxy"),
+        #VtxLxySig     = cms.InputTag("tagProbeSeparation", "VtxLxySig"),
         #VtxL3d        = cms.InputTag("tagProbeSeparation", "VtxL3d"),
         DCA           = cms.InputTag("tagProbeSeparation", "DCA"),
         ),
@@ -382,6 +382,7 @@ process.tnpSimpleSequenceOnePair = cms.Sequence(
     process.nverticesModule    +
     process.tagProbeSeparation +
     process.computeCorrectedIso +
+    process.probeMultiplicity + 
     process.splitTrackTagger + 
     process.l1rate +
     process.tpTreeOnePair
