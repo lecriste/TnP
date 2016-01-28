@@ -100,7 +100,7 @@ void createPtRootFiles() {
   //
   vector< pair<TString, vector<TString>> > eff_triggers ;
   for (uint iEff=0; iEff<nEff; ++iEff)
-    if ( !(effName[iEff].Contains("L3") || effName[iEff].Contains("Vertexing") || effName[iEff].EqualTo("Loose2015") || effName[iEff].EqualTo("Medium2015") || effName[iEff].EqualTo("Tight2012_zIPCut")) )
+    if ( !(effName[iEff].Contains("L3") || effName[iEff].Contains("Vertexing")) )
       eff_triggers.push_back( make_pair(effName[iEff],triggers) ) ;
     else
       eff_triggers.push_back( make_pair(effName[iEff],noTrig) ) ;
@@ -113,14 +113,15 @@ void createPtRootFiles() {
   //const std::string effSampleName[] = {"DATA"};
   const int nEffSample = sizeof(effSampleName)/sizeof(effSampleName[0]);
 
-  TString mode = ""; mode = "25ns_";
+  TString mode[] = {"",""}; //mode = {"","25ns_"};
 
   vector< double > bins1, bins2;
   vector< TString > bins2name;
   //for (int iEff=1; iEff<=1; ++iEff) {
-  //for (int iEff=4; iEff<=7; ++iEff) {
+  for (int iEff=4; iEff<=7; ++iEff) {
   //for (int iEff=8; iEff<=9; ++iEff) {
-  for (int iEff=0; iEff<=3; ++iEff) {
+  //for (int iEff=0; iEff<=3; ++iEff) {
+    if ( mode[1].Contains("25ns") && (iEff==4 || iEff==6) ) continue; // missing tag_abseta in 25ns input files
     cout <<"\nWorking on efficiency \"" <<effName[iEff] <<"\""<<endl;
 
     // Name of trigger: Mu5_Track2, Mu7_Track7
@@ -132,8 +133,6 @@ void createPtRootFiles() {
       } else if (effName[iEff].Contains("Dimuon0er16_Jpsi_NoVertexing")) {
 	//const std::string trackName[nEffSample][1] = { {"Dimuon0er16_Jpsi_NoVertexing"},{"Dimuon0er16_Jpsi_NoVertexing"} };
 	trackName[iEffSample].push_back("Dimuon0er16_Jpsi_NoVertexing");
-      } else if ( effName[iEff].EqualTo("Loose2015") || effName[iEff].EqualTo("Medium2015") || effName[iEff].EqualTo("Tight2012_zIPCut")) {
-	trackName[iEffSample].push_back("");
       } else
 	//if (effName[iEff].Contains("Soft2012")) {
 	//const std::string trackName[nEffSample][] = {{"Mu5_Track2", "Mu7_Track7"},{"Mu5_Track2", "Mu7_Track7"}};
@@ -156,13 +155,13 @@ void createPtRootFiles() {
     
 
     TString binnedVars = "_pt_abseta" ;
-    //binnedVars = "_pt_abseta2p4" ;
+    binnedVars = "_pt_abseta2p4" ;
     //binnedVars = "_plateau" ;
     //binnedVars = "_ptTurnOn" ;
-    //binnedVars = "_pt_abseta_notSeparated" ;
+    binnedVars = "_pt_abseta_notSeparated" ;
     //binnedVars = "_pt_abseta_seagull" ; //binnedVars = "_pt_abseta_cowboy" ;
     //binnedVars = "_ptPlateau_eta" ;
-    binnedVars = "_vtx" ;
+    //binnedVars = "_vtx" ;
     if (effName[iEff].Contains("Vertexing"))
       binnedVars.ReplaceAll("abseta","absrapidity");
 
@@ -204,7 +203,10 @@ void createPtRootFiles() {
 	  bins2.push_back(1.6);
 	  bins2name.push_back("1p2to1p6");
 	}
-      } var2name = "abseta" ;
+      }
+      var2name = "abseta" ;
+      if (effName[iEff].Contains("Vertexing"))
+	var2name.ReplaceAll("abseta","absrapidity");
       abseta = bins2.size() -1;
     }
     else if (binnedVars.Contains("lateau")) {
@@ -224,7 +226,8 @@ void createPtRootFiles() {
       bins2name.push_back("8to500");
       var2name = "pT" ;
       //
-      for (Int_t i=0; i<=30; i+=2)
+      //for (Int_t i=0; i<=30; i+=2)
+      for (Int_t i=0; i<=30; i+=3)
 	bins1.push_back(i+0.5);
       var1name = "# PV" ;
       abseta = bins1.size() -1;
@@ -233,8 +236,7 @@ void createPtRootFiles() {
     const int nBins1 = bins1.size() -1;
     const int nBins2 = bins2.size() -1;
     Bool_t logX = kFALSE;
-    if ( var1name.Contains("pT") )
-      logX = kTRUE;
+    //if ( var1name.Contains("pT") ) logX = kTRUE;
 
     //input files
     //std::stringstream datafile, mcfile;
@@ -252,43 +254,43 @@ void createPtRootFiles() {
 	//inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__data_246908-251883_JSON_MuonPhys_v2__%s%s.root", path.c_str(), eff_triggers[iEff].first.c_str(), binnedVars.Data()) ;
 	//inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__data_246908-251883_JSON_MuonPhys_v2__%s%s.root", path.c_str(), effFileName.Data(), binnedVars.Data()) ;
 	//inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__data_all__%s%s.root", path.c_str(), effFileName.Data(), binnedVars.Data()) ;
-	inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__data_%s_%s%s.root", path.c_str(), mode.Data(), effFileName.Data(), binnedVars.Data()) ;
-	//inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__data_all_%s_%s%s.root", path.c_str(), mode.Data(), effFileName.Data(), binnedVars.Data()) ;
+	inputfile[iEffSample] = TString::Format("%s/%sTnP_MuonID__data_%s_%s%s.root", path.c_str(), mode[0].Data(), mode[1].Data(), effFileName.Data(), binnedVars.Data()) ;
+	//inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__data_all_%s_%s%s.root", path.c_str(), mode[1].Data(), effFileName.Data(), binnedVars.Data()) ;
 	if (effName[iEff].Contains("Vertexing")) {
 	  //inputfile[iEffSample] = TString::Format("%s/TnP_Vertexing__data_246908-251883_JSON_MuonPhys_v2_%s.root", path.c_str(), binnedVars.Data()) ;
 	  //inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__data_246908-255031_JSON_MuonPhys_v2__%s%s.root", path.c_str(), eff_triggers[iEff].first.c_str(), binnedVars.Data()) ;
-	  inputfile[iEffSample] = TString::Format("%s/TnP_Vertexing__data_%s%s.root", path.c_str(), mode.Data(), binnedVars.Data()) ;
+	  inputfile[iEffSample] = TString::Format("%s/%sTnP_Vertexing__data_%s%s.root", path.c_str(), mode[0].Data(), mode[1].Data(), binnedVars.Data()) ;
 	}
       }
       else if ( effSampleName[iEffSample] == "MC" ) { 
 	//inputfile[iEffSample] = TString::Format("%s/TnP_MuonID_signal_mc_%s%s_fullMC_allBins.root", path,eff_triggers[iEff].first,binnedVars) ;
 	//inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__signal_mc__%s%s_30M.root", path.c_str(), eff_triggers[iEff].first.c_str(), binnedVars.Data()) ;
 	//inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__signal_mc__%s%s.root", path.c_str(), effFileName.Data(), binnedVars.Data()) ;
-	inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__signal_mc_%s_%s%s.root", path.c_str(), mode.Data(), effFileName.Data(), binnedVars.Data()) ;
-	//inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__signal_mc__%s%s_30M.root", path.c_str(), effFileName.Data(), binnedVars.Data()) ;
+	inputfile[iEffSample] = TString::Format("%s/%sTnP_MuonID__signal_mc_%s_%s%s.root", path.c_str(), mode[0].Data(), mode[1].Data(), effFileName.Data(), binnedVars.Data()) ;
+	//inputfile[iEffSample] = TString::Format("%s/%sTnP_MuonID__signal_mc__%s%s_30M.root", path.c_str(), effFileName.Data(), binnedVars.Data()) ;
 	if (effName[iEff].Contains("Vertexing")) {
-	  inputfile[iEffSample] = TString::Format("%s/TnP_Vertexing__signal_mc_%s%s.root", path.c_str(), mode.Data(), binnedVars.Data()) ;
+	  inputfile[iEffSample] = TString::Format("%s/%sTnP_Vertexing__signal_mc_%s%s.root", path.c_str(), mode[0].Data(), mode[1].Data(), binnedVars.Data()) ;
 	  //inputfile[iEffSample] = TString::Format("%s/TnP_Vertexing__signal_mc_%s.root", path.c_str(), binnedVars.Data()) ;
 	  //inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__signal_mc__%s%s_Mu8.root", path.c_str(), eff_triggers[iEff].first.c_str(), binnedVars.Data()) ;
 	}
       }
       else if ( effSampleName[iEffSample] == "MC_Mu8" ) { 
-	inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__signal_mc__%s%s_Mu8.root", path.c_str(), eff_triggers[iEff].first.Data(), binnedVars.Data()) ;
+	inputfile[iEffSample] = TString::Format("%s/%sTnP_MuonID__signal_mc__%s%s_Mu8.root", path.c_str(), mode[0].Data(), eff_triggers[iEff].first.Data(), binnedVars.Data()) ;
       }
     //output file
     std::stringstream outputfile;
     //outputfile <<"/scratch/ikratsch/TnP2012/MuonPOG/official6March2014/changedMass/multiplicity/MuonID_" <<eff_triggers[iEff].first <<binnedVars <<abseta <<"_2012_multiplicity.root";
     //outputfile <<path <<"/MuonID_" <<eff_triggers[iEff].first <<binnedVars <<".root";
     if (nEffSample < 2)
-      if (mode.Contains("25ns"))
-	outputfile <<"25ns/" <<"MuonID_" <<eff_triggers[iEff].first <<"_" <<mode <<binnedVars <<".root";
+      if (mode[1].Contains("25ns"))
+	outputfile <<"25ns/" <<"MuonID_" <<eff_triggers[iEff].first <<"_" <<mode[1] <<binnedVars <<".root";
       else 
-	outputfile <<"50ns/" <<"MuonID_" <<eff_triggers[iEff].first <<"_" <<mode <<binnedVars <<".root";
+	outputfile <<"50ns/" <<"MuonID_" <<eff_triggers[iEff].first <<"_" <<mode[1] <<binnedVars <<".root";
     else 
-      if (mode.Contains("25ns"))
-	outputfile <<"25ns/" <<"MuonID_" <<eff_triggers[iEff].first <<"_" <<mode <<binnedVars <<"__" <<effSampleName[0] <<"_vs_" <<effSampleName[1] <<".root";
+      if (mode[1].Contains("25ns"))
+	outputfile <<"25ns/" <<"MuonID_" <<eff_triggers[iEff].first <<"_" <<mode[1] <<binnedVars <<"__" <<effSampleName[0] <<"_vs_" <<effSampleName[1] <<".root";
       else
-	outputfile <<"50ns/" <<"MuonID_" <<eff_triggers[iEff].first <<"_" <<mode <<binnedVars <<"__" <<effSampleName[0] <<"_vs_" <<effSampleName[1] <<".root";
+	outputfile <<"50ns/" <<"MuonID_" <<eff_triggers[iEff].first <<"_" <<mode[1] <<binnedVars <<"__" <<effSampleName[0] <<"_vs_" <<effSampleName[1] <<".root";
 
     TFile *output = new TFile(outputfile.str().c_str(),"RECREATE");
 
@@ -330,9 +332,9 @@ void createPtRootFiles() {
 	dir_tpTree = cd(file,"tpTreeOnePair");
       if (!dir_tpTree) continue;
 
-      TString x_y[] = {"pt_abseta","abseta_pt"};
+      TString x_y[] = {"pt_"+var2name, var2name+"_pt"};
       if ( effName[iEff].Contains("NoVertexing") ) {
-	x_y[0] = "pair_pt_pair_absrapidity"; x_y[1] = "pair_absrapidity_pair_pt"; }
+	x_y[0] = "pair_pt_pair_"+var2name; x_y[1] = "pair_"+var2name+"_pair_pt"; }
       TH2F *myTH2[] = {0,0};
 
       //std::string plot[nBins2] ;
@@ -355,14 +357,14 @@ void createPtRootFiles() {
 	} else {
 	  if ( iTrack != nTrack-1 ) continue;
 	  directory <<eff_triggers[iEff].first <<binnedVars ;
-	  if (effName[iEff].Contains("Soft2012"))
+	  //if (effName[iEff].Contains("Soft2012"))
 	    directory <<eff_triggers[iEff].second[0] ;
 	}
 
 	// directory <<"Soft_pt_abseta";
 	TDirectory* dir_run = cd( dir_tpTree, directory.str().c_str() );
 	if (!dir_run) continue;
-	else cout <<"cd to " <<directory.str().c_str() <<" dir" <<endl ;
+	else cout <<"cd to \"" <<directory.str().c_str() <<"\" dir" <<endl ;
 	// Jump to fit directory
 	TDirectory* dir_fit_eff = cd(dir_run,"fit_eff_plots");
 	if (!dir_fit_eff) return;
@@ -422,34 +424,25 @@ void createPtRootFiles() {
 		else if (eff_triggers[iEff].first.Contains("L1L2"))
 		  inter <<"pt_PLOT__abseta_" <<bins2name[iBins2] <<"_and_" <<trackName[iEffSample][iTrack] <<"_Jpsi_TK_pass_and_TMOST_pass_and_Track_HP_pass_and_tag_" <<trackName[iEffSample][iTrack] <<"_Jpsi_MU_pass" ;
 		else if (eff_triggers[iEff].first.Contains("Vertexing")) 
-		  inter <<"pair_pt_PLOT__pair_absrapidity_" <<bins2name[iBins2] <<"_and_" <<trackName[iEffSample][iTrack] <<"_pass_and_tag_" <<trackName[iEffSample][iTrack] <<"_pass" ;
-		else {
-		  inter <<"pt_PLOT__abseta_" <<bins2name[iBins2] ;
-		  if (!effName[iEff].EqualTo("Loose2015") && !effName[iEff].EqualTo("Medium2015") && !effName[iEff].EqualTo("Tight2012_zIPCut"))
-		    inter <<"_and_" <<trackName[iEffSample][iTrack] <<"_Jpsi_TK_pass_and_tag_" <<trackName[iEffSample][iTrack] <<"_Jpsi_MU_pass" ;
-		}
+		  inter <<"pair_pt_PLOT__pair_"+var2name+"_" <<bins2name[iBins2] <<"_and_" <<trackName[iEffSample][iTrack] <<"_pass_and_tag_" <<trackName[iEffSample][iTrack] <<"_pass" ;
+		else
+		  inter <<"pt_PLOT__abseta_" <<bins2name[iBins2] <<"_and_" <<trackName[iEffSample][iTrack] <<"_Jpsi_TK_pass_and_tag_" <<trackName[iEffSample][iTrack] <<"_Jpsi_MU_pass" ;
 	      } else 
 		inter <<"pt_PLOT__abseta_" <<bins2name[iBins2] <<"_and_tag_" <<trackName[iEffSample][iTrack] <<"_pass" ;
 	    } else {
-	      inter <<"pt_PLOT" ;
-	      if (!effName[iEff].EqualTo("Loose2015") && !effName[iEff].EqualTo("Medium2015") && !effName[iEff].EqualTo("Tight2012_zIPCut"))
-		inter <<"__" <<trackName[iEffSample][iTrack] <<"_Jpsi_TK_pass_and_tag_" <<trackName[iEffSample][iTrack] <<"_Jpsi_MU_pass" ;
+	      inter <<"pt_PLOT" <<"__" <<trackName[iEffSample][iTrack] <<"_Jpsi_TK_pass_and_tag_" <<trackName[iEffSample][iTrack] <<"_Jpsi_MU_pass" ;
 	    }
 	  else if ( !binnedVars.Contains("vtx") ) {
-	    if (effName[iEff].EqualTo("Loose2015") || effName[iEff].EqualTo("Medium2015") || effName[iEff].EqualTo("Tight2012_zIPCut"))
-	      inter <<"eta_PLOT" ;
-	    else if (trackName[iEffSample][iTrack] != "Mu8")
+	    if (trackName[iEffSample][iTrack] != "Mu8")
 	      //inter <<"abseta_PLOT__" <<trackName[iEffSample][iTrack] <<"_Jpsi_TK_pass_and_tag_" <<trackName[iEffSample][iTrack] <<"_Jpsi_MU_pass" ;
 	      inter <<"eta_PLOT__" <<trackName[iEffSample][iTrack] <<"_Jpsi_TK_pass_and_tag_" <<trackName[iEffSample][iTrack] <<"_Jpsi_MU_pass" ;
 	    else if (trackName[iEffSample][iTrack] == "Mu8")
 	      inter <<"abseta_PLOT__tag_" <<trackName[iEffSample][iTrack] <<"_pass" ;
 	  }
-	  else if ( binnedVars.Contains("vtx") ) {
-	    if (effName[iEff].EqualTo("Loose2015") || effName[iEff].EqualTo("Medium2015") || effName[iEff].EqualTo("Tight2012_zIPCut"))
-	      inter <<"tag_nVertices_PLOT" ;
-	    else if (trackName[iEffSample][iTrack] != "Mu8")
+	  else if ( binnedVars.Contains("vtx") )
+	    if (trackName[iEffSample][iTrack] != "Mu8")
 	      inter <<"tag_nVertices_PLOT__" <<trackName[iEffSample][iTrack] <<"_Jpsi_TK_pass_and_tag_" <<trackName[iEffSample][iTrack] <<"_Jpsi_MU_pass" ;
-	  }
+
 
 	  plot[iBins2] = inter.str() ;
 	    
@@ -485,6 +478,7 @@ void createPtRootFiles() {
 	      
 	    //store values
 	    for (int s = 0; s < nBins1; s++) {
+	      cout <<"\nx_" <<s <<" = " <<x <<endl; 
 	      if (x > bins1[s] && x < bins1[s+1]) {
 		values[iEffSample][iTrack][s][iBins2].setEff(y, err_low, err_high);
 		values[iEffSample][iTrack][s][iBins2].setVar(x, var_low, var_high);
@@ -579,18 +573,21 @@ void createPtRootFiles() {
 
     TPaveText *lumi = new TPaveText(.6, .902, .9, .95, "NDC");
     lumi->SetTextSize(0.04); lumi->SetFillColor(0); lumi->SetLineColor(0); lumi->SetBorderSize(1);
-    if (!mode.Contains("25ns"))
+    if (!mode[1].Contains("25ns"))
       lumi->AddText("BX = 50 ns, L = 47 pb^{-1}");
     else
       lumi->AddText("BX = 25 ns, L = 2.59 fb^{-1}");
 
     TString prefix = "../" ;
     prefix = "/afs/cern.ch/work/l/lecriste/www/TnP/" ;
+    Bool_t web = kFALSE;
+    if ( prefix.EqualTo("/afs/cern.ch/work/l/lecriste/www/TnP/") )
+      web = kTRUE;
     TString uploadFile = "index.php" ;
 
   
     TFile *data_yield_file = TFile::Open("../TnP_yield_Charmonium_PromptReco_50ns_first47ipb.root") ;
-    if (mode.Contains("25ns"))
+    if (mode[1].Contains("25ns"))
       data_yield_file = 0; // use the 25ns yields file when available
 
     //
@@ -612,7 +609,7 @@ void createPtRootFiles() {
 
       //TString dir = prefix+"plots/mc/tpTree/"+eff_triggers[iEff].first+"/" ;
       TString dir = prefix+"plots/mc/50ns/tpTree/"+eff_triggers[iEff].first+"/" ;
-      if (mode.Contains("25ns"))
+      if (mode[1].Contains("25ns"))
 	dir.ReplaceAll("50ns","25ns") ;
       if ( inputfile[0].Contains("30M") || inputfile[1].Contains("30M"))
 	dir.ReplaceAll("/tpTree","/30M/tpTree") ;
@@ -621,40 +618,40 @@ void createPtRootFiles() {
       dir.ReplaceAll("/_","/") ;
       
       gSystem->mkdir(dir, true);
-      if ( prefix.EqualTo("/afs/cern.ch/work/l/lecriste/www/TnP/") )
+      if ( web )
 	gSystem->CopyFile(prefix+uploadFile, dir+uploadFile, true);
       
       dir.Append( binnedVars+"/" ); dir.ReplaceAll("/_","/") ;
       gSystem->mkdir(dir, true);
-      if ( prefix.EqualTo("/afs/cern.ch/work/l/lecriste/www/TnP/") )
+      if ( web )
 	gSystem->CopyFile(prefix+uploadFile, dir+uploadFile, true);
       
       dir.Append( eff_triggers[iEff].second[0]+"/" ); dir.ReplaceAll("/_","/") ;
       gSystem->mkdir(dir, true);
-      if ( prefix.EqualTo("/afs/cern.ch/work/l/lecriste/www/TnP/") )
+      if ( web )
 	gSystem->CopyFile(prefix+uploadFile, dir+uploadFile, true);
       
       dir.Append( "overlay/" ); // first
       gSystem->mkdir(dir, true);
-      if ( prefix.EqualTo("/afs/cern.ch/work/l/lecriste/www/TnP/") )
+      if ( web )
 	gSystem->CopyFile(prefix+uploadFile, dir+uploadFile, true);
 
       if ( dir.Contains("overlay") ) { // second
 	dir.ReplaceAll("overlay/", "ratio/");
 	gSystem->mkdir(dir, true);
-	if ( prefix.EqualTo("/afs/cern.ch/work/l/lecriste/www/TnP/") )
+	if ( web )
 	  gSystem->CopyFile(prefix+uploadFile, dir+uploadFile, true);
       }
 
       dir.Append( effSampleName[nEffSample-1]+"/" );
       gSystem->mkdir(dir, true);
-      if ( prefix.EqualTo("/afs/cern.ch/work/l/lecriste/www/TnP/") )
+      if ( web )
 	gSystem->CopyFile(prefix+uploadFile, dir+uploadFile, true);
       
       if ( dir.Contains("ratio") ) { // third
 	dir.ReplaceAll("ratio/", "overlay/");
 	gSystem->mkdir(dir, true);
-	if ( prefix.EqualTo("/afs/cern.ch/work/l/lecriste/www/TnP/") )
+	if ( web )
 	  gSystem->CopyFile(prefix+uploadFile, dir+uploadFile, true);
       }
 
@@ -669,11 +666,17 @@ void createPtRootFiles() {
 	if ( overlay[0] ) {
 	  overlayPad->cd();
 	  overlay[0]->Draw("AP") ;
+	  overlay[0]->SetMaximum( 1.1 ) ;
 	  if (!effName[iEff].EqualTo("Loose2015") && !effName[iEff].EqualTo("Soft2012") && !effName[iEff].EqualTo("Medium2015") && !effName[iEff].EqualTo("Tight2012_zIPCut"))
 	    overlay[0]->SetMinimum( 0. ) ;
 	  else
-	    overlay[0]->SetMinimum( 0.79 ) ; // from Gael's plots: https://indico.cern.ch/event/461572/contribution/0/attachments/1186546/1720473/muonTnP1280.pdf
-	  overlay[0]->SetMaximum( 1.1 ) ;
+	    if (!binnedVars.Contains("vtx") && !binnedVars.Contains("ptPlateau")) {
+	      overlay[0]->SetMinimum( 0.79 ) ; // from Gael's plots: https://indico.cern.ch/event/461572/contribution/0/attachments/1186546/1720473/muonTnP1280.pdf
+	      if (binnedVars.Contains("pt_abseta")) overlay[0]->SetMinimum( 0. ) ;
+	    } else {
+	      overlay[0]->SetMinimum( 0.49 ) ; // from Ilse's plots: https://indico.cern.ch/event/316122/contribution/3/attachments/607097/835440/muonEfficiencies2012_Jpsi_14April2014.pdf
+	      overlay[0]->SetMaximum( 1.3 ) ; // from Ilse's plots: https://indico.cern.ch/event/316122/contribution/3/attachments/607097/835440/muonEfficiencies2012_Jpsi_14April2014.pdf
+	    }
 	} else cout <<"\nNo " <<effSampleName[0]+"__"+var2name+"_"+bins2name[iBins2] <<" TGraphAsymmErrors found!" <<endl ; 
 	if ( overlay[nEffSample-1] ) {
 	  overlay[nEffSample-1]->Draw("Psame") ;
@@ -686,6 +689,8 @@ void createPtRootFiles() {
 	  if ( logX )
 	    overlay[i]->GetXaxis()->SetMoreLogLabels();
 	  overlay[i]->GetXaxis()->SetRangeUser(bins1[0],bins1[nBins1]);
+	  if (binnedVars.Contains("ptPlateau_eta"))
+	    overlay[i]->GetXaxis()->SetRangeUser(-2.1,2.1);
 	}
 
 
@@ -700,11 +705,14 @@ void createPtRootFiles() {
       	
 	TGraphAsymmErrors *ratio = new TGraphAsymmErrors();
 	if ( var1name.Contains("pT") )
-	  ratio->SetTitle("Ratio "+effSampleName[dataIdx]+"/"+effSampleName[noDataIdx]+" for |#eta(#mu)| from"+bins2name[iBins2]+";muon p_{T} [GeV];"+effSampleName[dataIdx]+"/"+effSampleName[noDataIdx]);
+	  if (!effName[iEff].Contains("Vertexing"))
+	    ratio->SetTitle("Ratio "+effSampleName[dataIdx]+"/"+effSampleName[noDataIdx]+" for |#eta(#mu)| from"+bins2name[iBins2]+";muon p_{T} [GeV];"+effSampleName[dataIdx]+"/"+effSampleName[noDataIdx]);
+	  else
+	    ratio->SetTitle("Ratio "+effSampleName[dataIdx]+"/"+effSampleName[noDataIdx]+" for |y(#mu#mu)| from"+bins2name[iBins2]+";dimuon p_{T} [GeV];"+effSampleName[dataIdx]+"/"+effSampleName[noDataIdx]);
 	else if ( var1name.Contains("eta") )
 	  ratio->SetTitle("Ratio "+effSampleName[dataIdx]+"/"+effSampleName[noDataIdx]+" for |p_{T}(#mu)| from"+bins2name[iBins2]+";muon #eta;"+effSampleName[dataIdx]+"/"+effSampleName[noDataIdx]);
 	else if (binnedVars.Contains("vtx"))
-	  ratio->SetTitle("Ratio "+effSampleName[dataIdx]+"/"+effSampleName[noDataIdx]+" for |p_{T}(#mu)| from"+bins2name[iBins2]+";"+var1name";"+effSampleName[dataIdx]+"/"+effSampleName[noDataIdx]);
+	  ratio->SetTitle("Ratio "+effSampleName[dataIdx]+"/"+effSampleName[noDataIdx]+" for |p_{T}(#mu)| from"+bins2name[iBins2]+";"+var1name+";"+effSampleName[dataIdx]+"/"+effSampleName[noDataIdx]);
 	TCanvas* ratioC = 0; TCanvas* ratioFitC = 0 ; 
 	//
 	TGraphAsymmErrors *diff = new TGraphAsymmErrors();
@@ -713,7 +721,7 @@ void createPtRootFiles() {
 	else if ( var1name.Contains("eta") )
 	  diff->SetTitle("Difference "+effSampleName[dataIdx]+" - "+effSampleName[noDataIdx]+" for |p_{T}(#mu)| from"+bins2name[iBins2]+";muon #eta;"+effSampleName[dataIdx]+" - "+effSampleName[noDataIdx]);
 	else if (binnedVars.Contains("vtx"))
-	  diff->SetTitle("Difference "+effSampleName[dataIdx]+" - "+effSampleName[noDataIdx]+" for |p_{T}(#mu)| from"+bins2name[iBins2]+";"+var1name";"+effSampleName[dataIdx]+" - "+effSampleName[noDataIdx]);
+	  diff->SetTitle("Difference "+effSampleName[dataIdx]+" - "+effSampleName[noDataIdx]+" for |p_{T}(#mu)| from"+bins2name[iBins2]+";"+var1name+";"+effSampleName[dataIdx]+" - "+effSampleName[noDataIdx]);
 	TCanvas* diffC = 0 ; 
 
 	int pointsRatio = 0, pointsDiff = 0;
@@ -929,7 +937,7 @@ void createPtRootFiles() {
 
 	// fit
 	gSystem->mkdir(dir+"fit/", true);
-	if ( prefix.EqualTo("/afs/cern.ch/work/l/lecriste/www/TnP/") )
+	if ( web )
 	  gSystem->CopyFile(prefix+uploadFile, dir+"fit/"+uploadFile, true);
 
 	ratioFitC = new TCanvas(ratioName.Append("_fit"),ratioName,800,600) ;
@@ -958,15 +966,17 @@ void createPtRootFiles() {
 	ratioPad->SetTopMargin(0.); ratio->SetTitle("");
 	ratioPad->SetBottomMargin(0.2);
 	ratio->GetYaxis()->SetTitleSize(0.12); ratio->GetYaxis()->SetTitleOffset(0.4);
-	ratio->GetXaxis()->SetTitleSize(0.12); ratio->GetXaxis()->SetTitleOffset(0.7);
+	ratio->GetXaxis()->SetTitleSize(0.12); ratio->GetXaxis()->SetTitleOffset(0.75);
 	ratio->GetXaxis()->SetLabelSize(0.1);
-	ratio->SetMinimum( 0.95 ) ; 
-	ratio->SetMaximum( 1.05 ) ;
+	ratio->SetMinimum( 1 -0.15 ) ; 
+	ratio->SetMaximum( 1 +0.16 ) ; // in order to make the label not truncated
 	if ( logX )
 	  ratioPad->SetLogx();
 	ratioPad->SetGrid() ;
 	gStyle->SetOptFit(0); 
 	ratio->Draw("APZ") ;
+	if (binnedVars.Contains("ptPlateau_eta"))
+	  ratio->GetXaxis()->SetRangeUser(-2.1,2.1);
 	TPaveStats *stNo = (TPaveStats*)ratio->GetListOfFunctions()->FindObject("stats");
 	if (stNo) stNo->Delete(); 
 	gPad->Modified();
