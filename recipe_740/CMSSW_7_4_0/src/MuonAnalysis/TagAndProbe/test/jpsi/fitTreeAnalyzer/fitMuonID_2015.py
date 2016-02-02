@@ -267,7 +267,8 @@ PT_BINS_ABSETA2p4 = cms.PSet(   SEPARATED,
 PT_ABSY_BINS_notSeparated_pair = cms.PSet(   NOTSEPARATED,
                                                #pt = pT_binning_2012,
                                                #pt = pT_binning_2015,
-                                               pair_pt = cms.vdouble(10.0, 16.0, 20.0, 40.0),
+                                               #pair_pt = cms.vdouble(10.0, 16.0, 20.0, 40.0),
+                                               pair_pt = cms.vdouble(10.0, 13.0, 16.0, 18.0, 20.0, 30.0, 40.0),
                                                #abseta = cms.vdouble(0.0,0.9,1.2,2.1) # 2012
                                                pair_absrapidity = cms.vdouble(0.0,0.9,1.2,2.1,2.4)
                                                )
@@ -357,7 +358,8 @@ process.TnP_MuonID = Template.clone(
      #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Charmonium_PromptReco_50ns_first47ipb_vertexingTriggersFlags.root'),
      ##InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Charmonium_PromptReco_50ns.root'),
      #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns.root'),
-     InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns_golden.root'),
+     #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns_golden.root'),
+     InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns_golden_Mu8.root'), # Mu8 test
      #
      InputTreeName = cms.string("fitter_tree"),
      InputDirectoryName = cms.string("tpTree"),
@@ -385,7 +387,8 @@ TRIGS = [ (2,'Mu7p5_Track2_Jpsi') ]
 UnbinnedVars = cms.vstring("mass")
 if "mc" in scenario:
      UnbinnedVars = cms.vstring("mass","weight")
-     process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC25ns_withNVtxWeightsFromGolden.root']
+     process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC25ns_withAllTagVars_withNVtxWeightsFromGolden.root']
+     #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC25ns_withNVtxWeightsFromGolden.root']
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC25ns_withNVtxWeightsFromMuonPhys.root']
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC25ns.root']
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC25ns.root']
@@ -397,7 +400,6 @@ if "mc" in scenario:
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC_Mu8.root'] # Mu8 test
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_total.root']
      #process.TnP_MuonID.InputFileNames = ['root://cmsxrootd.fnal.gov///store/user/lecriste/TnP/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/crab_TnP_MC_request/150710_153845/0000/tnpJPsi_MC_1.root']
-     #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_Mu8.root']
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_Monika.root']
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_benchmark_10k.root']
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_MC_Mu8.root']
@@ -442,6 +444,10 @@ for ID in IDS:
           if len(args) > 2 and X not in args[2:]: continue
           module = process.TnP_MuonID.clone(OutputFileName = cms.string(
                     "TnP_MuonID__%s_%s_%s_%s.root" %(scenario, mode, ID, X)))
+          if "Mu8" in process.TnP_MuonID.InputFileNames[0]:
+               #module.OutputFileName = module.OutputFileName.replace(".root","_Mu8.root")
+               module.OutputFileName = cms.string(
+                    "TnP_MuonID__%s_%s_%s_%s_Mu8.root" %(scenario, mode, ID, X))
           #DEN = B.clone()
           #setattr(module.Efficiencies, ID+"_"+X, cms.PSet(
           #          EfficiencyCategoryAndState = cms.vstring(ID,"above"),     # ??
@@ -622,6 +628,14 @@ if triggerEff:
                     if len(DEN.pair_pt) == 1: DEN.pair_pt = cms.vdouble(PTMIN, DEN.pair_pt[0])
                setattr(DEN, "tag_%s" %TRIG_noVtx, cms.vstring("pass"))
                setattr(DEN,     "%s" %TRIG_noVtx, cms.vstring("pass"))
+               #
+               if "er16" in TRIG_noVtx:
+                    absyMax = 1.6
+                    if hasattr(DEN, "pair_absrapidity"):
+                         DEN.pair_absrapidity = cms.vdouble(*[i for i in B.pair_absrapidity if i < absyMax])
+                         DEN.pair_absrapidity.append(absyMax)
+                         #DEN = DEN.clone(abseta = cms.vdouble(0.0, absyMax))
+                         #DEN = DEN.clone(tag_abseta = cms.vdouble(0.0, absyMax))
                #
                setattr(module.Efficiencies, TRIG+"_wrt_"+TRIG_noVtx, cms.PSet(
                          EfficiencyCategoryAndState = cms.vstring(TRIG,"pass"),

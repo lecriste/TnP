@@ -1,15 +1,18 @@
 MC = False
-#MC = True
+MC = True
 
 mode_25ns = False # for 50ns
 mode_25ns = True
 
-#RunC = True
+Mu8 = False
+#Mu8 = True
+
+RunC = True
 RunC = False
-#RunDv3 = True
-RunDv3 = False
+RunDv3 = True
+#RunDv3 = False
 RunDv4 = True
-#RunDv4 = False
+RunDv4 = False
 
 
 from CRABClient.UserUtilities import config
@@ -22,7 +25,8 @@ if MC:
 	        #config.General.requestName = 'TnP_MC_request'
 	        #config.General.requestName = 'TnP_MC_request_standardCfg'
 	        #config.General.requestName = 'TnP_fullMC_request'
-	        #config.General.requestName = 'TnP_fullMC_Mu8'
+		if Mu8:	        
+			config.General.requestName = 'TnP_fullMC_Mu8'
 	        #config.General.requestName = 'TnP_fullMC_standardCfg_withL2Filter'
                 #config.General.requestName = 'TnP_fullMC_standardCfg_withCorrectL2Filter'
 	        #config.General.requestName = 'TnP_fullMC_standardCfg_withCorrectGenMuons'
@@ -31,12 +35,14 @@ if MC:
 		#config.General.requestName = 'TnP_fullMC_vertexingTriggersFlags_withMCMatch'
                 config.General.requestName = 'TnP_fullMC_withAllTagVars'
 	else:
-		config.General.requestName = 'TnP_fullMC_25ns'
+		#config.General.requestName = 'TnP_fullMC_25ns'
+                config.General.requestName = 'TnP_fullMC_25ns_withAllTagVars'
 # Data
 else:
 	if (not mode_25ns):
 	        #config.General.requestName = 'Jpsi_tree'
-	        #config.General.requestName = 'Jpsi_tree_Mu8'
+	        if Mu8:
+			config.General.requestName = 'Jpsi_tree_Mu8'
 	        #config.General.requestName = 'TnP_full50nsData_standardCfg_withL2Filter'
 	        #config.General.requestName = 'TnP_last50nsRun_standardCfg_withL2Filter'
 	        #config.General.requestName = 'TnP_last50nsRun_standardCfg_withCorrectL2Filter'
@@ -46,12 +52,18 @@ else:
 		if (RunC):
 			#config.General.requestName = 'TnP_RunC_25ns'
                 	config.General.requestName = 'TnP_RunC_25ns_noPairVtxInfo'
+                        if Mu8:
+				config.General.requestName = 'TnP_RunC_25ns_Mu8'
 		elif (RunDv3):
 			#config.General.requestName = 'TnP_RunDv3_25ns'
 			config.General.requestName = 'TnP_RunDv3_25ns_noPairVtxInfo'
+                        if Mu8:
+				config.General.requestName = 'TnP_RunDv3_25ns_Mu8_v2'
 		elif (RunDv4):
 			#config.General.requestName = 'TnP_RunDv4_25ns'
                         config.General.requestName = 'TnP_RunDv4_25ns_noPairVtxInfo'
+                        if Mu8:
+				config.General.requestName = 'TnP_RunDv4_25ns_Mu8'
 
 config.General.transferOutputs = True
 config.General.transferLogs = False
@@ -86,10 +98,16 @@ else:
 	else:
 		if (RunC):
 			config.Data.inputDataset = '/Charmonium/Run2015C-PromptReco-v1/AOD'
+			if Mu8:
+				config.Data.inputDataset = '/DoubleMuon/Run2015C_25ns-05Oct2015-v1/AOD'
 		elif (RunDv3):
 			config.Data.inputDataset = '/Charmonium/Run2015D-PromptReco-v3/AOD'
+			if Mu8:
+				config.Data.inputDataset = '/DoubleMuon/Run2015D-PromptReco-v3/AOD'
 		elif (RunDv4):
 			config.Data.inputDataset = '/Charmonium/Run2015D-PromptReco-v4/AOD'
+			if Mu8:
+				config.Data.inputDataset = '/DoubleMuon/Run2015D-PromptReco-v4/AOD'
 
 
 config.Data.inputDBS = 'global'
