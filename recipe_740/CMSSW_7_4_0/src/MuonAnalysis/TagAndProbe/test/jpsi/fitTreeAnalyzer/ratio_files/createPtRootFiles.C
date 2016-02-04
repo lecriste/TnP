@@ -93,7 +93,7 @@ void createPtRootFiles() {
   // code set up so that MC file is split in different files for abseta bins
   //const std::string effName[] = {"Loose2012", "Soft2012", "newSoft2012", "Tight2012", "Dimuon10_L1L2"}; 
   //TString effName[] = {"Loose2012", "Soft2012", "newSoft2012", "Tight2012", "Dimuon10_L1L2", "Dimuon16_L1L2", "L3_wrt_Dimuon10_L1L2", "L3_wrt_Dimuon16_L1L2", "Dimuon16_Jpsi_wrt_Dimuon6_Jpsi_NoVertexing", "Dimuon10_Jpsi_Barrel_wrt_Dimuon0er16_Jpsi_NoVertexing"};
-  const TString effName[] = {"Loose2015", "Soft2012", "Medium2015", "Tight2012_zIPCut", "Dimuon10_L1L2", "Dimuon16_L1L2", "L3_wrt_Dimuon10_L1L2", "L3_wrt_Dimuon16_L1L2", "Dimuon16_Jpsi_wrt_Dimuon6_Jpsi_NoVertexing", "Dimuon10_Jpsi_Barrel_wrt_Dimuon0er16_Jpsi_NoVertexing"};
+  const TString effName[] = {"Loose2015", "Medium2015", "Tight2012_zIPCut", "Soft2012", "Dimuon10_L1L2", "Dimuon16_L1L2", "L3_wrt_Dimuon10_L1L2", "L3_wrt_Dimuon16_L1L2", "Dimuon16_Jpsi_wrt_Dimuon6_Jpsi_NoVertexing", "Dimuon10_Jpsi_Barrel_wrt_Dimuon0er16_Jpsi_NoVertexing"};
   const int nEff = sizeof(effName)/sizeof(effName[0]);
   vector<TString> triggers = {"_Mu7p5_Track2_Jpsi"} ; 
   vector<TString> noTrig = {""} ;
@@ -113,15 +113,15 @@ void createPtRootFiles() {
   //const std::string effSampleName[] = {"DATA"};
   const int nEffSample = sizeof(effSampleName)/sizeof(effSampleName[0]);
 
-  TString mode[] = {"",""}; //mode = {"","25ns_"};
+  TString mode[] = {"",""}; mode[1] = "25ns_";
 
   vector< double > bins1, bins2;
   vector< TString > bins2name;
-  //for (int iEff=1; iEff<=1; ++iEff) {
-  for (int iEff=4; iEff<=7; ++iEff) {
+  for (int iEff=3; iEff<=3; ++iEff) {
+  //for (int iEff=4; iEff<=7; ++iEff) {
   //for (int iEff=8; iEff<=9; ++iEff) {
   //for (int iEff=0; iEff<=3; ++iEff) {
-    if ( mode[1].Contains("25ns") && (iEff==4 || iEff==6) ) continue; // missing tag_abseta in 25ns input files
+  //for (int iEff=3; iEff<=7; ++iEff) {
     cout <<"\nWorking on efficiency \"" <<effName[iEff] <<"\""<<endl;
 
     // Name of trigger: Mu5_Track2, Mu7_Track7
@@ -159,7 +159,8 @@ void createPtRootFiles() {
     //binnedVars = "_plateau" ;
     //binnedVars = "_ptTurnOn" ;
     binnedVars = "_pt_abseta_notSeparated" ;
-    //binnedVars = "_pt_abseta_seagull" ; //binnedVars = "_pt_abseta_cowboy" ;
+    binnedVars = "_pt_abseta" ; binnedVars = "_pt_abseta_seagull" ; //binnedVars = "_pt_abseta_cowboy" ;
+    binnedVars.Append("_separated") ;
     //binnedVars = "_ptPlateau_eta" ;
     //binnedVars = "_vtx" ;
     if (effName[iEff].Contains("Vertexing"))
@@ -179,7 +180,7 @@ void createPtRootFiles() {
       //double bins1[] = {10, 20, 25, 30, 35, 40, 50, 60, 90, 140, 300, 500}; TString var1name = "pT" ;
       //double bins1[] = {2.0, 2.5, 3.0, 3.5, 4.0, 4.75, 5.5, 7.5, 10.0, 20.0, 40.0}; TString var1name = "pT" ;
       if (!effName[iEff].Contains("Vertexing")) {
-	bins1.push_back(2.0); bins1.push_back(2.5); bins1.push_back(3.0); bins1.push_back(3.5); bins1.push_back(4.0); bins1.push_back(4.75); bins1.push_back(5.5); bins1.push_back(7.5); bins1.push_back(10.0); bins1.push_back(20.0); bins1.push_back(40.0); 
+	bins1.push_back(2.0); bins1.push_back(2.5); bins1.push_back(3.0); bins1.push_back(3.5); bins1.push_back(4.0); bins1.push_back(4.75); bins1.push_back(5.5); bins1.push_back(7.5); bins1.push_back(10.0); bins1.push_back(15.0); bins1.push_back(20.0); bins1.push_back(40.0); 
       } 
       else {
 	if (!effName[iEff].Contains("Dimuon16"))
@@ -194,14 +195,12 @@ void createPtRootFiles() {
       if ( binnedVars.Contains("pt_abseta2p4") ) {
 	bins2.push_back(2.4); bins2name.push_back("0to2p4");
       } else {
-	bins2.push_back(0.9); bins2.push_back(1.2);
-	bins2name.push_back("0to0p9"); bins2name.push_back("0p9to1p2");
+	bins2.push_back(0.9); bins2.push_back(1.2); bins2.push_back(1.6);
+	bins2name.push_back("0to0p9"); bins2name.push_back("0p9to1p2"); bins2name.push_back("1p2to1p6");
 	if (!effName[iEff].Contains("Dimuon10")) {
 	  bins2.push_back(2.1); bins2.push_back(2.4);
-	  bins2name.push_back("1p2to2p1"); bins2name.push_back("2p1to2p4");
-	} else {
-	  bins2.push_back(1.6);
-	  bins2name.push_back("1p2to1p6");
+	  //bins2name.push_back("1p2to2p1");
+	  bins2name.push_back("1p6to2p1"); bins2name.push_back("2p1to2p4");
 	}
       }
       var2name = "abseta" ;
@@ -254,8 +253,8 @@ void createPtRootFiles() {
 	//inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__data_246908-251883_JSON_MuonPhys_v2__%s%s.root", path.c_str(), eff_triggers[iEff].first.c_str(), binnedVars.Data()) ;
 	//inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__data_246908-251883_JSON_MuonPhys_v2__%s%s.root", path.c_str(), effFileName.Data(), binnedVars.Data()) ;
 	//inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__data_all__%s%s.root", path.c_str(), effFileName.Data(), binnedVars.Data()) ;
-	inputfile[iEffSample] = TString::Format("%s/%sTnP_MuonID__data_%s_%s%s.root", path.c_str(), mode[0].Data(), mode[1].Data(), effFileName.Data(), binnedVars.Data()) ;
-	//inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__data_all_%s_%s%s.root", path.c_str(), mode[1].Data(), effFileName.Data(), binnedVars.Data()) ;
+	//inputfile[iEffSample] = TString::Format("%s/%sTnP_MuonID__data_%s_%s%s.root", path.c_str(), mode[0].Data(), mode[1].Data(), effFileName.Data(), binnedVars.Data()) ;
+	inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__data_all_%s_%s%s.root", path.c_str(), mode[1].Data(), effFileName.Data(), binnedVars.Data()) ;
 	if (effName[iEff].Contains("Vertexing")) {
 	  //inputfile[iEffSample] = TString::Format("%s/TnP_Vertexing__data_246908-251883_JSON_MuonPhys_v2_%s.root", path.c_str(), binnedVars.Data()) ;
 	  //inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__data_246908-255031_JSON_MuonPhys_v2__%s%s.root", path.c_str(), eff_triggers[iEff].first.c_str(), binnedVars.Data()) ;
@@ -387,13 +386,15 @@ void createPtRootFiles() {
 	      name2D.Append("_PLOT__pair_drM1_0p5to10_and_pair_probeMultiplicity_0p5to1p5_and_"+ trackName[iEffSample][iTrack] +"_Jpsi_TK_pass_and_tag_"+ trackName[iEffSample][iTrack] +"_Jpsi_MU_pass");
 	    else if ( effName[iEff].EqualTo("Dimuon10_L1L2") )
 	      name2D.Append("_PLOT__dB_-0p3to0p3_and_dzPV_-20to20_and_pair_drM1_0p5to10_and_pair_probeMultiplicity_0p5to1p5_and_tag_abseta_0to1p6_and_"+ trackName[iEffSample][iTrack] +"_Jpsi_TK_pass_and_TMOST_pass_and_Track_HP_pass_and_tag_"+ trackName[iEffSample][iTrack] +"_Jpsi_MU_pass");
-	    else if ( effName[iEff].EqualTo("Dimuon16_L1L2") )
-	      name2D.Append("_PLOT__dB_-0p3to0p3_and_dzPV_-20to20_and_pair_drM1_0p5to10_and_pair_probeMultiplicity_0p5to1p5_and_tag_pt_10to1000_and_"+ trackName[iEffSample][iTrack] +"_Jpsi_TK_pass_and_TMOST_pass_and_Track_HP_pass_and_tag_"+ trackName[iEffSample][iTrack] +"_Jpsi_MU_pass");
-	    else if ( effName[iEff].EqualTo("L3_wrt_Dimuon10_L1L2") )
+	    else if ( effName[iEff].EqualTo("Dimuon16_L1L2") ) {
+	      //name2D.Append("_PLOT__dB_-0p3to0p3_and_dzPV_-20to20_and_pair_drM1_0p5to10_and_pair_probeMultiplicity_0p5to1p5_and_tag_pt_10to1000_and_"+ trackName[iEffSample][iTrack] +"_Jpsi_TK_pass_and_TMOST_pass_and_Track_HP_pass_and_tag_"+ trackName[iEffSample][iTrack] +"_Jpsi_MU_pass");
+	      name2D.Append("_PLOT__dB_-0p3to0p3_and_dzPV_-20to20_and_pair_drM1_0p5to10_and_pair_probeMultiplicity_0p5to1p5_and_tag_pt_11to1000_and_"+ trackName[iEffSample][iTrack] +"_Jpsi_TK_pass_and_TMOST_pass_and_Track_HP_pass_and_tag_"+ trackName[iEffSample][iTrack] +"_Jpsi_MU_pass");
+	    } else if ( effName[iEff].EqualTo("L3_wrt_Dimuon10_L1L2") )
 	      name2D.Append("_PLOT__dB_-0p3to0p3_and_dzPV_-20to20_and_pair_drM1_0p5to10_and_pair_probeMultiplicity_0p5to1p5_and_Dimuon10_L1L2_pass_and_TMOST_pass_and_Track_HP_pass_and_tag_Mu7p5_L2Mu2_Jpsi_MU_pass");
-	    else if ( effName[iEff].EqualTo("L3_wrt_Dimuon16_L1L2") )
-	      name2D.Append("_PLOT__dB_-0p3to0p3_and_dzPV_-20to20_and_pair_drM1_0p5to10_and_pair_probeMultiplicity_0p5to1p5_and_tag_pt_10to1000_and_Dimuon16_L1L2_pass_and_TMOST_pass_and_Track_HP_pass_and_tag_Mu7p5_L2Mu2_Jpsi_MU_pass");
-	    else if ( effName[iEff].Contains("NoVertexing") ) 
+	    else if ( effName[iEff].EqualTo("L3_wrt_Dimuon16_L1L2") ) {
+	      //name2D.Append("_PLOT__dB_-0p3to0p3_and_dzPV_-20to20_and_pair_drM1_0p5to10_and_pair_probeMultiplicity_0p5to1p5_and_tag_pt_10to1000_and_Dimuon16_L1L2_pass_and_TMOST_pass_and_Track_HP_pass_and_tag_Mu7p5_L2Mu2_Jpsi_MU_pass");
+	      name2D.Append("_PLOT__dB_-0p3to0p3_and_dzPV_-20to20_and_pair_drM1_0p5to10_and_pair_probeMultiplicity_0p5to1p5_and_tag_pt_11to1000_and_Dimuon16_L1L2_pass_and_TMOST_pass_and_Track_HP_pass_and_tag_Mu7p5_L2Mu2_Jpsi_MU_pass");
+	    } else if ( effName[iEff].Contains("NoVertexing") ) 
 	      name2D.Append("_PLOT__pair_probeMultiplicity_0p5to1p5_and_"+ trackName[iEffSample][iTrack] +"_pass_and_tag_"+ trackName[iEffSample][iTrack] +"_pass");
 	    
 	    if ( binnedVars.Contains("notSeparated") )
@@ -576,7 +577,7 @@ void createPtRootFiles() {
     if (!mode[1].Contains("25ns"))
       lumi->AddText("BX = 50 ns, L = 47 pb^{-1}");
     else
-      lumi->AddText("BX = 25 ns, L = 2.59 fb^{-1}");
+      lumi->AddText("BX = 25 ns, L = 2.26 fb^{-1}");
 
     TString prefix = "../" ;
     prefix = "/afs/cern.ch/work/l/lecriste/www/TnP/" ;

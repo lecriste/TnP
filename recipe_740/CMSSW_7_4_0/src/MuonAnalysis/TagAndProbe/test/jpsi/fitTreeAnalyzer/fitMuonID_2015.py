@@ -217,6 +217,9 @@ pT_binning_2015 = cms.vdouble(2.0, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.5, 5.
 pT_binning_47ipb = cms.vdouble(2.0, 2.5, 3.0, 3.5, 4.0, 4.75, 5.5, 7.5, 10.0, 20.0, 40.0)
 pT_binning_25ns = cms.vdouble(2.0, 2.5, 3.0, 3.5, 4.0, 4.75, 5.5, 7.5, 10.0, 15.0, 20.0, 40.0)
 
+abseta_binning_47ipb = cms.vdouble(0.0,0.9,1.2,2.1,2.4)
+abseta_binning_25ns = cms.vdouble(0.0,0.9,1.2,1.6,2.1,2.4)
+
 PT_ETA_BINS = cms.PSet(   SEPARATED,
                           #pt = pT_binning_2012,
                           #pt = pT_binning_2015,
@@ -229,15 +232,25 @@ PT_ABSETA_BINS = cms.PSet(   SEPARATED,
                           #pt = pT_binning_2015,
                           pt = pT_binning_47ipb,
                           #abseta = cms.vdouble(0.0,0.9,1.2,2.1) # 2012
-                          abseta = cms.vdouble(0.0,0.9,1.2,2.1,2.4)
+                          abseta = abseta_binning_47ipb
+                       )
+
+PT_ABSETA_BINS = cms.PSet(   SEPARATED,
+                          #pt = pT_binning_2012,
+                          #pt = pT_binning_2015,
+                          pt = pT_binning_47ipb,
+                          #abseta = cms.vdouble(0.0,0.9,1.2,2.1) # 2012
+                          abseta = abseta_binning_47ipb
                        )
 
 PT_ABSETA_BINS_allPairs = cms.PSet(   SEPARATED_allPairs,
                           #pt = pT_binning_2012,
                           #pt = pT_binning_2015,
-                          pt = pT_binning_47ipb,
+                          #pt = pT_binning_47ipb,
+                          pt = pT_binning_25ns,
                           #abseta = cms.vdouble(0.0,0.9,1.2,2.1) # 2012
-                          abseta = cms.vdouble(0.0,0.9,1.2,2.1,2.4)
+                          #abseta = abseta_binning_47ipb,
+                          abseta = abseta_binning_25ns
                        )
 
 PT_ABSETA_BINS_notSeparated = cms.PSet(   NOTSEPARATED,
@@ -245,7 +258,7 @@ PT_ABSETA_BINS_notSeparated = cms.PSet(   NOTSEPARATED,
                           #pt = pT_binning_2015,
                           pt = pT_binning_47ipb,
                           #abseta = cms.vdouble(0.0,0.9,1.2,2.1) # 2012
-                          abseta = cms.vdouble(0.0,0.9,1.2,2.1,2.4)
+                          abseta = abseta_binning_47ipb
                        )
 
 PT_BINS_notSeparated = cms.PSet(   NOTSEPARATED,
@@ -270,7 +283,7 @@ PT_ABSY_BINS_notSeparated_pair = cms.PSet(   NOTSEPARATED,
                                                #pair_pt = cms.vdouble(10.0, 16.0, 20.0, 40.0),
                                                pair_pt = cms.vdouble(10.0, 13.0, 16.0, 18.0, 20.0, 30.0, 40.0),
                                                #abseta = cms.vdouble(0.0,0.9,1.2,2.1) # 2012
-                                               pair_absrapidity = cms.vdouble(0.0,0.9,1.2,2.1,2.4)
+                                               pair_absrapidity = abseta_binning_47ipb
                                                )
 
 PT_ABSETA_BINS_notSeparated_allPairs = cms.PSet(   NOTSEPARATED_allPairs,
@@ -278,7 +291,7 @@ PT_ABSETA_BINS_notSeparated_allPairs = cms.PSet(   NOTSEPARATED_allPairs,
                                                    #pt = pT_binning_2015,
                                                    pt = pT_binning_47ipb,
                                                    #abseta = cms.vdouble(0.0,0.9,1.2,2.1) # 2012
-                                                   abseta = cms.vdouble(0.0,0.9,1.2,2.1,2.4)
+                                                   abseta = abseta_binning_47ipb
                                                    )
 
 PT_ABSETA_BINS_SEAGULL = cms.PSet(   SEAGULL,
@@ -286,16 +299,38 @@ PT_ABSETA_BINS_SEAGULL = cms.PSet(   SEAGULL,
                                      #pt = pT_binning_2015,
                                      pt = pT_binning_47ipb,
                                      #abseta = cms.vdouble(0.0,0.9,1.2,2.1) # 2012
-                                     abseta = cms.vdouble(0.0,0.9,1.2,2.1,2.4)
+                                     abseta = abseta_binning_47ipb
                                      )
+
+PT_ABSETA_BINS_SEAGULL_separated = cms.PSet(   SEAGULL,
+                                               SEPARATED_allPairs,
+                                               #pt = pT_binning_2012,
+                                               #pt = pT_binning_2015,
+                                               #pt = pT_binning_47ipb,
+                                               pt = pT_binning_25ns,
+                                               #abseta = cms.vdouble(0.0,0.9,1.2,2.1) # 2012
+                                               #abseta = abseta_binning_47ipb
+                                               abseta = abseta_binning_25ns
+                                               )
 
 PT_ABSETA_BINS_COWBOY = cms.PSet(    COWBOY,
                                      #pt = pT_binning_2012,
                                      #pt = pT_binning_2015,
                                      pt = pT_binning_47ipb,
                                      #abseta = cms.vdouble(0.0,0.9,1.2,2.1) # 2012
-                                     abseta = cms.vdouble(0.0,0.9,1.2,2.1,2.4)
+                                     abseta = abseta_binning_47ipb
                                      )
+
+PT_ABSETA_BINS_COWBOY_separated = cms.PSet(    COWBOY,
+                                               SEPARATED_allPairs,
+                                               #pt = pT_binning_2012,
+                                               #pt = pT_binning_2015,
+                                               #pt = pT_binning_47ipb,
+                                               pt = pT_binning_25ns,
+                                               #abseta = cms.vdouble(0.0,0.9,1.2,2.1) # 2012
+                                               #abseta = abseta_binning_47ipb
+                                               anseta = abseta_binning_25ns
+                                               )
 
 PT_BINS = cms.PSet(       SEPARATED,
                           #pt = pT_binning_2012
@@ -358,8 +393,8 @@ process.TnP_MuonID = Template.clone(
      #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Charmonium_PromptReco_50ns_first47ipb_vertexingTriggersFlags.root'),
      ##InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Charmonium_PromptReco_50ns.root'),
      #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns.root'),
-     #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns_golden.root'),
-     InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns_golden_Mu8.root'), # Mu8 test
+     InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns_golden.root'),
+     #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns_golden_Mu8.root'), # Mu8 test
      #
      InputTreeName = cms.string("fitter_tree"),
      InputDirectoryName = cms.string("tpTree"),
@@ -418,7 +453,8 @@ else: mode = ""
 #ALLBINS =  [("pt_abseta_seagull",PT_ABSETA_BINS_SEAGULL), ("pt_abseta_cowboy",PT_ABSETA_BINS_COWBOY)]
 #ALLBINS =  [("pt_abseta_allPairs",PT_ABSETA_BINS_allPairs)]
 #ALLBINS =  [("pt_abseta_notSeparated",PT_ABSETA_BINS_notSeparated)]
-ALLBINS =  [("pt_abseta_notSeparated",PT_ABSETA_BINS_notSeparated), ("pt_abseta_seagull",PT_ABSETA_BINS_SEAGULL), ("pt_abseta_cowboy",PT_ABSETA_BINS_COWBOY)]
+#ALLBINS =  [("pt_abseta_notSeparated",PT_ABSETA_BINS_notSeparated), ("pt_abseta_seagull",PT_ABSETA_BINS_SEAGULL), ("pt_abseta_cowboy",PT_ABSETA_BINS_COWBOY)]
+ALLBINS =  [("pt_abseta_separated",PT_ABSETA_BINS_allPairs), ("pt_abseta_seagull_separated",PT_ABSETA_BINS_SEAGULL_separated), ("pt_abseta_cowboy_separated",PT_ABSETA_BINS_COWBOY_separated)]
 #ALLBINS =  [("pt_eta2p4_notSeparated",PT_BINS_notSeparated)]
 #ALLBINS =  [("pt_abseta2p4",PT_BINS_ABSETA2p4)]
 #ALLBINS =  [("pt_abseta_notSeparated",PT_ABSETA_BINS_notSeparated),("pt_eta2p4_notSeparated",PT_BINS_notSeparated)]
