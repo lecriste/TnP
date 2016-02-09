@@ -217,8 +217,9 @@ pT_binning_2015 = cms.vdouble(2.0, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.5, 5.
 pT_binning_47ipb = cms.vdouble(2.0, 2.5, 3.0, 3.5, 4.0, 4.75, 5.5, 7.5, 10.0, 20.0, 40.0)
 pT_binning_25ns = cms.vdouble(2.0, 2.5, 3.0, 3.5, 4.0, 4.75, 5.5, 7.5, 10.0, 15.0, 20.0, 40.0)
 
-abseta_binning_47ipb = cms.vdouble(0.0,0.9,1.2,2.1,2.4)
-abseta_binning_25ns = cms.vdouble(0.0,0.9,1.2,1.6,2.1,2.4)
+abseta_binning_47ipb = cms.vdouble(0.0, 0.9, 1.2, 2.1, 2.4)
+abseta_binning_25ns = cms.vdouble(0.0, 0.9, 1.2, 1.6, 2.1, 2.4)
+abseta_binning_25ns_v2 = cms.vdouble(0.0, 0.2, 0.3, 0.9 , 1.2, 1.6, 2.1, 2.4)
 
 PT_ETA_BINS = cms.PSet(   SEPARATED,
                           #pt = pT_binning_2012,
@@ -250,7 +251,8 @@ PT_ABSETA_BINS_allPairs = cms.PSet(   SEPARATED_allPairs,
                           pt = pT_binning_25ns,
                           #abseta = cms.vdouble(0.0,0.9,1.2,2.1) # 2012
                           #abseta = abseta_binning_47ipb,
-                          abseta = abseta_binning_25ns
+                          #abseta = abseta_binning_25ns
+                          abseta = abseta_binning_25ns_v2
                        )
 
 PT_ABSETA_BINS_notSeparated = cms.PSet(   NOTSEPARATED,
@@ -310,7 +312,8 @@ PT_ABSETA_BINS_SEAGULL_separated = cms.PSet(   SEAGULL,
                                                pt = pT_binning_25ns,
                                                #abseta = cms.vdouble(0.0,0.9,1.2,2.1) # 2012
                                                #abseta = abseta_binning_47ipb
-                                               abseta = abseta_binning_25ns
+                                               #abseta = abseta_binning_25ns
+                                               abseta = abseta_binning_25ns_v2
                                                )
 
 PT_ABSETA_BINS_COWBOY = cms.PSet(    COWBOY,
@@ -329,7 +332,8 @@ PT_ABSETA_BINS_COWBOY_separated = cms.PSet(    COWBOY,
                                                pt = pT_binning_25ns,
                                                #abseta = cms.vdouble(0.0,0.9,1.2,2.1) # 2012
                                                #abseta = abseta_binning_47ipb
-                                               anseta = abseta_binning_25ns
+                                               #abseta = abseta_binning_25ns
+                                               abseta = abseta_binning_25ns_v2
                                                )
 
 PT_BINS = cms.PSet(       SEPARATED,
