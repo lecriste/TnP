@@ -125,6 +125,9 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         tag_DoubleMu17TkMu8_TkMu8leg = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
         Mu8 = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
         tag_Mu8 = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        # Mu25
+        Mu25TkMu0Onia_TM = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        tag_Mu25TkMu0Onia_L3_MU = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
         ),
 
    Expressions = cms.PSet(
@@ -397,8 +400,9 @@ process.TnP_MuonID = Template.clone(
      #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Charmonium_PromptReco_50ns_first47ipb_vertexingTriggersFlags.root'),
      ##InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Charmonium_PromptReco_50ns.root'),
      #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns.root'),
-     InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns_golden.root'),
+     #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns_golden.root'),
      #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns_golden_Mu8.root'), # Mu8 test
+     InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns_golden_withMu25.root'),
      #
      InputTreeName = cms.string("fitter_tree"),
      InputDirectoryName = cms.string("tpTree"),
@@ -426,7 +430,8 @@ TRIGS = [ (2,'Mu7p5_Track2_Jpsi') ]
 UnbinnedVars = cms.vstring("mass")
 if "mc" in scenario:
      UnbinnedVars = cms.vstring("mass","weight")
-     process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC25ns_withAllTagVars_withNVtxWeightsFromGolden.root']
+     process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC25ns_withMu25_withNVtxWeights.root']
+     #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC25ns_withAllTagVars_withNVtxWeightsFromGolden.root']
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC25ns_withNVtxWeightsFromGolden.root']
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC25ns_withNVtxWeightsFromMuonPhys.root']
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC25ns.root']
@@ -511,9 +516,15 @@ for ID in IDS:
                     if len(DEN.pt) == 0: raise RuntimeError, "Make sure PTMIN is less than at least one B.pt element!"
                     if len(DEN.pt) == 1: DEN.pt = cms.vdouble(PTMIN, DEN.pt[0])
                DEN_forSoftID = DEN.clone()
+               DEN_withSoftID = DEN.clone( # check variables bounds if input file changes
+                                          TMOST = cms.vstring("pass"), tkTrackerLay = cms.vint32(6,18), tkPixelLay = cms.vint32(1,5), dzPV = cms.vdouble(-20,20), dB = cms.vdouble(-0.3,0.3), Track_HP = cms.vstring("pass"),
+                                          )
+               DEN_forL1L2 = DEN_withSoftID.clone()
                if TRIG != "Mu8":
                     setattr(DEN_forSoftID, "tag_%s_MU" %TRIG, cms.vstring("pass"))
                     setattr(DEN_forSoftID,     "%s_TK" %TRIG, cms.vstring("pass"))
+                    setattr(DEN_forL1L2, "tag_%s_MU" %TRIG, cms.vstring("pass"))
+                    setattr(DEN_forL1L2,     "%s_TK" %TRIG, cms.vstring("pass"))
                else:
                     setattr(DEN_forSoftID, "tag_%s" % TRIG, cms.vstring("pass"))
                     #setattr(DEN_forSoftID,     "%s" % TRIG, cms.vstring("pass"))
@@ -527,21 +538,23 @@ for ID in IDS:
                          ))
                # L1L2 w.r.t. SoftMuon ID
                if triggerEff:
-                    # for L2
-                    DEN_withSoftID = DEN_forSoftID.clone( # check variables bounds if input file changes
-                         TMOST = cms.vstring("pass"), tkTrackerLay = cms.vint32(6,18), tkPixelLay = cms.vint32(1,5), dzPV = cms.vdouble(-20,20), dB = cms.vdouble(-0.3,0.3), Track_HP = cms.vstring("pass"),
-                         )
+                    # Mu25
+		    DEN_Mu25 = DEN_withSoftID.clone( tag_Mu25TkMu0Onia_L3_MU = cms.vstring("pass") )
+		    setattr(module.Efficiencies, "Mu25_"+X, cms.PSet(
+                    	    EfficiencyCategoryAndState = cms.vstring("Mu25TkMu0Onia_TK","pass"),
+                            UnbinnedVariables = UnbinnedVars,
+                            BinnedVariables = DEN_Mu25,
+                            BinToPDFmap = cms.vstring("signalPlusBkg"),
+                            ))
                     # for L3
-                    DEN_SoftID = DEN.clone( # check variables bounds if input file changes
-                         TMOST = cms.vstring("pass"), tkTrackerLay = cms.vint32(6,18), tkPixelLay = cms.vint32(1,5), dzPV = cms.vdouble(-20,20), dB = cms.vdouble(-0.3,0.3), Track_HP = cms.vstring("pass"),
-                         )
-                    setattr(DEN_SoftID, "tag_Mu7p5_L2Mu2_Jpsi_MU", cms.vstring("pass"))
+                    DEN_forL3 = DEN_withSoftID.clone()
+                    setattr(DEN_forL3, "tag_Mu7p5_L2Mu2_Jpsi_MU", cms.vstring("pass"))
                     #
                     #tag_pt_min = 10.0 # for full-coverage trigger
                     tag_pt_min = 11.0 # for full-coverage trigger
                     absetaMax = 1.6
-                    for L1L2, DEN_L1L2, DEN_L3 in [("Dimuon16_L1L2",DEN_withSoftID.clone(tag_pt = cms.vdouble(tag_pt_min, 1000.0)),DEN_SoftID.clone(tag_pt = cms.vdouble(tag_pt_min, 1000.0))),
-                                                   ("Dimuon10_L1L2",DEN_withSoftID.clone(tag_abseta = cms.vdouble(0.0, absetaMax)),DEN_SoftID.clone(tag_abseta = cms.vdouble(0.0, absetaMax)))]: 
+                    for L1L2, DEN_L1L2, DEN_L3 in [("Dimuon16_L1L2",DEN_forL1L2.clone(tag_pt = cms.vdouble(tag_pt_min, 1000.0)),DEN_forL3.clone(tag_pt = cms.vdouble(tag_pt_min, 1000.0))),
+                                                   ("Dimuon10_L1L2",DEN_forL1L2.clone(tag_abseta = cms.vdouble(0.0, absetaMax)),DEN_forL3.clone(tag_abseta = cms.vdouble(0.0, absetaMax)))]: 
                          if "Dimuon10" in L1L2:
                               if hasattr(DEN_L1L2, "abseta"):
                                    DEN_L1L2.abseta = cms.vdouble(*[i for i in DEN.abseta if i < absetaMax])

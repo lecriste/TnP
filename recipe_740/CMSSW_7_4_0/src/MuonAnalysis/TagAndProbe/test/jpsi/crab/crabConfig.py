@@ -10,9 +10,9 @@ Mu8 = False
 RunC = True
 RunC = False
 RunDv3 = True
-#RunDv3 = False
+RunDv3 = False
 RunDv4 = True
-RunDv4 = False
+#RunDv4 = False
 
 
 from CRABClient.UserUtilities import config
@@ -36,7 +36,8 @@ if MC:
                 config.General.requestName = 'TnP_fullMC_withAllTagVars'
 	else:
 		#config.General.requestName = 'TnP_fullMC_25ns'
-                config.General.requestName = 'TnP_fullMC_25ns_withAllTagVars'
+                #config.General.requestName = 'TnP_fullMC_25ns_withAllTagVars'
+                config.General.requestName = 'TnP_fullMC_25ns_addingMu25'
 # Data
 else:
 	if (not mode_25ns):
@@ -51,17 +52,20 @@ else:
 	else:
 		if (RunC):
 			#config.General.requestName = 'TnP_RunC_25ns'
-                	config.General.requestName = 'TnP_RunC_25ns_noPairVtxInfo'
+                	#config.General.requestName = 'TnP_RunC_25ns_noPairVtxInfo'
+                	config.General.requestName = 'TnP_RunC_25ns_addingMu25'
                         if Mu8:
 				config.General.requestName = 'TnP_RunC_25ns_Mu8'
 		elif (RunDv3):
 			#config.General.requestName = 'TnP_RunDv3_25ns'
-			config.General.requestName = 'TnP_RunDv3_25ns_noPairVtxInfo'
+			#config.General.requestName = 'TnP_RunDv3_25ns_noPairVtxInfo'
+                	config.General.requestName = 'TnP_RunDv3_25ns_addingMu25'
                         if Mu8:
 				config.General.requestName = 'TnP_RunDv3_25ns_Mu8_v2'
 		elif (RunDv4):
 			#config.General.requestName = 'TnP_RunDv4_25ns'
-                        config.General.requestName = 'TnP_RunDv4_25ns_noPairVtxInfo'
+                        #config.General.requestName = 'TnP_RunDv4_25ns_noPairVtxInfo'
+                	config.General.requestName = 'TnP_RunDv4_25ns_addingMu25'
                         if Mu8:
 				config.General.requestName = 'TnP_RunDv4_25ns_Mu8'
 
@@ -117,6 +121,7 @@ if MC:
 else:
 	if (not mode_25ns):
 		config.Data.unitsPerJob = 1
+		# JSON
 	        #config.Data.lumiMask = 'Cert_181530-183126_HI7TeV_PromptReco_Collisions11_JSON.txt' # 47/pb
 		config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-251883_13TeV_PromptReco_Collisions15_JSON_MuonPhys_v2.txt' # 47/pb
 	        #config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-255031_13TeV_PromptReco_Collisions15_50ns_JSON_MuonPhys_v2.txt' # 77.34/pb 
@@ -126,6 +131,7 @@ else:
 			config.Data.unitsPerJob = 2
 		elif (RunDv4):
 			config.Data.unitsPerJob = 3
+		# JSON
 	        #config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_MuonPhys.txt' # 2.59/fb
 		#config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_MuonPhys_v2.txt' # 2.76/fb
                 config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_v2.txt' # 2.26/fb Golden

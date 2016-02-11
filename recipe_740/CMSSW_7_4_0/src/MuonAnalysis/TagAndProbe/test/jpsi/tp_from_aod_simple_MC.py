@@ -12,7 +12,7 @@ process.source = cms.Source("PoolSource",
                             skipEvents = cms.untracked.uint32( 0 ),
                             )
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32( 1000 ) 
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32( 2000 ) 
                                         # 355KB in 6' on 1k events, ?KB in 100' on 20k events for the official 25ns BPH MC
                                         # 1.3Mb in 2h30' on 9 files, 660Kb in 70' on 50K events, 405Kb in 15' on 10K events for the official 50ns BPH MC
                                         # 4.8Mb in 1h on 84597 (=-1) events for the MC from Muon POG 
@@ -79,8 +79,11 @@ elif "CMSSW_7_4_" in os.environ['CMSSW_VERSION']:
         #'/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v2/20000/0E1A8498-6627-E511-8BDF-00238BBD75D8.root',
         #'/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v2/20000/0E95776B-6627-E511-BEAC-001E67A42BA2.root',
         #'/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v2/20000/0EC5741B-9C28-E511-81CD-B499BAABF064.root',
-        'dcap://dcache-cms-dcap.desy.de//pnfs/desy.de/cms/tier2/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/80000/96B24D6D-0C27-E511-B9BB-003048FFD720.root',
+	# 50 ns problem
+        #'dcap://dcache-cms-dcap.desy.de//pnfs/desy.de/cms/tier2/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/80000/96B24D6D-0C27-E511-B9BB-003048FFD720.root',
         #'/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt50ns_MCRUN2_74_V9A-v2/80000/96B24D6D-0C27-E511-B9BB-003048FFD720.root',
+	# 25 ns problem with pair_probemultiplicity
+        '/store/mc/RunIISpring15DR74/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/AODSIM/Asympt25ns_MCRUN2_74_V9-v2/30000/52DA6630-6527-E511-8382-0025905C42A8.root'
         ]
 else: raise RuntimeError, "Unknown CMSSW version %s" % os.environ['CMSSW_VERSION']
 
@@ -106,8 +109,10 @@ process.triggerResultsFilter.l1tResults = ''
 process.triggerResultsFilter.throw = True
 #process.triggerResultsFilter.hltResults = cms.InputTag( "TriggerResults", "", "REDIGI38XPU" )
 process.triggerResultsFilter.hltResults = cms.InputTag( "TriggerResults", "", "HLT" )
-process.HLTMu   = process.triggerResultsFilter.clone(triggerConditions = ['HLT_Mu*_L2Mu*'])
-process.HLTBoth = process.triggerResultsFilter.clone(triggerConditions = ['HLT_Mu*_L2Mu*', 'HLT_Mu*_Track*_Jpsi*'])
+#process.HLTMu   = process.triggerResultsFilter.clone(triggerConditions = ['HLT_Mu*_L2Mu*'])
+#process.HLTBoth = process.triggerResultsFilter.clone(triggerConditions = ['HLT_Mu*_L2Mu*', 'HLT_Mu*_Track*_Jpsi*'])
+process.HLTMu   = process.triggerResultsFilter.clone(triggerConditions = ['HLT_Mu*_L2Mu*', 'HLT_Mu*_TkMu*']) # asked by Ilse
+process.HLTBoth = process.triggerResultsFilter.clone(triggerConditions = ['HLT_Mu*_L2Mu*', 'HLT_Mu*_Track*_Jpsi*', 'HLT_Mu*_TkMu*']) # asked by Ilse 
 #process.HLTMu   = process.triggerResultsFilter.clone(triggerConditions = ['HLT_Mu*_L2Mu*', 'HLT_Mu*']) # for Mu8 test
 #process.HLTBoth = process.triggerResultsFilter.clone(triggerConditions = ['HLT_Mu*_L2Mu*', 'HLT_Mu*_Track*_Jpsi*', 'HLT_Mu*']) # for Mu8 test
 process.HLTBoth_withDimuon = process.triggerResultsFilter.clone(triggerConditions = [ 'HLT_Mu*_L2Mu*', 'HLT_Mu*_Track*_Jpsi*', 'HLT_Mu*', 'HLT_Dimuon*' ])
@@ -256,25 +261,25 @@ process.load("MuonAnalysis.TagAndProbe.muon.tag_probe_muon_extraIso_cfi")
 #process.load("RecoMuon.DetLayers.muonDetLayerGeometry_cfi")
 
 process.tnpSimpleSequence = cms.Sequence(
-    process.goodGenMuonsFromJpsi +
-    process.tagMuons   * process.tagMuonsMCMatch   +
-    process.oneTag     +
-    process.probeMuons * process.probeMuonsMCMatch +
-    process.tpPairs    +
-    process.onePair    +
-    process.muonDxyPVdzmin +
-    process.nverticesModule +
-    process.tagProbeSeparation +
-    process.computeCorrectedIso + 
-    process.probeMultiplicity + 
-    process.splitTrackTagger +
-    process.l1rate +
+    process.goodGenMuonsFromJpsi *
+    process.tagMuons   * process.tagMuonsMCMatch   *
+    process.oneTag     *
+    process.probeMuons * process.probeMuonsMCMatch *
+    process.tpPairs    *
+    process.onePair    *
+    process.muonDxyPVdzmin *
+    process.nverticesModule *
+    process.tagProbeSeparation *
+    process.computeCorrectedIso * 
+    process.probeMultiplicity * 
+    process.splitTrackTagger *
+    process.l1rate *
     process.tpTree
 )
 
 process.tagAndProbe = cms.Path( 
-    process.fastFilter +
-    process.HLTBoth    +
+    process.fastFilter *
+    process.HLTBoth    *
     process.mergedMuons                 *
     process.patMuonsWithTriggerSequence *
     process.tnpSimpleSequence
@@ -299,22 +304,23 @@ process.tpTreeOnePair = process.tpTree.clone(
 )
 
 process.tnpSimpleSequenceOnePair = cms.Sequence(
-    process.goodGenMuonsFromJpsi +
-    process.tagMuons * process.tagMuonsMCMatch +
-    process.probeMuons * process.probeMuonsMCMatch +
-    process.tpPairs    +
-    process.muonDxyPVdzmin +
-    process.nverticesModule    +
-    process.tagProbeSeparation +
-    process.computeCorrectedIso +
-    process.splitTrackTagger + 
-    process.l1rate +
+    process.goodGenMuonsFromJpsi *
+    process.tagMuons * process.tagMuonsMCMatch *
+    process.probeMuons * process.probeMuonsMCMatch *
+    process.tpPairs    *
+    process.muonDxyPVdzmin *
+    process.nverticesModule    *
+    process.tagProbeSeparation *
+    process.computeCorrectedIso *
+    process.probeMultiplicity * 
+    process.splitTrackTagger * 
+    process.l1rate *
     process.tpTreeOnePair
 )
 
 process.tagAndProbeOnePair = cms.Path( 
-    process.fastFilter +
-    process.HLTBoth_withDimuon    +
+    process.fastFilter *
+    process.HLTBoth_withDimuon    *
     process.mergedMuons                 *
     process.patMuonsWithTriggerSequence *
     process.tnpSimpleSequenceOnePair
@@ -419,16 +425,16 @@ process.tpTreeSta = process.tpTree.clone(
 )
 
 process.tnpSimpleSequenceSta = cms.Sequence(
-    process.tagMuons   * process.tagMuonsMCMatch   +
-    process.oneTag     +
-    process.probeMuonsSta * process.probeMuonsMCMatchSta +
-    process.tpPairsSta      +
-    process.onePairSta      +
-    process.nverticesModule +
-    process.tagProbeStaSeparation +
-    process.probeStaMultiplicity + 
-    process.staToTkMatchSequenceJPsi +
-    process.l1rate +
+    process.tagMuons   * process.tagMuonsMCMatch   *
+    process.oneTag     *
+    process.probeMuonsSta * process.probeMuonsMCMatchSta *
+    process.tpPairsSta      *
+    process.onePairSta      *
+    process.nverticesModule *
+    process.tagProbeStaSeparation *
+    process.probeStaMultiplicity * 
+    process.staToTkMatchSequenceJPsi *
+    process.l1rate *
     process.tpTreeSta
 )
 
@@ -470,10 +476,10 @@ if True: # turn on for tracking efficiency from RECO/AOD + earlyGeneralTracks
     process.tpTreeSta.variables.tk0_deltaEta_NoBestJPsi = cms.InputTag("staToTkMatchNoBestJPsi0","deltaEta")
 
 process.tagAndProbeSta = cms.Path( 
-    process.fastFilter +
-    process.HLTMu      +
-    process.muonsSta                       +
-    process.patMuonsWithTriggerSequenceSta +
+    process.fastFilter *
+    process.HLTMu      *
+    process.muonsSta                       *
+    process.patMuonsWithTriggerSequenceSta *
     process.tnpSimpleSequenceSta
 )
 
@@ -549,18 +555,19 @@ if True: # turn on for tracking efficiency using gen particles as probe
         )
 
     process.tagAndProbeTkGen = cms.Path( 
-        process.goodGenMuonsFromJpsi + # added by me
-        process.fastFilter +
-        process.mergedMuons + process.patMuonsWithTriggerSequence + process.tagMuons * process.tagMuonsMCMatch + # added by me
-        process.probeMuons + # added by me for softIDToGenMatch
-        process.probeGen +
-        process.tpPairsTkGen + 
-        process.nverticesModule +
-        process.preTkMatchSequenceJPsi + 
-        process.genToTkMatch + process.genToTkMatchNoJPsi + process.genToTkMatchNoBestJPsi + 
-        process.genToTkMatch0 + process.genToTkMatchNoJPsi0 + process.genToTkMatchNoBestJPsi0 +
-        process.genToProbeMuonsMatch + process.genToSoftIDNoTMOSTMatch + process.genToSoftIDMatch +
-        process.probeMuonsMCMatchGen +
+        process.goodGenMuonsFromJpsi * # added by me
+        process.fastFilter *
+        process.mergedMuons * process.patMuonsWithTriggerSequence * process.tagMuons * process.tagMuonsMCMatch * # added by me
+        process.probeMuons * # added by me for softIDToGenMatch
+        process.probeGen *
+        process.tpPairsTkGen * 
+        process.nverticesModule *
+        process.preTkMatchSequenceJPsi * 
+        process.genToTkMatch * process.genToTkMatchNoJPsi * process.genToTkMatchNoBestJPsi * 
+        process.genToTkMatch0 * process.genToTkMatchNoJPsi0 * process.genToTkMatchNoBestJPsi0 *
+        process.genToProbeMuonsMatch * process.genToSoftIDNoTMOSTMatch * process.genToSoftIDMatch *
+        process.probeMuonsMCMatchGen *
+        process.nverticesModule    * # added by gpetruc: https://github.com/cms-analysis/MuonAnalysis-TagAndProbe/pull/21/files#diff-0
         process.tpTreeGen
         )
 
@@ -625,15 +632,16 @@ if True: # turn on for tracking efficiency using L1 seeds
         probeMatches  = cms.InputTag("probeMuonsMCMatchL1"),
     )
     process.tagAndProbeTkL1 = cms.Path(
-        process.fastFilter +
-        process.probeL1 +
-        process.tpPairsTkL1 +
-        process.preTkMatchSequenceJPsi +
-        process.l1ToTkMatch + 
-        process.l1ToTkMatchNoJPsi + process.l1ToTkMatchNoBestJPsi +
-        process.l1ToTkMatch0 + 
-        process.l1ToTkMatchNoJPsi0 + process.l1ToTkMatchNoBestJPsi0 +
-        process.probeMuonsMCMatchL1 +
+        process.fastFilter *
+        process.probeL1 *
+        process.tpPairsTkL1 *
+        process.preTkMatchSequenceJPsi *
+        process.l1ToTkMatch * 
+        process.l1ToTkMatchNoJPsi * process.l1ToTkMatchNoBestJPsi *
+        process.l1ToTkMatch0 * 
+        process.l1ToTkMatchNoJPsi0 * process.l1ToTkMatchNoBestJPsi0 *
+        process.probeMuonsMCMatchL1 *
+        process.nverticesModule    * # added by gpetruc: https://github.com/cms-analysis/MuonAnalysis-TagAndProbe/pull/21/files#diff-0
         process.tpTreeL1
     )
 
@@ -675,24 +683,24 @@ if True: # turn on for tracking efficiency using L1 seeds
 #)
 #
 #process.fakeRateJetPlusProbe = cms.Path(
-#    process.fastFilter +
-#    process.mergedMuons * process.patMuonsWithTriggerSequence +
-#    process.tagMuons + process.probeMuons + process.extraProbeVariablesSeq +
-#    process.jetPlusProbeSequence +
+#    process.fastFilter *
+#    process.mergedMuons * process.patMuonsWithTriggerSequence *
+#    process.tagMuons * process.probeMuons * process.extraProbeVariablesSeq *
+#    process.jetPlusProbeSequence *
 #    process.fakeRateJetPlusProbeTree
 #)
 #process.fakeRateWPlusProbe = cms.Path(
-#    process.fastFilter +
-#    process.mergedMuons * process.patMuonsWithTriggerSequence +
-#    process.tagMuons + process.probeMuons + process.extraProbeVariablesSeq +
-#    process.wPlusProbeSequence +
+#    process.fastFilter *
+#    process.mergedMuons * process.patMuonsWithTriggerSequence *
+#    process.tagMuons * process.probeMuons * process.extraProbeVariablesSeq *
+#    process.wPlusProbeSequence *
 #    process.fakeRateWPlusProbeTree
 #)
 #process.fakeRateZPlusProbe = cms.Path(
-#    process.fastFilter +
-#    process.mergedMuons * process.patMuonsWithTriggerSequence +
-#    process.tagMuons + process.probeMuons + process.extraProbeVariablesSeq +
-#    process.zPlusProbeSequence +
+#    process.fastFilter *
+#    process.mergedMuons * process.patMuonsWithTriggerSequence *
+#    process.tagMuons * process.probeMuons * process.extraProbeVariablesSeq *
+#    process.zPlusProbeSequence *
 #    process.fakeRateZPlusProbeTree
 #)
 

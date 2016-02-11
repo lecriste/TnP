@@ -72,8 +72,7 @@ patTriggerFull.onlyStandAlone = True
 patTrigger = cms.EDProducer("TriggerObjectFilterByCollection",
     src = cms.InputTag("patTriggerFull"),
     #collections = cms.vstring("hltL1extraParticles", "hltL2MuonCandidates", "hltL3MuonCandidates", "hltGlbTrkMuonCands", "hltMuTrackJpsiCtfTrackCands", "hltMuTrackJpsiEffCtfTrackCands", "hltMuTkMuJpsiTrackerMuonCands", "hltTracksIter"),
-    #collections = cms.vstring("hltL1extraParticles", "hltL2MuonCandidates", "hltL3MuonCandidates", "hltHighPtTkMuonCands", "hltGlbTrkMuonCands", "hltMuTrackJpsiCtfTrackCands", "hltMuTrackJpsiEffCtfTrackCands", "hltMuTkMuJpsiTrackerMuonCands", "hltTracksIter"),
-    collections = cms.vstring("hltL1extraParticles", "hltL2MuonCandidates", "hltL3MuonCandidates", "hltHighPtTkMuonCands", "hltGlbTrkMuonCands", "hltMuTrackJpsiCtfTrackCands", "hltMuTrackJpsiEffCtfTrackCands", "hltMuTkMuJpsiTrackerMuonCands", "hltTracksIter", "hltMuTkMuTrackerMuonCandsOnia"), # needed by Mu25TkMu0Onia_TM flag
+    collections = cms.vstring("hltL1extraParticles", "hltL2MuonCandidates", "hltL3MuonCandidates", "hltHighPtTkMuonCands", "hltGlbTrkMuonCands", "hltMuTrackJpsiCtfTrackCands", "hltMuTrackJpsiEffCtfTrackCands", "hltMuTkMuJpsiTrackerMuonCands", "hltTracksIter"),
 )
  
 #patTrigger = cms.EDFilter("PATTriggerObjectStandAloneSelector",
@@ -115,7 +114,7 @@ muonMatchHLTCtfTrack  = muonTriggerMatchHLT.clone(matchedCuts = cms.string('coll
 muonMatchHLTCtfTrack2 = muonTriggerMatchHLT.clone(matchedCuts = cms.string('coll("hltMuTrackJpsiEffCtfTrackCands")'), maxDeltaR = 0.1, maxDPtRel = 10.0)  #maxDeltaR Changed accordingly to Zoltan tuning. 
 muonMatchHLTTrackMu  = muonTriggerMatchHLT.clone(matchedCuts = cms.string('coll("hltMuTkMuJpsiTrackerMuonCands")'), maxDeltaR = 0.1, maxDPtRel = 10.0) #maxDeltaR Changed accordingly to Zoltan tuning.
 muonMatchHLTTracksIter  = muonTriggerMatchHLT.clone(matchedCuts = cms.string('coll("hltTracksIter")'),    maxDeltaR = 0.1, maxDPtRel = 10.0)  #maxDeltaR Changed accordingly to Zoltan tuning.
-muonMatchHLTTrackMuOnia  = muonTriggerMatchHLT.clone(matchedCuts = cms.string('coll("hltMuTkMuTrackerMuonCandsOnia")'),    maxDeltaR = 0.1, maxDPtRel = 10.0)
+#muonMatchHLTTrackMuOnia  = muonTriggerMatchHLT.clone(matchedCuts = cms.string('coll("hltMuTkMuTrackerMuonCandsOnia")'),    maxDeltaR = 0.1, maxDPtRel = 10.0)
 
 patTriggerMatchers1Mu = cms.Sequence(
       #muonMatchHLTL1 +   # keep off by default, since it is slow and usually not needed
@@ -123,7 +122,7 @@ patTriggerMatchers1Mu = cms.Sequence(
       muonMatchHLTL3 +
       muonMatchHLTL3T +
       muonMatchHLTTkMu
-      + muonMatchHLTTrackMuOnia
+      #+ muonMatchHLTTrackMuOnia
 )
 patTriggerMatchers1MuInputTags = [
     #cms.InputTag('muonMatchHLTL1','propagatedReco'), # fake, will match if and only if he muon did propagate to station 2
@@ -132,7 +131,7 @@ patTriggerMatchers1MuInputTags = [
     cms.InputTag('muonMatchHLTL3'),
     cms.InputTag('muonMatchHLTL3T'),
     cms.InputTag('muonMatchHLTTkMu'),
-    cms.InputTag('muonMatchHLTTrackMuOnia'),
+    #cms.InputTag('muonMatchHLTTrackMuOnia'),
 ]
 
 patTriggerMatchers2Mu = cms.Sequence(
@@ -140,14 +139,14 @@ patTriggerMatchers2Mu = cms.Sequence(
     muonMatchHLTCtfTrack2 +
     muonMatchHLTTrackMu   +
     muonMatchHLTTracksIter
-    + muonMatchHLTTrackMuOnia
+    #+ muonMatchHLTTrackMuOnia
 )
 patTriggerMatchers2MuInputTags = [
     cms.InputTag('muonMatchHLTCtfTrack'),
     cms.InputTag('muonMatchHLTCtfTrack2'),
     cms.InputTag('muonMatchHLTTrackMu'),
     cms.InputTag('muonMatchHLTTracksIter'),
-    cms.InputTag('muonMatchHLTTrackMuOnia'),
+    #cms.InputTag('muonMatchHLTTrackMuOnia'),
 ]
 
 ## ==== Embed ====
@@ -184,7 +183,7 @@ def switchOffAmbiguityResolution(process):
     process.muonMatchHLTCtfTrack.resolveAmbiguities = False
     process.muonMatchHLTTrackMu.resolveAmbiguities  = False
     process.muonMatchHLTTracksIter.resolveAmbiguities  = False
-    process.muonMatchHLTTrackMuOnia.resolveAmbiguities  = False
+    #process.muonMatchHLTTrackMuOnia.resolveAmbiguities  = False
 
 def changeTriggerProcessName(process, triggerProcessName, oldProcessName="HLT"):
     "Change the process name under which the trigger was run"

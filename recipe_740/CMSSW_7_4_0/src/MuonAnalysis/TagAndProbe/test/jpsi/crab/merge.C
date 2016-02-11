@@ -16,16 +16,7 @@
 int main() {
 
   //TString path = "0000";
-  //TString outputFile = "MuOniaParked_Run2012C_22Jan2013v1_MuMuPiKPAT";
-  //TString outputFile = "official_BdToPsiKpi_18Mar_MuMuPiKPAT";
-  //TString inputFile = "MuOniaRun2012C_25Apr_MuMuPiPiPAT_ntpl";
-  TString inputFile = "tnpJPsi_officialBPHMC";
-  //TString inputFile = "tnpJPsi_Data";
 
-  //TString outputFile = "full50nsRun" ;
-  //TString outputFile = "last50nsRun" ;
-  TString outputFile = inputFile ;
-  //TString outputFile = "MuOniaRun2012D_25Apr_MuMuPiPiPAT_ntpl" ;
   //FILE *fp = fopen( TString::Format("./%s.root",outputFile.Data()), "r" );
   //TFile *fp = TFile::Open( TString::Format("./%s.root",outputFile.Data()), "r" );
   //TFile *fp = new TFile(TString::Format("./%s.root",outputFile.Data()), "recreate");
@@ -54,7 +45,11 @@ int main() {
   //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/Charmonium/crab_TnP_RunC_25ns_noPairVtxInfo/160108_111956/" ; TString dir = "crab_TnP_RunC_25ns_noPairVtxInfo";
   //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/Charmonium/crab_TnP_RunDv3_25ns_noPairVtxInfo/160108_132823/" ; TString dir = "crab_TnP_RunDv3_25ns_noPairVtxInfo";
   //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/Charmonium/crab_TnP_RunDv4_25ns_noPairVtxInfo/160109_223454/" ; TString dir = "crab_TnP_RunDv4_25ns_noPairVtxInfo";
-  TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/crab_TnP_fullMC_25ns_withAllTagVars/160201_100551/" ; TString dir = "crab_TnP_fullMC_25ns_withAllTagVars";
+  //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/crab_TnP_fullMC_25ns_withAllTagVars/160201_100551/" ; TString dir = "crab_TnP_fullMC_25ns_withAllTagVars";
+  //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/crab_TnP_fullMC_25ns_addingMu25/160208_174353/" ; TString dir = "crab_TnP_fullMC_25ns_addingMu25";
+  //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/Charmonium/crab_TnP_RunC_25ns_addingMu25/160208_171741/" ; TString dir = "crab_TnP_RunC_25ns_addingMu25"; 
+  //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/Charmonium/crab_TnP_RunDv3_25ns_addingMu25/160208_171839/" ; TString dir = "crab_TnP_RunDv3_25ns_addingMu25";
+  TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/Charmonium/crab_TnP_RunDv4_25ns_addingMu25/160208_171916/" ; TString dir = "crab_TnP_RunDv4_25ns_addingMu25";
   // Mu8
   //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/DoubleMuon/crab_TnP_RunC_25ns_Mu8/160129_082727/" ; TString dir = "crab_TnP_RunC_25ns_Mu8";
   //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/DoubleMuon/crab_TnP_RunDv4_25ns_Mu8/160129_081627/" ; TString dir = "crab_TnP_RunDv4_25ns_Mu8";
@@ -62,7 +57,17 @@ int main() {
 
   TString rootPrefix = "root://eoscms.cern.ch/"+prefix ;
 
-  for (Int_t i=3; i<=4; i++) {
+  TString inputFile = "";
+  if (prefix.Contains("JpsiToMuMu"))
+    inputFile = "tnpJPsi_officialBPHMC";
+  else
+    inputFile = "tnpJPsi_Data";
+
+  //TString outputFile = "full50nsRun" ;
+  //TString outputFile = "last50nsRun" ;
+  TString outputFile = inputFile ;
+  
+  for (Int_t i=0; i<=7; i++) {
     TString path = TString::Format("000%d",i);
     //TFile *fp = new TFile(TString::Format("./%s_%s.root",inputFile.Data(),path.Data()), "recreate");
     //fp->mkdir("tpTree")->cd(); // gives error
@@ -107,7 +112,7 @@ int main() {
 
   // with hadd command
   //gSystem->Exec(TString::Format("hadd -f -k -v 1 %s.root %s_000*.root > hadd_log.txt", outputFile.Data(), outputFile.Data())) ;
-  //gSystem->Exec(TString::Format("hadd -f -k -v 1 %s/%s.root %s/%s_000*.root > %s/hadd_log.txt", dir.Data(), outputFile.Data(), dir.Data(), outputFile.Data(), dir.Data())) ;
+  gSystem->Exec(TString::Format("hadd -f -k -v 1 %s/%s.root %s/%s_000*.root > %s/hadd_log.txt", dir.Data(), outputFile.Data(), dir.Data(), outputFile.Data(), dir.Data())) ;
 
   return 0 ;
 }
