@@ -128,6 +128,10 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         # Mu25
         Mu25TkMu0Onia_TM = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
         tag_Mu25TkMu0Onia_L3_MU = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        # Mu16
+        Mu16TkMu0Onia_TM = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+        tag_Mu16TkMu0Onia_L3_MU = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
+
         ),
 
    Expressions = cms.PSet(
@@ -405,9 +409,10 @@ process.TnP_MuonID = Template.clone(
      #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Charmonium_PromptReco_50ns_first47ipb_vertexingTriggersFlags.root'),
      ##InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Charmonium_PromptReco_50ns.root'),
      #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns.root'),
-     InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns_golden.root'),
+     #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns_golden.root'),
      #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns_golden_Mu8.root'), # Mu8 test
      #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns_golden_withMu25.root'),
+     InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns_golden_withMu16.root'),
      #
      InputTreeName = cms.string("fitter_tree"),
      InputDirectoryName = cms.string("tpTree"),
@@ -483,10 +488,12 @@ ALLBINS =  [("pt_abseta_notSeparated",PT_ABSETA_BINS_notSeparated), ("pt_abseta_
 #ALLBINS += [("pt_abseta_wide",PT_ABSETA_WIDE)]
 #ALLBINS =  [("ptPlateau_eta",PLATEAU_ETA)]
 
-triggerEff = True
-#triggerEff = False
+#triggerEff = True
+triggerEff = False
 Mu25_test = False
 #Mu25_test = True
+Mu16_test = False
+Mu16_test = True
 
 print "Going to define TagProbeFitTreeAnalyzer for " + ', '.join(IDS) + " efficiency (trigger efficiency is " + str(triggerEff) + ")\nusing as input file: " + process.TnP_MuonID.InputFileNames[0]
 
@@ -554,6 +561,16 @@ for ID in IDS:
                             BinnedVariables = DEN_Mu25,
                             BinToPDFmap = cms.vstring("signalPlusBkg"),
                             ))
+               if Mu16_test:
+                    # Mu16
+                    DEN_Mu16 = DEN_withSoftID.clone( tag_Mu16TkMu0Onia_L3_MU = cms.vstring("pass") )
+                    setattr(module.Efficiencies, "Mu16_"+X, cms.PSet(
+                            EfficiencyCategoryAndState = cms.vstring("Mu16TkMu0Onia_TM","pass"),
+                            UnbinnedVariables = UnbinnedVars,
+                            BinnedVariables = DEN_Mu16,
+                            BinToPDFmap = cms.vstring("signalPlusBkg"),
+                            ))
+
                if triggerEff:
                     # for L3
                     DEN_forL3 = DEN_withSoftID.clone()

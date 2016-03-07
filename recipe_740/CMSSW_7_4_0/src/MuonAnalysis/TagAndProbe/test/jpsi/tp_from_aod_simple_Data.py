@@ -189,9 +189,11 @@ elif "CMSSW_7_4_" in os.environ['CMSSW_VERSION']:
         #'/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/906/00000/1CBD178C-CD4B-E511-B61D-02163E014291.root',
         #'/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/907/00000/C4A55346-E24B-E511-80E3-02163E013463.root',
         #'/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/913/00000/00716CF9-EB4B-E511-BEA7-02163E0136EE.root',
-        '/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/914/00000/FCED70C1-EC4B-E511-9676-02163E0142B5.root'
+        #'/store/data/Run2015C/Charmonium/AOD/PromptReco-v1/000/254/914/00000/FCED70C1-EC4B-E511-9676-02163E0142B5.root'
 	# DoubleMuon for Mu8 test
 	#'root://cms-xrd-global.cern.ch//store/data/Run2015C_25ns/DoubleMuon/AOD/05Oct2015-v1/50000/001DCCA1-0574-E511-9088-0025905B85D0.root'
+	# MuOnia for Mu16 test
+	'/store/data/Run2015C/MuOnia/AOD/PromptReco-v1/000/254/227/00000/B4C42971-0546-E511-B988-02163E011853.root'
         ]
 else: raise RuntimeError, "Unknown CMSSW version %s" % os.environ['CMSSW_VERSION']
 
