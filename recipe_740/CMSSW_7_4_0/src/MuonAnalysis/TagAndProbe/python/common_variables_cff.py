@@ -230,7 +230,7 @@ LowPtTriggerFlagsEfficienciesTag = cms.PSet(
                                        + " && triggerObjectMatchesByCollection('hltL3MuonCandidates').at(0).hasFilterLabel('hltL3fL1sMu16orMu20erorMu25L1f0L2f0L3Filtered25')"
                                        ),
    Mu16TkMu0Onia_L3_MU = cms.string(   "!triggerObjectMatchesByCollection('hltL3MuonCandidates').empty()"
-                                       + " && triggerObjectMatchesByCollection('hltL3MuonCandidates').at(0).hasFilterLabel('hltL3fL1sMu16orMu20erorMu16L1f0L2f0L3Filtered16')"
+                                       + " && triggerObjectMatchesByCollection('hltL3MuonCandidates').at(0).hasFilterLabel('hltL3fL1sMu14erorMu16L1f0L2f0L3Filtered16')"
                                        ),
    )
 
@@ -274,10 +274,10 @@ LowPtTriggerFlagsEfficienciesProbe = cms.PSet(
                                         + " && triggerObjectMatchesByCollection('hltGlbTrkMuonCands').at(0).hasFilterLabel('hltDiMuonGlbFiltered25TrkFiltered0')"
                                         ),
     Mu16TkMu0Onia_L2 = cms.string(      "!triggerObjectMatchesByCollection('hltL2MuonCandidates').empty()"
-                                        + " && triggerObjectMatchesByCollection('hltL2MuonCandidates').at(0).hasFilterLabel('hltL2fL1sMu16orMu20erorMu16L1f0L2Filtered0')"
+                                        + " && triggerObjectMatchesByCollection('hltL2MuonCandidates').at(0).hasFilterLabel('hltL2fL1sMu14erorMu16L1f0L2Filtered0')"
                                         ),
     Mu16TkMu0Onia_L3 = cms.string(      "!triggerObjectMatchesByCollection('hltL3MuonCandidates').empty()"
-                                        + " && triggerObjectMatchesByCollection('hltL3MuonCandidates').at(0).hasFilterLabel('hltL3fL1sMu16orMu20erorMu16L1f0L2f0L3Filtered16')"
+                                        + " && triggerObjectMatchesByCollection('hltL3MuonCandidates').at(0).hasFilterLabel('hltL3fL1sMu14erorMu16L1f0L2f0L3Filtered16')"
                                         ),
     Mu16TkMu0Onia_TM = cms.string(      "!triggerObjectMatchesByCollection('hltGlbTrkMuonCands').empty()"
                                         + " && triggerObjectMatchesByCollection('hltGlbTrkMuonCands').at(0).hasFilterLabel('hltDiMuonGlb16Trk0DzFiltered0p2')"
