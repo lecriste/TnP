@@ -552,20 +552,28 @@ for ID in IDS:
                          BinToPDFmap = cms.vstring("signalPlusBkg")
                          ))
                # L1L2 w.r.t. SoftMuon ID
+               absetaMax = 1.6
                if Mu25_test:
                     # Mu25
-		    DEN_Mu25 = DEN_withSoftID.clone( tag_Mu25TkMu0Onia_L3_MU = cms.vstring("pass") )
+		    DEN_Mu25 = DEN_withSoftID.clone( tag_abseta = cms.vdouble(0.0, absetaMax), tag_Mu25TkMu0Onia_L3_MU = cms.vstring("pass"), Mu25TkMu0Onia_TM = cms.vstring("pass") )
+                    if hasattr(DEN_Mu26, "abseta"):
+                         DEN_Mu26.abseta = cms.vdouble(*[i for i in DEN.abseta if i < absetaMax])
+                         DEN_Mu26.abseta.append(absetaMax)
 		    setattr(module.Efficiencies, "Mu25_"+X, cms.PSet(
-                    	    EfficiencyCategoryAndState = cms.vstring("Mu25TkMu0Onia_TM","pass"),
+                    	    EfficiencyCategoryAndState = cms.vstring("Dimuon10_Jpsi_Barrel","pass"),
                             UnbinnedVariables = UnbinnedVars,
                             BinnedVariables = DEN_Mu25,
                             BinToPDFmap = cms.vstring("signalPlusBkg"),
                             ))
                if Mu16_test:
                     # Mu16
-                    DEN_Mu16 = DEN_withSoftID.clone( tag_Mu16TkMu0Onia_L3_MU = cms.vstring("pass") )
+                    DEN_Mu16 = DEN_withSoftID.clone( tag_abseta = cms.vdouble(0.0, absetaMax), tag_Mu16TkMu0Onia_L3_MU = cms.vstring("pass"), Mu16TkMu0Onia_TM = cms.vstring("pass") )
+                    if hasattr(DEN_Mu16, "abseta"):
+                         DEN_Mu16.abseta = cms.vdouble(*[i for i in DEN.abseta if i < absetaMax])
+                         DEN_Mu16.abseta.append(absetaMax)
                     setattr(module.Efficiencies, "Mu16_"+X, cms.PSet(
-                            EfficiencyCategoryAndState = cms.vstring("Mu16TkMu0Onia_TM","pass"),
+                            EfficiencyCategoryAndState = cms.vstring("Dimuon10_Jpsi_Barrel","pass"), # L3 filter
+                            #EfficiencyCategoryAndState = cms.vstring("Dimuon10_L1L2","pass"), # L2 filter
                             UnbinnedVariables = UnbinnedVars,
                             BinnedVariables = DEN_Mu16,
                             BinToPDFmap = cms.vstring("signalPlusBkg"),
@@ -578,7 +586,6 @@ for ID in IDS:
                     #
                     #tag_pt_min = 10.0 # for full-coverage trigger
                     tag_pt_min = 11.0 # for full-coverage trigger
-                    absetaMax = 1.6
                     for L1L2, DEN_L1L2, DEN_L3 in [("Dimuon16_L1L2",DEN_forL1L2.clone(tag_pt = cms.vdouble(tag_pt_min, 1000.0)),DEN_forL3.clone(tag_pt = cms.vdouble(tag_pt_min, 1000.0))),
                                                    ("Dimuon10_L1L2",DEN_forL1L2.clone(tag_abseta = cms.vdouble(0.0, absetaMax)),DEN_forL3.clone(tag_abseta = cms.vdouble(0.0, absetaMax)))]: 
                          if "Dimuon10" in L1L2:
