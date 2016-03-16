@@ -93,14 +93,14 @@ void createPtRootFiles() {
   // code set up so that MC file is split in different files for abseta bins
   //const std::string effName[] = {"Loose2012", "Soft2012", "newSoft2012", "Tight2012", "Dimuon10_L1L2"}; 
   //TString effName[] = {"Loose2012", "Soft2012", "newSoft2012", "Tight2012", "Dimuon10_L1L2", "Dimuon16_L1L2", "L3_wrt_Dimuon10_L1L2", "L3_wrt_Dimuon16_L1L2", "Dimuon16_Jpsi_wrt_Dimuon6_Jpsi_NoVertexing", "Dimuon10_Jpsi_Barrel_wrt_Dimuon0er16_Jpsi_NoVertexing"};
-  const TString effName[] = {"Loose2015", "Medium2015", "Tight2012_zIPCut", "Soft2012", "Dimuon10_L1L2", "Dimuon16_L1L2", "L3_wrt_Dimuon10_L1L2", "L3_wrt_Dimuon16_L1L2", "Dimuon16_Jpsi_wrt_Dimuon6_Jpsi_NoVertexing", "Dimuon10_Jpsi_Barrel_wrt_Dimuon0er16_Jpsi_NoVertexing","Mu16"};
+  const TString effName[] = {"Loose2015", "Medium2015", "Tight2012_zIPCut", "Soft2012", "Dimuon10_L1L2", "Dimuon16_L1L2", "L3_wrt_Dimuon10_L1L2", "L3_wrt_Dimuon16_L1L2", "Dimuon16_Jpsi_wrt_Dimuon6_Jpsi_NoVertexing", "Dimuon10_Jpsi_Barrel_wrt_Dimuon0er16_Jpsi_NoVertexing","Mu16","Mu16_MuL3"};
   const int nEff = sizeof(effName)/sizeof(effName[0]);
   vector<TString> triggers = {"_Mu7p5_Track2_Jpsi"} ; 
   vector<TString> noTrig = {""} ;
   //
   vector< pair<TString, vector<TString>> > eff_triggers ;
   for (uint iEff=0; iEff<nEff; ++iEff)
-    if ( !(effName[iEff].Contains("L3") || effName[iEff].Contains("Vertexing") || effName[iEff].Contains("Mu16")) )
+    if ( !(effName[iEff].BeginsWith("L3") || effName[iEff].Contains("Vertexing") || effName[iEff].Contains("Mu16")) )
       eff_triggers.push_back( make_pair(effName[iEff],triggers) ) ;
     else
       eff_triggers.push_back( make_pair(effName[iEff],noTrig) ) ;
@@ -125,7 +125,7 @@ void createPtRootFiles() {
   //for (int iEff=0; iEff<=3; ++iEff) {
   //for (int iEff=3; iEff<=7; ++iEff) {
   //for (int iEff=6; iEff<=7; ++iEff) { // L3 only
-  for (int iEff=10; iEff<=10; ++iEff) { // test
+  for (int iEff=11; iEff<=11; ++iEff) { // test
     cout <<"\nWorking on efficiency \"" <<effName[iEff] <<"\" in the " <<(mode[1].Contains("25ns") ? "25" : "50") <<"ns scenario" <<endl;
 
     // Name of trigger: Mu5_Track2, Mu7_Track7
@@ -165,7 +165,7 @@ void createPtRootFiles() {
     //binnedVars = "_plateau" ;
     //binnedVars = "_ptTurnOn" ;
     binnedVars = "_pt_abseta_notSeparated" ;
-    binnedVars = "_pt_abseta" ; binnedVars = "_pt_abseta_seagull" ; //binnedVars = "_pt_abseta_cowboy" ;
+    binnedVars = "_pt_abseta" ; binnedVars = "_pt_abseta_seagull" ; binnedVars = "_pt_abseta_cowboy" ;
     //binnedVars.Append("_separated") ;
     //binnedVars = "_ptPlateau_eta" ;
     //binnedVars = "_vtx" ;
@@ -274,7 +274,7 @@ void createPtRootFiles() {
 	//inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__data_all__%s%s.root", path.c_str(), effFileName.Data(), binnedVars.Data()) ;
 	if (!mode[1].Contains("25ns")) // 50 ns
 	  inputfile[iEffSample] = TString::Format("%s/%sTnP_MuonID__data_%s_%s%s.root", path.c_str(), mode[0].Data(), mode[1].Data(), effFileName.Data(), binnedVars.Data()) ;
-	else
+	else // 25 ns
 	  //inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__data_all_%s_%s%s.root", path.c_str(), mode[1].Data(), effFileName.Data(), binnedVars.Data()) ;
 	  inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__data_%s_%s%s.root", path.c_str(), mode[1].Data(), effFileName.Data(), binnedVars.Data()) ;
 	if (effName[iEff].Contains("Vertexing")) {
@@ -330,6 +330,7 @@ void createPtRootFiles() {
       }//iTrack
     } //iEffSample
 
+    Bool_t truncateErr = kTRUE; truncateErr = kFALSE;
 
     for (int iEffSample = 0; iEffSample < nEffSample; iEffSample++) {
       
@@ -369,8 +370,11 @@ void createPtRootFiles() {
 	if ( !binnedVars.Contains("lateau") ) {
 	  if ( trackName[iEffSample][iTrack] != "Mu8" ) {
 	    if ( !inputfile[iEffSample].Contains("Vertexing") ) {
-	      //directory <<eff_triggers[iEff].first <<"_pt_abseta_" <<trackName[iEffSample][iTrack] <<"_Jpsi";
-	      directory <<eff_triggers[iEff].first <<binnedVars <<eff_triggers[iEff].second[0] ;
+	      if ( !effName[iEff].Contains("Mu16") ) {
+		//directory <<eff_triggers[iEff].first <<"_pt_abseta_" <<trackName[iEffSample][iTrack] <<"_Jpsi";
+		directory <<eff_triggers[iEff].first <<binnedVars <<eff_triggers[iEff].second[0] ;
+	      } else
+		directory <<"Mu16" <<binnedVars <<eff_triggers[iEff].second[0] ;
 	    } else
 	      directory <<eff_triggers[iEff].first ;
 	  } else
@@ -442,7 +446,7 @@ void createPtRootFiles() {
 	  if ( !binnedVars.Contains("lateau") && !binnedVars.Contains("ptTurnOn") && !binnedVars.Contains("vtx") )
 	    if ( abseta >= 2 ) {
 	      if ( trackName[iEffSample][iTrack] != "Mu8" ) {
-		if ( eff_triggers[iEff].first.Contains("L3") )
+		if ( eff_triggers[iEff].first.BeginsWith("L3") )
 		  inter <<"pt_PLOT__abseta_" <<bins2name[iBins2] <<"_and_" <<eff_triggers[iEff-2].first <<"_pass_and_TMOST_pass_and_Track_HP_pass_and_tag_" <<"Mu7p5_L2Mu2" <<"_Jpsi_MU_pass" ;
 		else if ( eff_triggers[iEff].first.Contains("L1L2") )
 		  inter <<"pt_PLOT__abseta_" <<bins2name[iBins2] <<"_and_" <<trackName[iEffSample][iTrack] <<"_Jpsi_TK_pass_and_TMOST_pass_and_Track_HP_pass_and_tag_" <<trackName[iEffSample][iTrack] <<"_Jpsi_MU_pass" ;
@@ -499,8 +503,10 @@ void createPtRootFiles() {
 	    //if(err_high > 0.05) {err_high = err_low; cout <<"changed high error" <<endl;}
 	    //if(err_low > 0.05) {err_low = err_high; cout <<"changed low error" <<endl;}
 	    //if(iEffSample==1 && err_high > 0.05) {err_high = err_low; cout <<"changed MC high error" <<endl;}
-	    //if (y + err_high > 1) err_high = 1 - y; // comment out to calculate correct ratio errors
-	      
+	    if (!truncateErr) {
+	      //if (y + err_high > 1) err_high = 1 - y; // comment out to calculate correct ratio errors
+	      err_high = err_low; // comment out to calculate correct ratio errors
+ 	    }
 	    //store values
 	    for (int s = 0; s < nBins1; s++) {
 	      cout <<"\nx_" <<s <<" = " <<x <<endl; 
@@ -864,11 +870,11 @@ void createPtRootFiles() {
 	    // RATIO
 	       <<eff_ratio[iBins1][1] <<"^{+"
 	       <<eff_ratio[iBins1][3] <<"}_{-"
-	       <<eff_ratio[iBins1][2] <<"}$\\" <<endl
+	       <<eff_ratio[iBins1][2] <<"}$" <<endl
 	    // DIFF
 	       <<eff_diff[iBins1][1] <<"^{+"
 	       <<eff_diff[iBins1][3] <<"}_{-"
-	       <<eff_diff[iBins1][2] <<"}$\\" <<endl ;
+	       <<eff_diff[iBins1][2] <<"}$" <<endl ;
 	  
 	} //iBins1
 	
@@ -956,9 +962,16 @@ void createPtRootFiles() {
 	//diffC->SaveAs( TString::Format("../plots/ratio/27oct/"+eff_triggers[iEff].first+"/%s.png", diffName.Data()) ) ;
 
 	dir.ReplaceAll("overlay/", "ratio/");
-	ratioC->SaveAs( dir+ratioName+".png") ;
-	diffC->SaveAs( dir+diffName+".png") ;
-
+	if (truncateErr) {
+	  ratioC->SaveAs( dir+ratioName+".png") ;
+	  diffC->SaveAs( dir+diffName+".png") ;
+	} else {
+	  gSystem->mkdir(dir+"noErrorTruncation", true);
+	  if ( web )
+	    gSystem->CopyFile(prefix+uploadFile, dir+"noErrorTruncation/"+uploadFile, true);
+	  ratioC->SaveAs( dir+"noErrorTruncation/"+ratioName+".png") ;
+	  diffC->SaveAs( dir+"noErrorTruncation/"+diffName+".png") ;
+	}
 
 	// fit
 	gSystem->mkdir(dir+"fit/", true);
@@ -981,8 +994,15 @@ void createPtRootFiles() {
 	if ( logX )
 	  gPad->SetLogx() ;
 	gPad->SetGrid() ;
-	ratioFitC->SaveAs( dir+"fit/"+ratioName+".png") ;
 
+	if (truncateErr)
+	  ratioFitC->SaveAs( dir+"fit/"+ratioName+".png") ;
+	else {
+	  gSystem->mkdir(dir+"fit/noErrorTruncation", true);
+	  if ( web )
+	    gSystem->CopyFile(prefix+uploadFile, dir+"fit/noErrorTruncation/"+uploadFile, true);
+	  ratioFitC->SaveAs( dir+"fit/noErrorTruncation/"+ratioName+".png") ;
+	}
 
 	dir.ReplaceAll("ratio/", "overlay/");
 	// PAS style overlay
@@ -1013,7 +1033,14 @@ void createPtRootFiles() {
 	  overlayPad->SetLogx();
 	overlayPad->SetGrid() ; 
 
-	overlayC->SaveAs( dir+bins2name[iBins2]+".png") ;
+	if (truncateErr)
+	  overlayC->SaveAs( dir+bins2name[iBins2]+".png") ;
+	else {
+	  gSystem->mkdir(dir+"noErrorTruncation/", true);
+	  if ( web )
+	    gSystem->CopyFile(prefix+uploadFile, dir+"noErrorTruncation/"+uploadFile, true);
+	  overlayC->SaveAs( dir+"noErrorTruncation/"+bins2name[iBins2]+".png") ;
+	}
 
       } //iBins2
 

@@ -488,12 +488,13 @@ ALLBINS =  [("pt_abseta_notSeparated",PT_ABSETA_BINS_notSeparated), ("pt_abseta_
 #ALLBINS += [("pt_abseta_wide",PT_ABSETA_WIDE)]
 #ALLBINS =  [("ptPlateau_eta",PLATEAU_ETA)]
 
-#triggerEff = True
+triggerEff = True
 triggerEff = False
 Mu25_test = False
 #Mu25_test = True
 Mu16_test = False
-Mu16_test = True
+if "Mu16" in process.TnP_MuonID.InputFileNames[0]:
+     Mu16_test = True
 
 print "Going to define TagProbeFitTreeAnalyzer for " + ', '.join(IDS) + " efficiency (trigger efficiency is " + str(triggerEff) + ")\nusing as input file: " + process.TnP_MuonID.InputFileNames[0]
 
@@ -572,8 +573,9 @@ for ID in IDS:
                          DEN_Mu16.abseta = cms.vdouble(*[i for i in DEN.abseta if i < absetaMax])
                          DEN_Mu16.abseta.append(absetaMax)
                     setattr(module.Efficiencies, "Mu16_"+X, cms.PSet(
-                            EfficiencyCategoryAndState = cms.vstring("Dimuon10_Jpsi_Barrel","pass"), # L3 filter
+                            #EfficiencyCategoryAndState = cms.vstring("Dimuon10_Jpsi_Barrel","pass"), # L3 filter
                             #EfficiencyCategoryAndState = cms.vstring("Dimuon10_L1L2","pass"), # L2 filter
+                            EfficiencyCategoryAndState = cms.vstring("Dimuon10_L1L2","pass", "Mu_L3","pass"), # L2 + Mu_L3 filter
                             UnbinnedVariables = UnbinnedVars,
                             BinnedVariables = DEN_Mu16,
                             BinToPDFmap = cms.vstring("signalPlusBkg"),
