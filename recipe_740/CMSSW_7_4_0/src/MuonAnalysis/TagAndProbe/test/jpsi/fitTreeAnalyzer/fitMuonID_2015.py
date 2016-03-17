@@ -227,6 +227,7 @@ pT_binning_25ns = cms.vdouble(2.0, 2.5, 3.0, 3.5, 4.0, 4.75, 5.5, 7.5, 10.0, 15.
 abseta_binning_47ipb = cms.vdouble(0.0, 0.9, 1.2, 2.1, 2.4)
 abseta_binning_25ns = cms.vdouble(0.0, 0.9, 1.2, 1.6, 2.1, 2.4)
 abseta_binning_25ns_v2 = cms.vdouble(0.0, 0.2, 0.3, 0.9 , 1.2, 1.6, 2.1, 2.4)
+absy_binning_25ns = cms.vdouble(0.0, 0.3, 0.6, 0.9, 1.2, 1.6, 2.1, 2.4)
 
 PT_ETA_BINS = cms.PSet(   SEPARATED,
                           #pt = pT_binning_2012,
@@ -292,8 +293,17 @@ PT_ABSY_BINS_notSeparated_pair = cms.PSet(   NOTSEPARATED,
                                                #pt = pT_binning_2015,
                                                #pair_pt = cms.vdouble(10.0, 16.0, 20.0, 40.0),
                                                pair_pt = cms.vdouble(10.0, 13.0, 16.0, 18.0, 20.0, 30.0, 40.0),
-                                               #abseta = cms.vdouble(0.0,0.9,1.2,2.1) # 2012
-                                               pair_absrapidity = abseta_binning_47ipb
+                                               #pair_absrapidity = abseta_binning_47ipb
+                                               pair_absrapidity = absy_binning_25ns
+                                               )
+
+PT_ABSYLARGE_BINS_notSeparated_pair = cms.PSet(   NOTSEPARATED,
+                                               #pt = pT_binning_2012,
+                                               #pt = pT_binning_2015,
+                                               #pair_pt = cms.vdouble(10.0, 16.0, 20.0, 40.0),
+                                               pair_pt = cms.vdouble(10.0, 13.0, 16.0, 18.0, 20.0, 30.0, 40.0),
+                                               #pair_absrapidity = abseta_binning_47ipb
+                                               pair_absrapidity = cms.vdouble(0.,1.2)
                                                )
 
 PT_ABSETA_BINS_notSeparated_allPairs = cms.PSet(   NOTSEPARATED_allPairs,
@@ -411,8 +421,8 @@ process.TnP_MuonID = Template.clone(
      #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns.root'),
      #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns_golden.root'),
      #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns_golden_Mu8.root'), # Mu8 test
-     #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns_golden_withMu25.root'),
-     InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns_golden_withMu16.root'),
+     InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns_golden_withMu25.root'),
+     #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns_golden_withMu16.root'),
      #
      InputTreeName = cms.string("fitter_tree"),
      InputDirectoryName = cms.string("tpTree"),
@@ -489,7 +499,7 @@ ALLBINS =  [("pt_abseta_notSeparated",PT_ABSETA_BINS_notSeparated), ("pt_abseta_
 #ALLBINS =  [("ptPlateau_eta",PLATEAU_ETA)]
 
 triggerEff = True
-triggerEff = False
+#triggerEff = False
 Mu25_test = False
 #Mu25_test = True
 Mu16_test = False
@@ -619,8 +629,8 @@ for ID in IDS:
                #         BinnedVariables = DEN.clone(mcTrue = cms.vstring("true"))
                #     ))
           # comment the following two lines to not run this efficiency
-          setattr(process, "TnP_MuonID__"+ID+"_"+X, module)
-          setattr(process, "run_"+ID+"_"+X, cms.Path(module))
+          #setattr(process, "TnP_MuonID__"+ID+"_"+X, module)
+          #setattr(process, "run_"+ID+"_"+X, cms.Path(module))
 
 
 
@@ -688,7 +698,7 @@ for X,B in ALLBINS:
 
 ########## Vertexing efficiency ########## 
 if triggerEff:
-     ALLBINS =  [("pt_absrapidity_notSeparated",PT_ABSY_BINS_notSeparated_pair)]
+     ALLBINS =  [("pt_absrapidity_notSeparated",PT_ABSY_BINS_notSeparated_pair),("pt_absrapidityLarge_notSeparated",PT_ABSYLARGE_BINS_notSeparated_pair)]
      TRIGS = [ (16,'Dimuon6_Jpsi_NoVertexing','Dimuon16_Jpsi'), (10,'Dimuon0er16_Jpsi_NoVertexing','Dimuon10_Jpsi_Barrel') ]
 
      process.TnP_Vertexing = Template.clone(
@@ -732,8 +742,8 @@ if triggerEff:
                          BinnedVariables = DEN,
                          ))
           # comment the following two lines to not run this efficiency
-          #setattr(process, "TnP_Vertexing__"+X, module)
-          #setattr(process, "p_TnP_vertexing_"+X, cms.Path(module))
+          setattr(process, "TnP_Vertexing__"+X, module)
+          setattr(process, "p_TnP_vertexing_"+X, cms.Path(module))
 
 
 print "End of configuration file"

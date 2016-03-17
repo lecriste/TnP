@@ -106,11 +106,11 @@ void createPtRootFiles() {
       eff_triggers.push_back( make_pair(effName[iEff],noTrig) ) ;
 
   // Name of samples: data and MC
-  //const std::string effSampleName[] = {"MC", "DATA"};
+  const std::string effSampleName[] = {"MC", "DATA"};
   //const std::string effSampleName[] = {"MC", "MC"};
   //const std::string effSampleName[] = {"MC"};
   //const std::string effSampleName[] = {"MC", "MC_Mu8"};
-  const std::string effSampleName[] = {"DATA"};
+  //const std::string effSampleName[] = {"DATA"};
   //
   const Int_t sampleMarker[2][2] = {{4,21},{1,20}}; // {color, style}
   const int nEffSample = sizeof(effSampleName)/sizeof(effSampleName[0]);
@@ -121,11 +121,11 @@ void createPtRootFiles() {
   vector< TString > bins2name;
   //for (int iEff=3; iEff<=3; ++iEff) { // Soft only
   //for (int iEff=4; iEff<=7; ++iEff) {
-  //for (int iEff=8; iEff<=9; ++iEff) {
+  for (int iEff=8; iEff<=9; ++iEff) { // vertexing
   //for (int iEff=0; iEff<=3; ++iEff) {
   //for (int iEff=3; iEff<=7; ++iEff) {
   //for (int iEff=6; iEff<=7; ++iEff) { // L3 only
-  for (int iEff=11; iEff<=11; ++iEff) { // test
+  //for (int iEff=11; iEff<=11; ++iEff) { // test
     cout <<"\nWorking on efficiency \"" <<effName[iEff] <<"\" in the " <<(mode[1].Contains("25ns") ? "25" : "50") <<"ns scenario" <<endl;
 
     // Name of trigger: Mu5_Track2, Mu7_Track7
@@ -165,7 +165,7 @@ void createPtRootFiles() {
     //binnedVars = "_plateau" ;
     //binnedVars = "_ptTurnOn" ;
     binnedVars = "_pt_abseta_notSeparated" ;
-    binnedVars = "_pt_abseta" ; binnedVars = "_pt_abseta_seagull" ; binnedVars = "_pt_abseta_cowboy" ;
+    //binnedVars = "_pt_abseta" ; binnedVars = "_pt_abseta_seagull" ; binnedVars = "_pt_abseta_cowboy" ;
     //binnedVars.Append("_separated") ;
     //binnedVars = "_ptPlateau_eta" ;
     //binnedVars = "_vtx" ;
@@ -189,9 +189,9 @@ void createPtRootFiles() {
 	bins1.push_back(2.0); bins1.push_back(2.5); bins1.push_back(3.0); bins1.push_back(3.5); bins1.push_back(4.0); bins1.push_back(4.75); bins1.push_back(5.5); bins1.push_back(7.5); bins1.push_back(10.0); bins1.push_back(15.0); bins1.push_back(20.0); bins1.push_back(40.0); 
       } 
       else {
-	if (!effName[iEff].Contains("Dimuon16"))
-	  bins1.push_back(10.0);
-	bins1.push_back(16.0); bins1.push_back(20.0); bins1.push_back(40.0);
+	if (!effName[iEff].Contains("Dimuon16")) {
+	  bins1.push_back(10.0); bins1.push_back(13.0); }
+	bins1.push_back(16.0); bins1.push_back(18.0); bins1.push_back(20.0); bins1.push_back(30.0); bins1.push_back(40.0);
       } var1name = "pT" ;
 
       //std::string bins2name[] = {"0to2p4"};
@@ -202,10 +202,18 @@ void createPtRootFiles() {
 	bins2.push_back(2.4); bins2name.push_back("0to2p4");
       } else {
 	if (mode[1].Contains("25ns")) {
-	  bins2.push_back(0.2); bins2.push_back(0.3); 
-	  bins2name.push_back("0to0p2"); bins2name.push_back("0p2to0p3"); bins2name.push_back("0p3to0p9");
+	  if (!effName[iEff].Contains("Vertexing")) {
+	  bins2.push_back(0.2); bins2name.push_back("0to0p2");
+	  }
+	  bins2.push_back(0.3);
+	  if (!effName[iEff].Contains("Vertexing")) {
+	    bins2name.push_back("0p2to0p3"); bins2name.push_back("0p3to0p9");
+	  } else {
+	    bins2name.push_back("0to0p3");
+	    bins2.push_back(0.6); bins2name.push_back("0p3to0p6"); bins2name.push_back("0p6to0p9");
+	  }
 	}
-	else
+	else 
 	  bins2name.push_back("0to0p9");
 	bins2.push_back(0.9); 
 	//	  
@@ -279,8 +287,8 @@ void createPtRootFiles() {
 	  inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__data_%s_%s%s.root", path.c_str(), mode[1].Data(), effFileName.Data(), binnedVars.Data()) ;
 	if (effName[iEff].Contains("Vertexing")) {
 	  //inputfile[iEffSample] = TString::Format("%s/TnP_Vertexing__data_246908-251883_JSON_MuonPhys_v2_%s.root", path.c_str(), binnedVars.Data()) ;
-	  //inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__data_246908-255031_JSON_MuonPhys_v2__%s%s.root", path.c_str(), eff_triggers[iEff].first.c_str(), binnedVars.Data()) ;
-	  inputfile[iEffSample] = TString::Format("%s/%sTnP_Vertexing__data_%s%s.root", path.c_str(), mode[0].Data(), mode[1].Data(), binnedVars.Data()) ;
+	  //inputfile[iEffSample] = TString::Format("%s/%sTnP_Vertexing__data_%s%s.root", path.c_str(), mode[0].Data(), mode[1].Data(), binnedVars.Data()) ;
+	  inputfile[iEffSample] = TString::Format("%s/%sTnP_Vertexing__data_all_%s%s.root", path.c_str(), mode[0].Data(), mode[1].Data(), binnedVars.Data()) ;
 	}
       }
       else if ( effSampleName[iEffSample] == "MC" ) { 
