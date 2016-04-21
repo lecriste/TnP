@@ -223,10 +223,12 @@ pT_binning_2012 = cms.vdouble(2.0, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.5, 5.
 pT_binning_2015 = cms.vdouble(2.0, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.5, 5.0, 6.0, 8.0, 10.0, 15.0, 20.0, 30.0, 40.0)
 pT_binning_47ipb = cms.vdouble(2.0, 2.5, 3.0, 3.5, 4.0, 4.75, 5.5, 7.5, 10.0, 20.0, 40.0)
 pT_binning_25ns = cms.vdouble(2.0, 2.5, 3.0, 3.5, 4.0, 4.75, 5.5, 7.5, 10.0, 15.0, 20.0, 40.0)
+pT_binning_Mu8 = cms.vdouble(3.0, 6.0, 40.0)
 
 abseta_binning_47ipb = cms.vdouble(0.0, 0.9, 1.2, 2.1, 2.4)
 abseta_binning_25ns = cms.vdouble(0.0, 0.9, 1.2, 1.6, 2.1, 2.4)
 abseta_binning_25ns_v2 = cms.vdouble(0.0, 0.2, 0.3, 0.9 , 1.2, 1.6, 2.1, 2.4)
+abseta_binning_Mu8 = cms.vdouble(0.0, 1.2, 2.4)
 absy_binning_25ns = cms.vdouble(0.0, 0.3, 0.6, 0.9, 1.2, 1.6, 2.1, 2.4)
 
 PT_ETA_BINS = cms.PSet(   SEPARATED,
@@ -244,12 +246,9 @@ PT_ABSETA_BINS = cms.PSet(   SEPARATED,
                           abseta = abseta_binning_47ipb
                        )
 
-PT_ABSETA_BINS = cms.PSet(   SEPARATED,
-                          #pt = pT_binning_2012,
-                          #pt = pT_binning_2015,
-                          pt = pT_binning_47ipb,
-                          #abseta = cms.vdouble(0.0,0.9,1.2,2.1) # 2012
-                          abseta = abseta_binning_47ipb
+PT_ABSETA_BINS_Mu8 = cms.PSet(   SEPARATED,
+                          pt = pT_binning_Mu8,
+                          abseta = abseta_binning_Mu8
                        )
 
 PT_ABSETA_BINS_allPairs = cms.PSet(   SEPARATED_allPairs,
@@ -258,9 +257,9 @@ PT_ABSETA_BINS_allPairs = cms.PSet(   SEPARATED_allPairs,
                           #pt = pT_binning_47ipb,
                           pt = pT_binning_25ns,
                           #abseta = cms.vdouble(0.0,0.9,1.2,2.1) # 2012
-                          #abseta = abseta_binning_47ipb,
+                          abseta = abseta_binning_47ipb,
                           #abseta = abseta_binning_25ns
-                          abseta = abseta_binning_25ns_v2
+                          #abseta = abseta_binning_25ns_v2
                        )
 
 PT_ABSETA_BINS_notSeparated = cms.PSet(   NOTSEPARATED,
@@ -420,8 +419,8 @@ process.TnP_MuonID = Template.clone(
      ##InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Charmonium_PromptReco_50ns.root'),
      #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns.root'),
      #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns_golden.root'),
-     #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns_golden_Mu8.root'), # Mu8 test
-     InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns_golden_withMu25.root'),
+     InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns_golden_Mu8.root'), # Mu8 test
+     #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns_golden_withMu25.root'),
      #InputFileNames = cms.vstring('/afs/cern.ch/work/l/lecriste/TnP/recipe_740/CMSSW_7_4_0/src/MuonAnalysis/TagAndProbe/test/jpsi/tnpJPsi_Data25ns_golden_withMu16.root'),
      #
      InputTreeName = cms.string("fitter_tree"),
@@ -437,12 +436,13 @@ IDS = ["Soft2012"]
 #IDS = ["Loose2012", "Soft2012", "newSoft2012"]
 #IDS = [ "Glb", "TMOST", "VBTF", "PF" ]
 # Carlo request:
-#IDS = ["Loose2015", "Soft2012", "Medium2015", "Tight2012_zIPCut"]
+IDS = ["Loose2015", "Soft2012", "Medium2015", "Tight2012_zIPCut"]
 
 #TRIGS = [ (2,'Mu7p5_L2Mu2_Jpsi'), (2,'Mu7p5_Track2_Jpsi'), (3.5,'Mu7p5_Track3p5_Jpsi'), (7,'Mu7p5_Track7_Jpsi') ]
 #TRIGS = [ (2,'Mu7p5_Track2_Jpsi'), (7,'Mu7p5_Track7_Jpsi') ]
 TRIGS = [ (2,'Mu7p5_Track2_Jpsi') ]
-#TRIGS = [ (2,'Mu8') ] # Mu8 test
+if "Mu8" in process.TnP_MuonID.InputFileNames[0]:
+     TRIGS = [ (2,'Mu8') ] # Mu8 test
 #TRIGS = [ (7,'Mu7p5_Track7_Jpsi') ]
 #TRIGS = [ (0,'Mu8'), (0,'Mu17') ] 
 #TRIGS = [ (0,'DoubleMu17TkMu8_TkMu8leg') ]
@@ -480,9 +480,9 @@ else: mode = ""
 #ALLBINS =  [("pt_eta",PT_ETA_BINS)]
 #ALLBINS =  [("pt_abseta",PT_ABSETA_BINS)]
 #ALLBINS =  [("pt_abseta_seagull",PT_ABSETA_BINS_SEAGULL), ("pt_abseta_cowboy",PT_ABSETA_BINS_COWBOY)]
-#ALLBINS =  [("pt_abseta_allPairs",PT_ABSETA_BINS_allPairs)]
+ALLBINS =  [("pt_abseta_allPairs",PT_ABSETA_BINS_allPairs)]
 #ALLBINS =  [("pt_abseta_notSeparated",PT_ABSETA_BINS_notSeparated)]
-ALLBINS =  [("pt_abseta_notSeparated",PT_ABSETA_BINS_notSeparated), ("pt_abseta_seagull",PT_ABSETA_BINS_SEAGULL), ("pt_abseta_cowboy",PT_ABSETA_BINS_COWBOY)]
+#ALLBINS =  [("pt_abseta_notSeparated",PT_ABSETA_BINS_notSeparated), ("pt_abseta_seagull",PT_ABSETA_BINS_SEAGULL), ("pt_abseta_cowboy",PT_ABSETA_BINS_COWBOY)]
 #ALLBINS =  [("pt_abseta_separated",PT_ABSETA_BINS_allPairs), ("pt_abseta_seagull_separated",PT_ABSETA_BINS_SEAGULL_separated), ("pt_abseta_cowboy_separated",PT_ABSETA_BINS_COWBOY_separated)]
 #ALLBINS =  [("pt_eta2p4_notSeparated",PT_BINS_notSeparated)]
 #ALLBINS =  [("pt_abseta2p4",PT_BINS_ABSETA2p4)]
@@ -497,9 +497,11 @@ ALLBINS =  [("pt_abseta_notSeparated",PT_ABSETA_BINS_notSeparated), ("pt_abseta_
 #ALLBINS =  [("pt_abseta",PT_ABSETA_BINS), ("vtx",VTX_BINS), ("plateau",PLATEAU_ABSETA)]
 #ALLBINS += [("pt_abseta_wide",PT_ABSETA_WIDE)]
 #ALLBINS =  [("ptPlateau_eta",PLATEAU_ETA)]
+if "Mu8" in process.TnP_MuonID.InputFileNames[0]:
+     ALLBINS =  [("pt_abseta",PT_ABSETA_BINS_Mu8)]
 
 triggerEff = True
-#triggerEff = False
+triggerEff = False
 Mu25_test = False
 #Mu25_test = True
 Mu16_test = False
@@ -629,8 +631,8 @@ for ID in IDS:
                #         BinnedVariables = DEN.clone(mcTrue = cms.vstring("true"))
                #     ))
           # comment the following two lines to not run this efficiency
-          #setattr(process, "TnP_MuonID__"+ID+"_"+X, module)
-          #setattr(process, "run_"+ID+"_"+X, cms.Path(module))
+          setattr(process, "TnP_MuonID__"+ID+"_"+X, module)
+          setattr(process, "run_"+ID+"_"+X, cms.Path(module))
 
 
 
