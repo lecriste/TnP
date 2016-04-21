@@ -121,8 +121,8 @@ void createPtRootFiles() {
   vector< TString > bins2name;
   //for (int iEff=3; iEff<=3; ++iEff) { // Soft only
   //for (int iEff=4; iEff<=7; ++iEff) {
-  for (int iEff=8; iEff<=9; ++iEff) { // vertexing
-  //for (int iEff=0; iEff<=3; ++iEff) {
+  //for (int iEff=8; iEff<=9; ++iEff) { // vertexing
+  for (int iEff=0; iEff<=3; ++iEff) { // all IDs
   //for (int iEff=3; iEff<=7; ++iEff) {
   //for (int iEff=6; iEff<=7; ++iEff) { // L3 only
   //for (int iEff=11; iEff<=11; ++iEff) { // test
@@ -169,9 +169,11 @@ void createPtRootFiles() {
     //binnedVars.Append("_separated") ;
     //binnedVars = "_ptPlateau_eta" ;
     //binnedVars = "_vtx" ;
+    binnedVars = "_pt_abseta_allPairs" ;
     if (effName[iEff].Contains("Vertexing")) {
       binnedVars.ReplaceAll("abseta","absrapidity"); binnedVars.ReplaceAll("rapidity","rapidityLarge");
     }
+    Bool_t oniaBinning = kFALSE; //oniaBinning = kTRUE;
     TString var1name, var2name; 
     bins1.clear();
     bins2.clear(); bins2name.clear(); // fill always together!
@@ -203,7 +205,7 @@ void createPtRootFiles() {
       } else {
 	if ( !binnedVars.Contains("Large") ) {
 
-	  if (mode[1].Contains("25ns")) {
+	  if (mode[1].Contains("25ns") && oniaBinning) {
 	    if (!effName[iEff].Contains("Vertexing")) {
 	      bins2.push_back(0.2); bins2name.push_back("0to0p2");
 	    }
@@ -224,12 +226,12 @@ void createPtRootFiles() {
 	else bins2name.push_back("0to1p2");
 	bins2.push_back(1.2); 
 	//
-	if (mode[1].Contains("25ns")) { 
+	if (mode[1].Contains("25ns") && oniaBinning) { 
 	  bins2.push_back(1.6); bins2name.push_back("1p2to1p6");
 	}
 	if (!effName[iEff].Contains("Dimuon10") && !effName[iEff].Contains("Mu16")) {
 	  bins2.push_back(2.1); bins2.push_back(2.4);
-	  if (mode[1].Contains("25ns"))
+	  if (mode[1].Contains("25ns") && oniaBinning)
 	    bins2name.push_back("1p6to2p1");
 	  else
 	    bins2name.push_back("1p2to2p1");
@@ -268,7 +270,7 @@ void createPtRootFiles() {
     const int nBins1 = bins1.size() -1;
     const int nBins2 = bins2.size() -1;
     Bool_t logX = kFALSE;
-    if ( var1name.Contains("pT") ) logX = kTRUE;
+    if ( oniaBinning ) logX = kTRUE;
 
     //input files
     //std::stringstream datafile, mcfile;
@@ -289,8 +291,8 @@ void createPtRootFiles() {
 	if (!mode[1].Contains("25ns")) // 50 ns
 	  inputfile[iEffSample] = TString::Format("%s/%sTnP_MuonID__data_%s_%s%s.root", path.c_str(), mode[0].Data(), mode[1].Data(), effFileName.Data(), binnedVars.Data()) ;
 	else // 25 ns
-	  //inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__data_all_%s_%s%s.root", path.c_str(), mode[1].Data(), effFileName.Data(), binnedVars.Data()) ;
-	  inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__data_%s_%s%s.root", path.c_str(), mode[1].Data(), effFileName.Data(), binnedVars.Data()) ;
+	  inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__data_all_%s_%s%s.root", path.c_str(), mode[1].Data(), effFileName.Data(), binnedVars.Data()) ;
+	  //inputfile[iEffSample] = TString::Format("%s/TnP_MuonID__data_%s_%s%s.root", path.c_str(), mode[1].Data(), effFileName.Data(), binnedVars.Data()) ;
 	if (effName[iEff].Contains("Vertexing")) {
 	  //inputfile[iEffSample] = TString::Format("%s/TnP_Vertexing__data_246908-251883_JSON_MuonPhys_v2_%s.root", path.c_str(), binnedVars.Data()) ;
 	  //inputfile[iEffSample] = TString::Format("%s/%sTnP_Vertexing__data_%s%s.root", path.c_str(), mode[0].Data(), mode[1].Data(), binnedVars.Data()) ;
