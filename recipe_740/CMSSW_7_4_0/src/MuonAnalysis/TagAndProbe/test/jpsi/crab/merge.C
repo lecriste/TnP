@@ -43,31 +43,40 @@ int main() {
   //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/Charmonium/crab_TnP_RunC_25ns/151126_160437/" ; TString dir = "crab_TnP_RunC_25ns";
   //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/crab_TnP_fullMC_withAllTagVars/151211_174215/" ; TString dir = "crab_TnP_fullMC_withAllTagVars";
   //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/Charmonium/crab_TnP_RunC_25ns_noPairVtxInfo/160108_111956/" ; TString dir = "crab_TnP_RunC_25ns_noPairVtxInfo";
+  //TString dir = "crab_TnP_RunC_25ns_noPairVtxInfo"; TString task = "160108_111956" ;
   //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/Charmonium/crab_TnP_RunDv3_25ns_noPairVtxInfo/160108_132823/" ; TString dir = "crab_TnP_RunDv3_25ns_noPairVtxInfo";
+  TString dir = "crab_TnP_RunDv3_25ns_noPairVtxInfo"; TString task = "160108_132823" ;
   //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/Charmonium/crab_TnP_RunDv4_25ns_noPairVtxInfo/160109_223454/" ; TString dir = "crab_TnP_RunDv4_25ns_noPairVtxInfo";
+  //TString dir = "crab_TnP_RunDv4_25ns_noPairVtxInfo"; TString task = "160109_223454" ;
   //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/crab_TnP_fullMC_25ns_withAllTagVars/160201_100551/" ; TString dir = "crab_TnP_fullMC_25ns_withAllTagVars";
-  //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/crab_TnP_fullMC_25ns_addingMu25/160208_174353/" ; TString dir = "crab_TnP_fullMC_25ns_addingMu25";
+  //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8/crab_TnP_fullMC_25ns_addingMu25/160208_174353/" ;
+  //TString dir = "crab_TnP_fullMC_25ns_addingMu25"; TString task = "160208_174353" ;
   //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/Charmonium/crab_TnP_RunC_25ns_addingMu25/160208_171741/" ; TString dir = "crab_TnP_RunC_25ns_addingMu25"; 
   //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/Charmonium/crab_TnP_RunDv3_25ns_addingMu25/160208_171839/" ; TString dir = "crab_TnP_RunDv3_25ns_addingMu25";
-  TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/Charmonium/crab_TnP_RunDv4_25ns_addingMu25/160208_171916/" ; TString dir = "crab_TnP_RunDv4_25ns_addingMu25";
+  //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/Charmonium/crab_TnP_RunDv4_25ns_addingMu25/160208_171916/" ; TString dir = "crab_TnP_RunDv4_25ns_addingMu25";
   // Mu8
   //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/DoubleMuon/crab_TnP_RunC_25ns_Mu8/160129_082727/" ; TString dir = "crab_TnP_RunC_25ns_Mu8";
   //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/DoubleMuon/crab_TnP_RunDv4_25ns_Mu8/160129_081627/" ; TString dir = "crab_TnP_RunDv4_25ns_Mu8";
   //TString prefix = "/eos/cms/store/group/phys_muon/lecriste/TnP/DoubleMuon/crab_TnP_RunDv3_25ns_Mu8_v2/160131_233829/" ; TString dir = "crab_TnP_RunDv3_25ns_Mu8_v2";
 
-  TString rootPrefix = "root://eoscms.cern.ch/"+prefix ;
+  //TString rootPrefix = "root://eoscms.cern.ch/"+prefix ;
 
+  TString prefix = "";
   TString inputFile = "";
-  if (prefix.Contains("JpsiToMuMu"))
+  if (dir.Contains("MC")) {
+    prefix = "/store/group/phys_muon/lecriste/TnP/JpsiToMuMu_OniaMuonFilter_TuneCUEP8M1_13TeV-pythia8";
     inputFile = "tnpJPsi_officialBPHMC";
-  else
-    inputFile = "tnpJPsi_Data";
+  } else {
+   prefix = "/store/group/phys_muon/lecriste/TnP/Charmonium"; 
+   inputFile = "tnpJPsi_Data"; }
+  
+  TString rootPrefix = "root://eoscms.cern.ch/"+prefix+"/"+dir+"/"+task+"/" ;
 
   //TString outputFile = "full50nsRun" ;
   //TString outputFile = "last50nsRun" ;
   TString outputFile = inputFile ;
   
-  for (Int_t i=0; i<=7; i++) {
+  for (Int_t i=2; i<=5; i++) {
     TString path = TString::Format("000%d",i);
     //TFile *fp = new TFile(TString::Format("./%s_%s.root",inputFile.Data(),path.Data()), "recreate");
     //fp->mkdir("tpTree")->cd(); // gives error
@@ -93,12 +102,22 @@ int main() {
 
 
     // with hadd command
+    /*
     TString intermediateFile = outputFile + "_" + path + ".root" ;
     TString intermediateLog = "hadd_" + path + "_log.txt" ;
     //gSystem->Exec(TString::Format("hadd -f -k -v 1 %s %s%s/%s*.root > %s", intermediateFile.Data(), prefix.Data(), path.Data(), inputFile.Data(), intermediateLog.Data())) ;
     // for eos
     //gSystem->Exec(TString::Format("%s ls %s%s/ | grep .root | awk '{ printf \"%s%s/\"; print }' | xargs hadd -f -k -v 1 %s > %s", eos.Data(), rootPrefix.Data(), path.Data(), rootPrefix.Data(), path.Data(), intermediateFile.Data(), intermediateLog.Data() )) ;
     gSystem->Exec(TString::Format("%s ls %s%s/ | grep .root | awk '{ printf \"%s%s/\"; print }' | xargs hadd -f -k -v 1 %s/%s > %s/%s", eos.Data(), rootPrefix.Data(), path.Data(), rootPrefix.Data(), path.Data(), dir.Data(), intermediateFile.Data(), dir.Data(), intermediateLog.Data() )) ;
+    */
+    TString subdir = dir+"/"+path;
+    gSystem->mkdir(subdir, false);
+    for (Int_t j=0; j<=9; j++) {
+      TString intermediateFile = outputFile + "_" + path + "_" + TString::Itoa(j,10) + ".root" ;
+      TString intermediateLog = "hadd_" + path + "_" + TString::Itoa(j,10) + "_log.txt" ;
+      gSystem->Exec(TString::Format("%s ls %s%s/ | grep %d.root | awk '{ printf \"%s%s/\"; print}' | xargs hadd -f -k -v 1 %s/%s > %s/%s", eos.Data(), rootPrefix.Data(), path.Data(), j, rootPrefix.Data(), path.Data(), subdir.Data(), intermediateFile.Data(), subdir.Data(), intermediateLog.Data() )) ;
+    }
+    gSystem->Exec(TString::Format("hadd -f -k -v 1 %s/%s_%s.root %s/%s_%s_*.root > %s/hadd_%s_log.txt", dir.Data(), outputFile.Data(), path.Data(), subdir.Data(), outputFile.Data(), path.Data(), dir.Data(), path.Data())) ;
 
   }
 
@@ -112,6 +131,7 @@ int main() {
 
   // with hadd command
   //gSystem->Exec(TString::Format("hadd -f -k -v 1 %s.root %s_000*.root > hadd_log.txt", outputFile.Data(), outputFile.Data())) ;
+  //gSystem->Exec(TString::Format("hadd -f -k -v 1 %s/%s.root %s/%s_000*.root > %s/hadd_log.txt", dir.Data(), outputFile.Data(), dir.Data(), outputFile.Data(), dir.Data())) ;
   gSystem->Exec(TString::Format("hadd -f -k -v 1 %s/%s.root %s/%s_000*.root > %s/hadd_log.txt", dir.Data(), outputFile.Data(), dir.Data(), outputFile.Data(), dir.Data())) ;
 
   return 0 ;

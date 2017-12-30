@@ -141,7 +141,7 @@ void TagProbeFitter::setWeightVar(const std::string &var) {
   weightVar = var;
 }
 
-string TagProbeFitter::calculateEfficiency(string dirName,const std::vector<string>& effCats,const std::vector<string>& effStates, vector<string>& unbinnedVariables, map<string, vector<double> >& binnedReals, map<string, std::vector<string> >& binnedCategories, vector<string>& binToPDFmap){
+string TagProbeFitter::calculateEfficiency(string dirName,const std::vector<string>& effCats,const std::vector<string>& effStates, vector<string>& unbinnedVariables, map<string, vector<double> >& binnedReals, map<string, std::vector<string> >& binnedCategories, vector<string>& binToPDFmap) {
   //go to home directory
   outputDirectory->cd();
   //make a directory corresponding to this efficiency binning
@@ -354,7 +354,7 @@ string TagProbeFitter::calculateEfficiency(string dirName,const std::vector<stri
 	  //cout <<"dirName " <<i <<" = " <<dirName <<endl ;
 	}
     //
-    cout<<"Fitting bin:  "<<dirName <<endl;
+    cout<<"Fitting bin:  "<<dirName <<"\nfor " <<effCats[0] <<endl ;
     //make a directory for each bin
     gDirectory->mkdir(dirName)->cd();
 
@@ -846,11 +846,14 @@ void TagProbeFitter::saveEfficiencyPlots(RooDataSet& eff, const TString& effName
 	      catName.ReplaceAll( v->first+"_bin"+TString::Itoa(i,10)+"_", v->first+"_"+v->second[i]+"_" )  ;
 
 	for (map<TString, vector<TString> >::iterator v=variable_binLimits.begin(); v!=variable_binLimits.end(); v++)
-	  for ( UInt_t i=0; i<v->second.size(); ++i) {
-	    //cout <<"catName " <<i <<" = " <<catName <<endl ;
-	    //catName.ReplaceAll( v->first+"_bin"+TString::Itoa(i,10)+"_", v->first+"_"+v->second[i]+"_" )  ;
-	    catName.ReplaceAll( v->first+"_bin"+TString::Itoa(i,10), v->first+"_"+v->second[i] )  ;
-	    //cout <<"catName " <<i <<" = " <<catName <<endl ;
+	  for ( UInt_t i=0; i < v->second.size(); ++i) {
+            TString toReplace = v->first+"_bin"+TString::Itoa(i,10);
+	    if (catName.Contains( toReplace )) { // useful only for debugging
+	      //cout <<"catName " <<i <<" = " <<catName <<endl ;
+	      //catName.ReplaceAll( toReplace+"_", v->first+"_"+v->second[i]+"_" )  ;
+	      catName.ReplaceAll( toReplace, v->first+"_"+v->second[i] ) ;
+	      //cout <<"catName " <<i <<" = " <<catName <<endl ;
+	    }
 	  }
 	// 
         makeEfficiencyPlot1D(myEff, *v1, TString::Format("%s_PLOT__%s", v1->GetName(), catName.Data()), catName, effName, "allCats1D", t->getVal());

@@ -4,7 +4,7 @@ import FWCore.ParameterSet.Config as cms
 ###    cmsRun fitMuonID.py <scenario>
 ### scenarios:
 ###   - data_all (default)
-###   - signal_mc
+###   - signal_MC
 
 import sys
 args = sys.argv[1:]
@@ -23,6 +23,8 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 process.source = cms.Source("EmptySource")
 
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )
+
+binsNominal = 40
 
 print "About to define TagProbeFitTreeAnalyzer"
 
@@ -86,7 +88,7 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         TMOST = cms.vstring("TMOneStationTight", "dummy[pass=1,fail=0]"),
         PF = cms.vstring("PF", "dummy[pass=1,fail=0]"),
         Track_HP = cms.vstring("Track_HP", "dummy[pass=1,fail=0]"),
-        Tight2012 = cms.vstring("Tight Id. Muon", "dummy[pass=1,fail=0]"),
+        Tight = cms.vstring("Tight Id. Muon", "dummy[pass=1,fail=0]"),
         Medium = cms.vstring("Medium Id. Muon", "dummy[pass=1,fail=0]"),
 	# 2012 triggers
         #Mu5_Track2_Jpsi_TK = cms.vstring("ProbeTrigger_Track0", "dummy[pass=1,fail=0]"),
@@ -134,27 +136,27 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
 
         ),
 
-   Expressions = cms.PSet(
-     LooseVar = cms.vstring("LooseVar", "PF==1 && (Glb==1 || TM==1) ", "PF", "Glb", "TM"),
-     Loose2015Var = cms.vstring("Loose2015Var", "PF==1", "PF"),
-     oldSoftVar = cms.vstring("oldSoftVar", "TMOST ==1 && tkTrackerLay > 5 && tkPixelLay > 1 && tkChi2 < 1.8 && abs(dzPV) < 30 && abs(dB) < 3", "TMOST","tkTrackerLay", "tkPixelLay", "tkChi2", "dzPV", "dB"),
-     # without chi2 cut
-     #oldSoftVar = cms.vstring("oldSoftVar", "TMOST ==1 && tkTrackerLay > 5 && tkPixelLay > 1 && abs(dzPV) < 30 && abs(dB) < 3", "TMOST","tkTrackerLay", "tkPixelLay", "dzPV", "dB"),
-     #changed cuts
-     #oldSoftVar = cms.vstring("oldSoftVar", "TMOST ==1", "TMOST"),
-     #oldSoftVar = cms.vstring("oldSoftVar", "TMOST ==1 && abs(dzPV) < 20", "TMOST", "dzPV"),
-     #oldSoftVar = cms.vstring("oldSoftVar", "TMOST ==1 && abs(dzPV) < 20 && abs(dB) < 0.3", "TMOST", "dzPV", "dB"),
-     #oldSoftVar = cms.vstring("oldSoftVar", "TMOST ==1 && abs(dzPV) < 20 && abs(dB) < 0.3 && tkPixelLay > 0", "TMOST", "dzPV", "dB", "tkPixelLay"),
-     #oldSoftVar = cms.vstring("oldSoftVar", "TMOST ==1 && abs(dzPV) < 20 && abs(dB) < 0.3 && tkPixelLay > 0 && tkTrackerLay > 5", "TMOST", "dzPV", "dB", "tkPixelLay", "tkTrackerLay"),
-     #MediumVar = cms.vstring("MediumVar", "Loose==1 && validFraction > 0.8 && ((Glb==1 && glbChi2 < 3 && chi2LPosition < 12 && tkKink < 20 && segmComp > 0.303) || segmComp> 0.451)", "Loose", "validFraction", "Glb", "glbChi2", "chi2LPosition", "tkKink", "segmComp"), # already defined in the tree
-     MediumVar = cms.vstring("MediumVar", "Medium==1", "Medium"),
-     TightVar = cms.vstring("TightVar", "PF==1 && Glb==1 && tkChi2 < 10 && glbValidMuHits > 0 && numberOfMatchedStations > 1 && abs(dB) < 0.2 && abs(dzPV) < 0.5 && tkValidPixelHits > 0 && tkTrackerLay > 5", "PF", "Glb", "tkChi2", "glbValidMuHits", "numberOfMatchedStations", "dB",  "dzPV", "tkValidPixelHits", "tkTrackerLay" ),
-     Tight2012_zIPCutVar = cms.vstring("Tight2012_zIPCut", "Tight2012 == 1 && abs(dzPV) < 0.5", "Tight2012", "dzPV"),
-     # new SoftMuon ID 2012
-     SoftVar = cms.vstring("SoftVar", "TMOST == 1 && tkTrackerLay > 5 && tkPixelLay > 0 && abs(dzPV) < 20 && abs(dB) < 0.3 && Track_HP == 1", "TMOST","tkTrackerLay", "tkPixelLay", "dzPV", "dB", "Track_HP"),
-     ),
+    Expressions = cms.PSet(
+          LooseVar = cms.vstring("LooseVar", "PF==1 && (Glb==1 || TM==1) ", "PF", "Glb", "TM"),
+          Loose2015Var = cms.vstring("Loose2015Var", "PF==1", "PF"),
+          oldSoftVar = cms.vstring("oldSoftVar", "TMOST ==1 && tkTrackerLay > 5 && tkPixelLay > 1 && tkChi2 < 1.8 && abs(dzPV) < 30 && abs(dB) < 3", "TMOST","tkTrackerLay", "tkPixelLay", "tkChi2", "dzPV", "dB"),
+          # without chi2 cut
+          #oldSoftVar = cms.vstring("oldSoftVar", "TMOST ==1 && tkTrackerLay > 5 && tkPixelLay > 1 && abs(dzPV) < 30 && abs(dB) < 3", "TMOST","tkTrackerLay", "tkPixelLay", "dzPV", "dB"),
+          #changed cuts
+          #oldSoftVar = cms.vstring("oldSoftVar", "TMOST ==1", "TMOST"),
+          #oldSoftVar = cms.vstring("oldSoftVar", "TMOST ==1 && abs(dzPV) < 20", "TMOST", "dzPV"),
+          #oldSoftVar = cms.vstring("oldSoftVar", "TMOST ==1 && abs(dzPV) < 20 && abs(dB) < 0.3", "TMOST", "dzPV", "dB"),
+          #oldSoftVar = cms.vstring("oldSoftVar", "TMOST ==1 && abs(dzPV) < 20 && abs(dB) < 0.3 && tkPixelLay > 0", "TMOST", "dzPV", "dB", "tkPixelLay"),
+          #oldSoftVar = cms.vstring("oldSoftVar", "TMOST ==1 && abs(dzPV) < 20 && abs(dB) < 0.3 && tkPixelLay > 0 && tkTrackerLay > 5", "TMOST", "dzPV", "dB", "tkPixelLay", "tkTrackerLay"),
+          #MediumVar = cms.vstring("MediumVar", "Loose==1 && validFraction > 0.8 && ((Glb==1 && glbChi2 < 3 && chi2LPosition < 12 && tkKink < 20 && segmComp > 0.303) || segmComp> 0.451)", "Loose", "validFraction", "Glb", "glbChi2", "chi2LPosition", "tkKink", "segmComp"), # already defined in the tree
+          MediumVar = cms.vstring("MediumVar", "Medium==1", "Medium"),
+          TightVar = cms.vstring("TightVar", "PF==1 && Glb==1 && tkChi2 < 10 && glbValidMuHits > 0 && numberOfMatchedStations > 1 && abs(dB) < 0.2 && abs(dzPV) < 0.5 && tkValidPixelHits > 0 && tkTrackerLay > 5", "PF", "Glb", "tkChi2", "glbValidMuHits", "numberOfMatchedStations", "dB",  "dzPV", "tkValidPixelHits", "tkTrackerLay" ),
+          Tight2012_zIPCutVar = cms.vstring("Tight2012_zIPCut", "Tight == 1 && abs(dzPV) < 0.5", "Tight", "dzPV"),
+          # new SoftMuon ID 2012
+          SoftVar = cms.vstring("SoftVar", "TMOST == 1 && tkTrackerLay > 5 && tkPixelLay > 0 && abs(dzPV) < 20 && abs(dB) < 0.3 && Track_HP == 1", "TMOST","tkTrackerLay", "tkPixelLay", "dzPV", "dB", "Track_HP"),
+    ),
 
-   Cuts = cms.PSet(
+    Cuts = cms.PSet(
           Loose2012 = cms.vstring("Loose", "LooseVar", "0.5"),
           Loose2015 = cms.vstring("Loose2015", "Loose2015Var", "0.5"),
           Medium2015 = cms.vstring("Medium2015", "MediumVar", "0.5"),
@@ -164,12 +166,18 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
           Soft2012 = cms.vstring("Soft", "SoftVar", "0.5"),
           ),
 
-   PDFs = cms.PSet(
-        signalPlusBkg = cms.vstring(
+    PDFs = cms.PSet(
+        CBPlusExp = cms.vstring(
             "CBShape::signal(mass, mean[3.1,3.0,3.2], sigma[0.05,0.02,0.06], alpha[3., 0.5, 5.], n[1, 0.1, 100.])",
+            "Exponential::backgroundPass(mass, lp[0,-5,5])",
+            "Exponential::backgroundFail(mass, lf[0,-5,5])",
+            "efficiency[0.9,0,1]",
+            "signalFractionInPassing[0.9]"
+        ),
+        GaussPlusExp = cms.vstring(
+            "Gaussian::signal(mass, mean[3.1,3.0,3.2], sigma[0.05,0.02,0.1])",
             #"Chebychev::backgroundPass(mass, {cPass[0,-0.5,0.5], cPass2[0,-0.5,0.5]})",
             #"Chebychev::backgroundFail(mass, {cFail[0,-0.5,0.5], cFail2[0,-0.5,0.5]})",
-            #"Gaussian::signal(mass, mean[3.1,3.0,3.2], sigma[0.05,0.02,0.1])",
             "Exponential::backgroundPass(mass, lp[0,-5,5])",
             "Exponential::backgroundFail(mass, lf[0,-5,5])",
             "efficiency[0.9,0,1]",
@@ -178,7 +186,7 @@ Template = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     ),
 
     binnedFit = cms.bool(True),
-    binsForFit = cms.uint32(40),
+    binsForFit = cms.uint32(binsNominal), # will be overwritten later
 
     Efficiencies = cms.PSet(), # will be filled later
 )
@@ -436,7 +444,7 @@ process.TnP_MuonID = Template.clone(
      InputDirectoryName = cms.string("tpTree"),
      #InputDirectoryName = cms.string("tpTreeSta"),
      OutputFileName = cms.string("TnP_MuonID_%s.root" %scenario),
-     Efficiencies = cms.PSet(),
+     Efficiencies = cms.PSet(), # will be filled later
 )
 
 IDS = ["Soft2012"]
@@ -445,7 +453,7 @@ IDS = ["Soft2012"]
 #IDS = ["Loose2012", "Soft2012", "newSoft2012"]
 #IDS = [ "Glb", "TMOST", "VBTF", "PF" ]
 # Carlo request:
-IDS = ["Loose2015", "Soft2012", "Medium2015", "Tight2012_zIPCut"]
+#IDS = ["Loose2015", "Soft2012", "Medium2015", "Tight2012_zIPCut"]
 
 #TRIGS = [ (2,'Mu7p5_L2Mu2_Jpsi'), (2,'Mu7p5_Track2_Jpsi'), (3.5,'Mu7p5_Track3p5_Jpsi'), (7,'Mu7p5_Track7_Jpsi') ]
 #TRIGS = [ (2,'Mu7p5_Track2_Jpsi'), (7,'Mu7p5_Track7_Jpsi') ]
@@ -457,7 +465,7 @@ if "Mu8" in process.TnP_MuonID.InputFileNames[0]:
 #TRIGS = [ (0,'DoubleMu17TkMu8_TkMu8leg') ]
 
 UnbinnedVars = cms.vstring("mass")
-if "mc" in scenario:
+if "MC" in scenario:
      UnbinnedVars = cms.vstring("mass","weight")
      process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC25ns_withMu25_withNVtxWeights.root']
      #process.TnP_MuonID.InputFileNames = ['../tnpJPsi_officialBPHMC25ns_withAllTagVars_withNVtxWeightsFromGolden.root']
@@ -518,131 +526,166 @@ Mu16_test = False
 if "Mu16" in process.TnP_MuonID.InputFileNames[0]:
      Mu16_test = True
 
+
+# For systematcis studies
+
+MASS_RANGE = [ ("2.9","3.3",'') ]
+#MASS_RANGE = [ ("2.9","3.3",''), ("2.95","3.25",'_narrowMassRange'), ("2.85","3.35",'_largeMassRange')]
+MASS_NAME = process.TnP_MuonID.Variables.mass[0]
+MASS_UNIT = process.TnP_MuonID.Variables.mass[3]
+
+MASS_BINS = [ (binsNominal,'') ]
+#MASS_BINS = [ (binsNominal,''), (35,'_35massBins'), (45,'_45massBins') ] # not able to make it work :(
+#MASS_BINS = [ (35,'_35massBins') ]
+#MASS_BINS = [ (45,'_45massBins') ]
+
+#PDF = [ ("CBPlusExp",'') ]
+PDF = [ ("GaussPlusExp",'_GaussPlusExp') ]
+#PDF = [ ("CBPlusExp",''), ("GaussPlusExp",'_GaussPlusExp') ]
+
 print "Going to define TagProbeFitTreeAnalyzer for " + ', '.join(IDS) + " efficiency (trigger efficiency is " + str(triggerEff) + ")\nusing as input file: " + process.TnP_MuonID.InputFileNames[0]
+print "Remeber that empty strings or strings containng the name of the EDAnalyzer variables will not work with a misleading error message!"
 
 for ID in IDS:
      #if len(args) > 1 and args[1] in IDS and ID != args[1]: continue
      if len(args) > 1 and ID != args[1]: continue
      for X,B in ALLBINS:
           if len(args) > 2 and X not in args[2:]: continue
-          module = process.TnP_MuonID.clone(OutputFileName = cms.string(
-                    "TnP_MuonID__%s_%s_%s_%s.root" %(scenario, mode, ID, X)))
-          if "Mu8" in process.TnP_MuonID.InputFileNames[0]:
-               #module.OutputFileName = module.OutputFileName.replace(".root","_Mu8.root")
-               module.OutputFileName = cms.string(
-                    "TnP_MuonID__%s_%s_%s_%s_Mu8.root" %(scenario, mode, ID, X))
-          #DEN = B.clone()
-          #setattr(module.Efficiencies, ID+"_"+X, cms.PSet(
-          #          EfficiencyCategoryAndState = cms.vstring(ID,"above"),     # ??
-          #          UnbinnedVariables = UnbinnedVars,
-          #          BinnedVariables = DEN,
-          #          BinToPDFmap = cms.vstring("signalPlusBkg")
-          #          )
-          #        )
-          #
-          for PTMIN, TRIG in TRIGS:
-               TRIGLABEL=""
-               #if "pt_" in X:
-               if "pt" in X or "vtx" in X:
-                    TRIGLABEL="_"+TRIG
-               else:
-                    #if TRIG != "Mu7p5_Track2_Jpsi": continue # use only one trigger except for turn-on ("turn-on" = ""pt_" in X")
-                    if TRIG != "Mu7p5_Track7_Jpsi" and TRIG != "Mu8": continue # use only one trigger except for turn-on ("turn-on" = ""pt_" in X")
-               DEN = B.clone()
-               if hasattr(DEN, "pt"):
-                    DEN.pt = cms.vdouble(*[i for i in B.pt if i >= PTMIN])
-                    if len(DEN.pt) == 0: raise RuntimeError, "Make sure PTMIN is less than at least one B.pt element!"
-                    if len(DEN.pt) == 1: DEN.pt = cms.vdouble(PTMIN, DEN.pt[0])
-               DEN_forSoftID = DEN.clone()
-               DEN_withSoftID = DEN.clone( # check variables bounds if input file changes
-                                          TMOST = cms.vstring("pass"), tkTrackerLay = cms.vint32(6,18), tkPixelLay = cms.vint32(1,5), dzPV = cms.vdouble(-20,20), dB = cms.vdouble(-0.3,0.3), Track_HP = cms.vstring("pass"),
-                                          )
-               DEN_forL1L2 = DEN_withSoftID.clone()
-               if TRIG != "Mu8":
-                    setattr(DEN_forSoftID, "tag_%s_MU" %TRIG, cms.vstring("pass"))
-                    setattr(DEN_forSoftID,     "%s_TK" %TRIG, cms.vstring("pass"))
-                    setattr(DEN_forL1L2, "tag_%s_MU" %TRIG, cms.vstring("pass"))
-                    setattr(DEN_forL1L2,     "%s_TK" %TRIG, cms.vstring("pass"))
-               else:
-                    setattr(DEN_forSoftID, "tag_%s" % TRIG, cms.vstring("pass"))
-                    #setattr(DEN_forSoftID,     "%s" % TRIG, cms.vstring("pass"))
-               #setattr(DEN_forSoftID, "TM", cms.vstring("pass"))
-               #if "calomu" in scenario: DEN_forSoftID.Calo = cms.vstring("pass")
-               setattr(module.Efficiencies, ID+"_"+X+TRIGLABEL, cms.PSet(
-                         EfficiencyCategoryAndState = cms.vstring(ID,"above"),     # ??
-                         UnbinnedVariables = UnbinnedVars,
-                         BinnedVariables = DEN_forSoftID,
-                         BinToPDFmap = cms.vstring("signalPlusBkg")
-                         ))
-               # L1L2 w.r.t. SoftMuon ID
-               absetaMax = 1.6
-               if Mu25_test:
-                    # Mu25
-		    DEN_Mu25 = DEN_withSoftID.clone( tag_abseta = cms.vdouble(0.0, absetaMax), tag_Mu25TkMu0Onia_L3_MU = cms.vstring("pass"), Mu25TkMu0Onia_TM = cms.vstring("pass") )
-                    if hasattr(DEN_Mu26, "abseta"):
-                         DEN_Mu26.abseta = cms.vdouble(*[i for i in DEN.abseta if i < absetaMax])
-                         DEN_Mu26.abseta.append(absetaMax)
-		    setattr(module.Efficiencies, "Mu25_"+X, cms.PSet(
-                    	    EfficiencyCategoryAndState = cms.vstring("Dimuon10_Jpsi_Barrel","pass"),
-                            UnbinnedVariables = UnbinnedVars,
-                            BinnedVariables = DEN_Mu25,
-                            BinToPDFmap = cms.vstring("signalPlusBkg"),
-                            ))
-               if Mu16_test:
-                    # Mu16
-                    DEN_Mu16 = DEN_withSoftID.clone( tag_abseta = cms.vdouble(0.0, absetaMax), tag_Mu16TkMu0Onia_L3_MU = cms.vstring("pass"), Mu16TkMu0Onia_TM = cms.vstring("pass") )
-                    if hasattr(DEN_Mu16, "abseta"):
-                         DEN_Mu16.abseta = cms.vdouble(*[i for i in DEN.abseta if i < absetaMax])
-                         DEN_Mu16.abseta.append(absetaMax)
-                    setattr(module.Efficiencies, "Mu16_"+X, cms.PSet(
-                            #EfficiencyCategoryAndState = cms.vstring("Dimuon10_Jpsi_Barrel","pass"), # L3 filter
-                            #EfficiencyCategoryAndState = cms.vstring("Dimuon10_L1L2","pass"), # L2 filter
-                            EfficiencyCategoryAndState = cms.vstring("Dimuon10_L1L2","pass", "Mu_L3","pass"), # L2 + Mu_L3 filter
-                            UnbinnedVariables = UnbinnedVars,
-                            BinnedVariables = DEN_Mu16,
-                            BinToPDFmap = cms.vstring("signalPlusBkg"),
-                            ))
 
-               if triggerEff:
-                    # for L3
-                    DEN_forL3 = DEN_withSoftID.clone()
-                    setattr(DEN_forL3, "tag_Mu7p5_L2Mu2_Jpsi_MU", cms.vstring("pass"))
-                    #
-                    #tag_pt_min = 10.0 # for full-coverage trigger
-                    tag_pt_min = 11.0 # for full-coverage trigger
-                    for L1L2, DEN_L1L2, DEN_L3 in [("Dimuon16_L1L2",DEN_forL1L2.clone(tag_pt = cms.vdouble(tag_pt_min, 1000.0)),DEN_forL3.clone(tag_pt = cms.vdouble(tag_pt_min, 1000.0))),
-                                                   ("Dimuon10_L1L2",DEN_forL1L2.clone(tag_abseta = cms.vdouble(0.0, absetaMax)),DEN_forL3.clone(tag_abseta = cms.vdouble(0.0, absetaMax)))]: 
-                         if "Dimuon10" in L1L2:
-                              if hasattr(DEN_L1L2, "abseta"):
-                                   DEN_L1L2.abseta = cms.vdouble(*[i for i in DEN.abseta if i < absetaMax])
-                                   DEN_L1L2.abseta.append(absetaMax)
-                              if hasattr(DEN_L3, "abseta"):
-                                   DEN_L3.abseta = DEN_L1L2.abseta
-                         setattr(module.Efficiencies, L1L2+"_"+X+TRIGLABEL, cms.PSet(
-                                   EfficiencyCategoryAndState = cms.vstring(L1L2,"pass"),
-                                   UnbinnedVariables = UnbinnedVars,
-                                   BinnedVariables = DEN_L1L2,
-                                   BinToPDFmap = cms.vstring("signalPlusBkg"),
-                                   ))
-                         # L3 w.r.t. L1L2
-                         setattr(DEN_L3, L1L2, cms.vstring("pass"))
-                         setattr(module.Efficiencies, "L3_wrt_"+L1L2+"_"+X, cms.PSet(
-                                   EfficiencyCategoryAndState = cms.vstring("Mu_L3","pass"),
-                                   UnbinnedVariables = UnbinnedVars,
-                                   BinnedVariables = DEN_L3,
-                                   BinToPDFmap = cms.vstring("signalPlusBkg"),
-                                   ))
-               #if "plateau" in X: module.SaveWorkspace = True
-               ## mc efficiency, if scenario is mc
-               #if "mc" in scenario:
-               #     setattr(module.Efficiencies, ID+"_"+X+TRIGLABEL+"_mcTrue", cms.PSet(
-               #         EfficiencyCategoryAndState = cms.vstring(ID,"above"),  # ?? "pass"
-               #         UnbinnedVariables = UnbinnedVars,
-               #         BinnedVariables = DEN.clone(mcTrue = cms.vstring("true"))
-               #     ))
-          # comment out the following two lines to not run this efficiency
-          setattr(process, "TnP_MuonID__"+ID+"_"+X, module)
-          setattr(process, "run_"+ID+"_"+X, cms.Path(module))
+          for low, up, RANGELABEL in MASS_RANGE:
+
+               for bins, BINSLABEL in MASS_BINS:
+
+                    for pdf, PDFLABEL in PDF:
+
+                         effName = ID +"_"+ X + RANGELABEL + BINSLABEL + PDFLABEL
+                         module = process.TnP_MuonID.clone(OutputFileName = cms.string("TnP_MuonID__%s_%s_%s.root" %(scenario, mode, effName)),
+                                                           binsForFit = cms.uint32(bins)
+                                                           )
+                         module.Variables.mass = cms.vstring(MASS_NAME, low, up, MASS_UNIT)
+
+                         if "Mu8" in process.TnP_MuonID.InputFileNames[0]:
+                              #module.OutputFileName = module.OutputFileName.replace(".root","_Mu8.root")
+                              module.OutputFileName = cms.string("TnP_MuonID__%s_%s_%s_Mu8.root" %(scenario, mode, effName))
+
+                              #DEN = B.clone()
+                              #setattr(module.Efficiencies, ID+"_"+X, cms.PSet(
+                              #          EfficiencyCategoryAndState = cms.vstring(ID,"above"),     # ??
+                              #          UnbinnedVariables = UnbinnedVars,
+                              #          BinnedVariables = DEN,
+                              #          BinToPDFmap = cms.vstring( pdf )
+                              #          )
+                              #        )
+                              #
+                         for PTMIN, TRIG in TRIGS:
+                              TRIGLABEL=""
+                              #if "pt_" in X:
+                              if "pt" in X or "vtx" in X:
+                                   TRIGLABEL="_"+TRIG
+                              else:
+                                   #if TRIG != "Mu7p5_Track2_Jpsi": continue # use only one trigger except for turn-on ("turn-on" = ""pt_" in X")
+                                   if TRIG != "Mu7p5_Track7_Jpsi" and TRIG != "Mu8": continue # use only one trigger except for turn-on ("turn-on" = ""pt_" in X")
+                              effTrigName = X + TRIGLABEL + RANGELABEL + BINSLABEL + PDFLABEL
+                              ID_effTrigName = ID +"_"+ effTrigName
+
+                              DEN = B.clone()
+                              if hasattr(DEN, "pt"):
+                                   DEN.pt = cms.vdouble(*[i for i in B.pt if i >= PTMIN])
+                                   if len(DEN.pt) == 0: raise RuntimeError, "Make sure PTMIN is less than at least one B.pt element!"
+                                   if len(DEN.pt) == 1: DEN.pt = cms.vdouble(PTMIN, DEN.pt[0])
+                              DEN_forSoftID = DEN.clone()
+                              DEN_withSoftID = DEN.clone( # check variables bounds if input file changes
+                                   TMOST = cms.vstring("pass"), tkTrackerLay = cms.vint32(6,18), tkPixelLay = cms.vint32(1,5), dzPV = cms.vdouble(-20,20), dB = cms.vdouble(-0.3,0.3), Track_HP = cms.vstring("pass"),
+                                   )
+                              DEN_forL1L2 = DEN_withSoftID.clone()
+                              if TRIG != "Mu8":
+                                   setattr(DEN_forSoftID, "tag_%s_MU" %TRIG, cms.vstring("pass"))
+                                   setattr(DEN_forSoftID,     "%s_TK" %TRIG, cms.vstring("pass"))
+                                   setattr(DEN_forL1L2, "tag_%s_MU" %TRIG, cms.vstring("pass"))
+                                   setattr(DEN_forL1L2,     "%s_TK" %TRIG, cms.vstring("pass"))
+                              else:
+                                   setattr(DEN_forSoftID, "tag_%s" % TRIG, cms.vstring("pass"))
+                                   #setattr(DEN_forSoftID,     "%s" % TRIG, cms.vstring("pass"))
+                              #setattr(DEN_forSoftID, "TM", cms.vstring("pass"))
+                              #if "calomu" in scenario: DEN_forSoftID.Calo = cms.vstring("pass")
+                              setattr(module.Efficiencies, ID_effTrigName, cms.PSet(
+                                        EfficiencyCategoryAndState = cms.vstring(ID,"above"),
+                                        UnbinnedVariables = UnbinnedVars,
+                                        BinnedVariables = DEN_forSoftID,
+                                        # The user has to associate a PDF to each bin of probe data: the first string is the name of the default PDF, it is possibly followed by bin name and PDF name pairs (https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideTagProbeFitTreeAnalyzer#Efficiency_Specifications).
+                                        BinToPDFmap = cms.vstring( pdf )
+                                        ))
+
+                              # L1L2 w.r.t. SoftMuon ID
+                              absetaMax = 1.6
+                              if Mu25_test:
+                                   # Mu25
+                                   DEN_Mu25 = DEN_withSoftID.clone( tag_abseta = cms.vdouble(0.0, absetaMax), tag_Mu25TkMu0Onia_L3_MU = cms.vstring("pass"), Mu25TkMu0Onia_TM = cms.vstring("pass") )
+                                   if hasattr(DEN_Mu26, "abseta"):
+                                        DEN_Mu26.abseta = cms.vdouble(*[i for i in DEN.abseta if i < absetaMax])
+                                        DEN_Mu26.abseta.append(absetaMax)
+                                   setattr(module.Efficiencies, "Mu25_"+X, cms.PSet(
+                                             EfficiencyCategoryAndState = cms.vstring("Dimuon10_Jpsi_Barrel","pass"),
+                                             UnbinnedVariables = UnbinnedVars,
+                                             BinnedVariables = DEN_Mu25,
+                                             BinToPDFmap = cms.vstring( pdf ),
+                                             ))
+                              if Mu16_test:
+                                   # Mu16
+                                   DEN_Mu16 = DEN_withSoftID.clone( tag_abseta = cms.vdouble(0.0, absetaMax), tag_Mu16TkMu0Onia_L3_MU = cms.vstring("pass"), Mu16TkMu0Onia_TM = cms.vstring("pass") )
+                                   if hasattr(DEN_Mu16, "abseta"):
+                                        DEN_Mu16.abseta = cms.vdouble(*[i for i in DEN.abseta if i < absetaMax])
+                                        DEN_Mu16.abseta.append(absetaMax)
+                                   setattr(module.Efficiencies, "Mu16_"+X, cms.PSet(
+                                             #EfficiencyCategoryAndState = cms.vstring("Dimuon10_Jpsi_Barrel","pass"), # L3 filter
+                                             #EfficiencyCategoryAndState = cms.vstring("Dimuon10_L1L2","pass"), # L2 filter
+                                             EfficiencyCategoryAndState = cms.vstring("Dimuon10_L1L2","pass", "Mu_L3","pass"), # L2 + Mu_L3 filter
+                                             UnbinnedVariables = UnbinnedVars,
+                                             BinnedVariables = DEN_Mu16,
+                                             BinToPDFmap = cms.vstring( pdf ),
+                                             ))
+
+                              if triggerEff:
+                                   # for L3
+                                   DEN_forL3 = DEN_withSoftID.clone()
+                                   setattr(DEN_forL3, "tag_Mu7p5_L2Mu2_Jpsi_MU", cms.vstring("pass"))
+                                   #
+                                   #tag_pt_min = 10.0 # for full-coverage trigger
+                                   tag_pt_min = 11.0 # for full-coverage trigger
+                                   for L1L2, DEN_L1L2, DEN_L3 in [("Dimuon16_L1L2",DEN_forL1L2.clone(tag_pt = cms.vdouble(tag_pt_min, 1000.0)),DEN_forL3.clone(tag_pt = cms.vdouble(tag_pt_min, 1000.0))),
+                                                                  ("Dimuon10_L1L2",DEN_forL1L2.clone(tag_abseta = cms.vdouble(0.0, absetaMax)),DEN_forL3.clone(tag_abseta = cms.vdouble(0.0, absetaMax)))]: 
+                                        if "Dimuon10" in L1L2:
+                                             if hasattr(DEN_L1L2, "abseta"):
+                                                  DEN_L1L2.abseta = cms.vdouble(*[i for i in DEN.abseta if i < absetaMax])
+                                                  DEN_L1L2.abseta.append(absetaMax)
+                                             if hasattr(DEN_L3, "abseta"):
+                                                  DEN_L3.abseta = DEN_L1L2.abseta
+                                             setattr(module.Efficiencies, L1L2+"_"+effTrigName, cms.PSet(
+                                                       EfficiencyCategoryAndState = cms.vstring(L1L2,"pass"),
+                                                       UnbinnedVariables = UnbinnedVars,
+                                                       BinnedVariables = DEN_L1L2,
+                                                       BinToPDFmap = cms.vstring( pdf ),
+                                                       ))
+                                        # L3 w.r.t. L1L2
+                                        setattr(DEN_L3, L1L2, cms.vstring("pass"))
+                                        setattr(module.Efficiencies, "L3_wrt_"+L1L2+"_"+X, cms.PSet(
+                                                  EfficiencyCategoryAndState = cms.vstring("Mu_L3","pass"),
+                                                  UnbinnedVariables = UnbinnedVars,
+                                                  BinnedVariables = DEN_L3,
+                                                  BinToPDFmap = cms.vstring( pdf ),
+                                                  ))
+                              #if "plateau" in X: module.SaveWorkspace = True
+                              ## mc efficiency, if scenario is mc
+                              #if "mc" in scenario:
+                              #     setattr(module.Efficiencies, ID_effTrigName+"_mcTrue", cms.PSet(
+                              #         EfficiencyCategoryAndState = cms.vstring(ID,"above"),  # ?? "pass"
+                              #         UnbinnedVariables = UnbinnedVars,
+                              #         BinnedVariables = DEN.clone(mcTrue = cms.vstring("true"))
+                              #     ))
+
+                              # comment out the following two lines to not run this efficiency
+                              setattr(process, "TnP_MuonID__"+effName, module)
+                              setattr(process, "run_"+effName, cms.Path(module))
 
 
 
@@ -666,7 +709,7 @@ if "mc" in scenario:
      process.TnP_Tracking.InputFileNames = process.TnP_MuonID.InputFileNames
 
 #sampleToPdfMap = { "":"gaussPlusCubic", "NoJPsi":"gaussPlusFloatCubic", "NoBestJPsi":"gaussPlusFloatCubic"}
-sampleToPdfMap = { "":"signalPlusBkg", "NoJPsi":"gaussPlusFloatCubic", "NoBestJPsi":"gaussPlusFloatCubic"}
+sampleToPdfMap = { "":"CBPlusExp", "NoJPsi":"gaussPlusFloatCubic", "NoBestJPsi":"gaussPlusFloatCubic"}
 
 for X,B in ALLBINS:
      if len(args) > 2 and X not in args[2:]: continue
@@ -698,7 +741,7 @@ for X,B in ALLBINS:
                     #
                     setattr(module.Cuts, "#DeltaR_cut",   cms.vstring("tk_deltaR"+eff, "tk_deltaR"+eff, str(DR)))
                     setattr(module.Cuts, "#Delta#eta_cut", cms.vstring("tk_deltaEta"+eff, "tk_deltaEta"+eff, str(DETA)))
-                    setattr(module.Efficiencies, "eff_"+label, cms.PSet(
+                    setattr(module.Efficiencies, "eff_"+label+RANGELABEL+BINSLABEL, cms.PSet(
                               EfficiencyCategoryAndState = cms.vstring("#DeltaR_cut","below", "#Delta#eta_cut","below"),
                               UnbinnedVariables = UnbinnedVars,
                               BinToPDFmap = cms.vstring(sampleToPdfMap[eff.replace("_","")]),
@@ -747,10 +790,10 @@ if triggerEff:
                          #DEN = DEN.clone(abseta = cms.vdouble(0.0, absyMax))
                          #DEN = DEN.clone(tag_abseta = cms.vdouble(0.0, absyMax))
                #
-               setattr(module.Efficiencies, TRIG+"_wrt_"+TRIG_noVtx, cms.PSet(
+               setattr(module.Efficiencies, TRIG+"_wrt_"+TRIG_noVtx+RANGELABEL+BINSLABEL, cms.PSet(
                          EfficiencyCategoryAndState = cms.vstring(TRIG,"pass"),
                          UnbinnedVariables = UnbinnedVars,
-                         BinToPDFmap = cms.vstring("signalPlusBkg"),
+                         BinToPDFmap = cms.vstring("CBPlusExp"),
                          BinnedVariables = DEN,
                          ))
           # comment the following two lines to not run this efficiency
